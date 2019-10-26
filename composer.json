@@ -29,6 +29,25 @@
     "skyline/route-annotation-compiler": "dev-master"
   },
   "require-dev": {
-    "phpunit/phpunit": "^6"
-  }
+    "skyline/binary": "dev-master"
+  },
+  "scripts": {
+  "compile:live": "php vendor/bin/skyline.phar compile --project live-project.xml --no-interaction",
+  "compile": "php vendor/bin/skyline.phar compile --project dev-project.xml --dev --no-interaction --zero",
+  "post-create-project-cmd": "@compile",
+  "publish:dev": [
+    "composer update",
+    "@compile"
+  ],
+  "publish:test": [
+    "composer update",
+    "php vendor/bin/skyline.phar compile --project live-project.xml --no-interaction --test"
+  ],
+  "publish": [
+    "composer update",
+    "@compile:live",
+    "composer update --no-dev"
+  ],
+  "compile:pdo": "php vendor/bin/skyline.phar compile --project dev-project.xml --dev --no-interaction --zero --with-pdo"
+}
 }
