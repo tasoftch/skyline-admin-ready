@@ -1,5 +1,6 @@
 {
   "name": "skyline-admin/ready",
+  "description": "This is the most easy user interface for a Skyline CMS Application. Everything is already pre configured and you are able to start right away creating your own website.",
   "license": "BSD-3-Clause",
   "minimum-stability": "dev",
   "authors": [
