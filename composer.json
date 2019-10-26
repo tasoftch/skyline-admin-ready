@@ -1,0 +1,33 @@
+{
+  "name": "skyline-admin/ready",
+  "license": "BSD-3-Clause",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Thomas Abplanalp",
+      "email": "info@tasoft.ch"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Skyline\\Admin\\Ready\\" : "src"
+    }
+  },
+  "require" : {
+    "php": "^7.2",
+    "skyline/core-application": "dev-master",
+    "skyline/html-render": "dev-master",
+    "skyline/component-bootstrap": "dev-master",
+    "skyline/navigation": "dev-master",
+    "skyline/component-animation": "dev-master",
+    "skyline/api": "dev-master",
+    "skyline/component-api": "dev-master",
+    "skyline/pdo": "dev-master",
+    "skyline/cms-security": "dev-master",
+    "skyline/compiler": "dev-master",
+    "skyline/route-annotation-compiler": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6"
+  }
+}
