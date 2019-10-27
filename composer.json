@@ -33,7 +33,7 @@
   },
   "scripts": {
   "compile:live": "php vendor/bin/skyline.phar compile --project live-project.xml --no-interaction",
-  "compile": "php vendor/bin/skyline.phar compile --project dev-project.xml --dev --no-interaction --zero",
+  "compile": "php vendor/bin/skyline.phar compile --project Tests/dev-project.xml --dev --no-interaction --zero",
   "post-create-project-cmd": "@compile",
   "publish:dev": [
     "composer update",
@@ -48,6 +48,6 @@
     "@compile:live",
     "composer update --no-dev"
   ],
-  "compile:pdo": "php vendor/bin/skyline.phar compile --project dev-project.xml --dev --no-interaction --zero --with-pdo"
+  "compile:pdo": "php vendor/bin/skyline.phar compile --project Tests/dev-project.xml --dev --no-interaction --zero --with-pdo"
 }
 }
