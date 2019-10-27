@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * BSD 3-Clause License
  *
  * Copyright (c) 2019, TASoft Applications
@@ -32,31 +31,33 @@
  *
  */
 
-use Skyline\Compiler\CompilerContext;
-use Skyline\Component\Config\AbstractComponent;
-use Skyline\Component\Config\IconComponent;
-use Skyline\Component\Config\JavaScriptPostLoadComponent;
+$(function() {
+    function updateFooter($footer) {
+        var footerHeight = $footer.outerHeight(true);
 
-$skylineLogo64 = __DIR__ . '/Components/img/64.png';
-$skylineCoreJS = __DIR__ . "/Components/js/skyline-core.js";
+        var bottomEdge = $footer.position().top + footerHeight;
 
-return [
-    "Skyline" => [
-        "icon" => new IconComponent(
-            '/Public/Skyline/Images/Logo/Skyline-Logo-64.png',
-            NULL,
-            'sha384-'.hash_file("sha384", $skylineLogo64),
-            NULL,
-            CompilerContext::getCurrentCompiler()->getRelativeProjectPath($skylineLogo64)
-        ),
-        'bootstrap-js' => new JavaScriptPostLoadComponent('https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.bundle.min.js', "sha384-VoPFvGr9GxhDT3n8vqqZ46twP5lgex+raTCfICQy73NLhN7ZqSfCtfSn4mLA2EFA"),
-        AbstractComponent::COMP_REQUIREMENTS => [
-            "jQuery"
-        ],
-        "core-js" => new JavaScriptPostLoadComponent(
-            "/Public/Skyline/JavaScript/skyline.core.js",
-            'sha384-'.hash_file("sha384", $skylineCoreJS),
-            NULL,
-            CompilerContext::getCurrentCompiler()->getRelativeProjectPath($skylineCoreJS))
-    ]
-];
+        if(bottomEdge < $(window).height()) {
+            var flexibleHeight = $flexible.outerHeight(true);
+            var fixedHeight = 0;
+            $fixed.each(function() {
+                fixedHeight += $(this).outerHeight(true);
+            });
+
+            $flexible.css("height", ($(window).height() - fixedHeight - footerHeight) + "px");
+        } else {
+            $flexible.css("height", undefined);
+        }
+    }
+
+    var $footer = $(".sticky-bottom");
+    var $flexible = $(".sticky-flexible");
+    var $fixed = $(".sticky-fixed");
+
+    if($footer.length && $flexible.length) {
+        $(window).resize(function() {
+            updateFooter($footer);
+        });
+        updateFooter($footer);
+    }
+});
