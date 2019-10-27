@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+This project file will be loaded by the compiler to preprocess the application
+-->
+<project class="\Skyline\Compiler\Project\Project">
+    <attributes>
+        <!-- The Application's title (if nothing else specified) -->
+        <attr name="title">My Website Development</attr>
+        <!-- The Application's global description, if nothing else was declared -->
+        <attr name="description">My Website in development powered by Skyline CMS and TASoft Applications</attr>
+
+        <!-- Declare Application Data directory, where Skyline CMS stores information.
+             This is the only directory that changes (creating pages, media and so on)
+             -->
+        <attr name="data">SkylineAppData</attr>
+
+        <!-- Define the public directory of your project. This directory should be the public html top level directory -->
+        <attr name="public">Public</attr>
+
+        <!-- Skip listed directories or files in search paths -->
+        <attr name="excluded" type="list">
+            <item>Tests</item>          <!-- Literal search -->
+            <item>*Test.php</item>      <!-- GLOB search is allowed -->
+            <item>.git</item>
+            <item>.idea</item>
+        </attr>
+
+        <!-- Make sure the application will redirect incoming request to HTTPS -->
+        <attr name="HTTPS">0</attr>
+
+        <!-- The application root (from Public directory to top level directory of application) -->
+        <attr name="appRoot">./</attr>
+    </attributes>
+    <searchPaths>
+        <!--
+        This section tells the compiler where it should look for source files
+        -->
+        <dir type="config">vendor/skyline</dir>
+        <dir type="config">./</dir>
+        <dir type="uconfig">SkylineAppData/Config</dir>      <!-- Your configuration files -->
+        <dir type="vendor">vendor</dir>                     <!-- vendor packages -->
+        <dir type="classes">src/</dir>
+        <dir type="templates">vendor/skyline</dir>
+        <dir type="templates">./Templates</dir>
+    </searchPaths>
+    <CORS>
+        <!--
+        Telling the application which hosts are accepted in this application enables to protect resources against hotlinking.
+        -->
+        <host name="www.example.dev" />
+        <host name="admin.example.dev" />
+        <host name="example.dev" />
+        <!--
+        If you use the skyline API package, you should declare the cross origin resource share behaviour
+        -->
+        <host name="api.example.dev">
+            <accepts>*.example.dev</accepts>
+        </host>
+    </CORS>
+    <context class="Skyline\Compiler\CompilerContext">
+        <!--
+            The compiler context is responsible to guide through compilation.
+            Define some compilation runtime specific parameters here
+        -->
+
+        <!-- List all compiler factories you want to compile from -->
+        <factory>Skyline\Compiler\Factory\CompleteWithPackagesCompilersFactory</factory>
+
+        <!-- or only the top level compilers -->
+        <!-- <factory>Skyline\Compiler\Factory\CompleteCompilersFactory</factory> -->
+        <!-- or what ever factory you define. Each factory must extend the Skyline\Compiler\Factory\AbstractFactoryFactory class. -->
+
+        <!-- If defined, the given class will be compiled as application run class -->
+        <application>Skyline\Application\Application</application>
+
+        <!-- If defined, the given class will bootstrap Skyline CMS Application -->
+        <bootstrap>Skyline\Kernel\Bootstrap</bootstrap>
+    </context>
+</project>
