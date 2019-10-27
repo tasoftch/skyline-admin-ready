@@ -18,22 +18,22 @@
     "php": "^7.2",
     "skyline/core-application": "dev-master",
     "skyline/html-render": "dev-master",
-    "skyline/component-bootstrap": "dev-master",
-    "skyline/navigation": "dev-master",
     "skyline/component-animation": "dev-master",
     "skyline/api": "dev-master",
     "skyline/component-api": "dev-master",
     "skyline/pdo": "dev-master",
     "skyline/cms-security": "dev-master",
     "skyline/compiler": "dev-master",
-    "skyline/route-annotation-compiler": "dev-master"
+    "skyline/route-annotation-compiler": "dev-master",
+    "skyline/component-jquery": "dev-master",
+    "skyline-admin/component-css": "dev-master"
   },
   "require-dev": {
     "skyline/binary": "dev-master"
   },
   "scripts": {
   "compile:live": "php vendor/bin/skyline.phar compile --project live-project.xml --no-interaction",
-  "compile": "php vendor/bin/skyline.phar compile --project Tests/dev-project.xml --dev --no-interaction --zero",
+  "compile": "php vendor/bin/skyline.phar compile --project dev-project.xml --dev --no-interaction --zero ",
   "post-create-project-cmd": "@compile",
   "publish:dev": [
     "composer update",

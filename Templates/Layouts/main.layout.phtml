@@ -35,26 +35,50 @@
 use Skyline\Navigation\NavigationService;
 
 /**
- * @require Bootstrap
+ * @require Skyline
+ * @require Ready
  * @title Skyline Ready :: Dashboard
  */
 
 ?>
-<div class="container-fluid mt-3 main-container">
-    <header class="m-0 mx-sm-3 mt-sm-3 sticky-fixed">
-        <?php
+<div class="container-fluid px-0">
+    <header class="sticky-fixed">
+        <nav class="navbar navbar-dark bg-dark navbar-expand-md">
+            <a class="navbar-brand" href="#">
+                <img src="/Public/Skyline/Images/Logo/Skyline-Logo-64.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                <span class="text-skyline">Sky</span>line
+            </a>
 
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#skyline-navbar-contents" aria-controls="skyline-navbar-contents" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
+            <div class="collapse navbar-collapse" id="skyline-navbar-contents">
+                <ul class="navbar-nav mr-auto">
 
-        ?>
-        <div class="container pt-3 pb-5 d-flex justify-content-end">
-            <div class="well">
-                <h2 class="mb-0"><span class="tasoft-primary-text">TA</span>Soft <span class="tasoft-primary-text">App</span>lications</h2>
-                <p>
-                    Ihre Lösungen rund um Programmierung und Entwicklung
-                </p>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>
             </div>
-        </div>
+        </nav>
     </header>
 
     <div class="container p-0 p-sm-1">
@@ -65,11 +89,11 @@ use Skyline\Navigation\NavigationService;
         </main>
     </div>
 
-    <footer class="sticky-bottom m-0 mx-sm-3 mb-sm-3">
+    <footer class="sticky-bottom bg-dark text-white border-skyline border-top">
         <div class="container py-1">
             © 2019 TASoft
             <p class="text-muted font-italic" style="font-size: 80%">
-                Powered by Skyline CMS. Alle Rechte vorbehalten.
+                Powered by Skyline CMS. All rights reserved.
             </p>
         </div>
     </footer>
