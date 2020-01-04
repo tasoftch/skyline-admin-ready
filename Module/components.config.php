@@ -34,16 +34,19 @@
 
 use Skyline\Compiler\CompilerContext;
 use Skyline\Component\Config\AbstractComponent;
+use Skyline\Component\Config\CSSComponent;
 use Skyline\Component\Config\IconComponent;
 use Skyline\Component\Config\JavaScriptPostLoadComponent;
+use Skyline\Component\Config\OpenDirectoryComponent;
 
-$skylineLogo64 = __DIR__ . '/Components/img/64.png';
+$skylineLogo64 = __DIR__ . '/Components/Images/Logo/skyline-256.png';
 $skylineCoreJS = __DIR__ . "/Components/js/skyline-core.js";
 
+
 return [
-    "Skyline" => [
+    "Ready" => [
         "icon" => new IconComponent(
-            '/Public/Skyline/Images/Logo/Skyline-Logo-64.png',
+            '/Public/Skyline-Library/Admin/Images/Logo/skyline-256.png',
             NULL,
             'sha384-'.hash_file("sha384", $skylineLogo64),
             NULL,
@@ -54,9 +57,16 @@ return [
             "jQuery"
         ],
         "core-js" => new JavaScriptPostLoadComponent(
-            "/Public/Skyline/JavaScript/skyline.core.js",
+            "/Public/Skyline-Library/Admin/JavaScript/skyline-core.js",
             'sha384-'.hash_file("sha384", $skylineCoreJS),
             NULL,
             CompilerContext::getCurrentCompiler()->getRelativeProjectPath($skylineCoreJS))
-    ]
+    ],
+    "FontAwesome" => [
+        'css' => new CSSComponent("https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", 'all', "sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"),
+    ],
+    new OpenDirectoryComponent(
+        '/Skyline-Library/Admin',
+        __DIR__ . "/Components"
+    )
 ];

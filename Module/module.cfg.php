@@ -32,4 +32,32 @@
  *
  */
 
-?>
+use Skyline\Module\Compiler\Decider\RegexSubdomainDecider;
+use Skyline\Module\Compiler\Decider\RegexURIPrefixDecider;
+use Skyline\Module\Config\ModuleConfig;
+
+return [
+    ModuleConfig::MODULE_NAME => 'Ready',
+    ModuleConfig::CLASS_DIRECTORY_NAME => __DIR__ . "/src",
+    ModuleConfig::CLASS_PREFIX => 'Skyline\\Admin\\Ready\\',
+
+    ModuleConfig::MODULE_DECIDER_CLASSES => [
+        [
+            RegexSubdomainDecider::class,
+            '%^admin$%i',
+            RegexSubdomainDecider::NORMALIZE_TO_NOT_HAVE_URI,
+            'admin'
+        ],
+        [
+            RegexURIPrefixDecider::class,
+            RegexURIPrefixDecider::NORMALIZE_TO_NOT_HAVE_URI,
+            '%^/?admin%i',
+            ''
+        ],
+        [
+            RegexURIPrefixDecider::class,
+            0,
+            '%^/?Public/Skyline\-Library/Admin%i'
+        ]
+    ]
+];

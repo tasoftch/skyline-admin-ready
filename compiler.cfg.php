@@ -32,28 +32,19 @@
  *
  */
 
-namespace Skyline\Admin\Ready\Controller;
+use Skyline\Compiler\Factory\AbstractExtendedCompilerFactory;
+use Skyline\Compiler\Predef\CreateDirectoriesCompiler;
 
-
-use Skyline\Application\Controller\AbstractActionController;
-use Skyline\CMS\Security\SecurityTrait;
-
-/**
- * Main Controller for landing page on Skyline CMS Ready.
- * Displays the dashboard
- *
- * @package Skyline\Admin\Ready\Controller
- *
- * @role SKYLINE.ADMIN
- */
-class DashboardActionController extends AbstractActionController
-{
-    use SecurityTrait;
-
-    /**
-     * @route literal /admin
-     */
-    public function dashboardAction() {
-
-    }
-}
+return [
+    'create-ui' => [
+        AbstractExtendedCompilerFactory::COMPILER_CLASS_KEY                            => CreateDirectoriesCompiler::class,
+        AbstractExtendedCompilerFactory::COMPILER_ARGUMENTS_KEY => [
+            'directoryNames' => [
+                'UI'
+            ]
+        ],
+        AbstractExtendedCompilerFactory::COMPILER_DEPENDENCIES_KEY => [
+            'composer-packages-order'
+        ]
+    ]
+];

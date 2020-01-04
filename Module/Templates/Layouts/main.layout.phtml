@@ -1,0 +1,175 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\Navigation\NavigationService;
+use Skyline\Render\Context\DefaultRenderContext;
+use Skyline\Render\Service\TemplateControllerInterface;
+use Skyline\Render\Template\Catalog;
+use Skyline\Security\User\UserInterface;
+
+
+/**
+ * @require SkylineCoreStyle
+ * @require FontAwesome
+ * @require Ready
+ * @title Skyline Ready :: Dashboard
+ *
+ * @var DefaultRenderContext $this
+ *
+ */
+
+/** @var NavigationService $navService */
+$navService = $this->mainNavigation;
+
+$mainMenu = $navService->getNavigationBar("main-menu");
+?>
+<style type="text/css">
+    .avatar {
+        position: absolute;
+        width: 38px;
+        height: 38px;
+        -webkit-border-radius: 20px;
+        -moz-border-radius: 20px;
+        border-radius: 20px;
+        top: -1px;
+        left: -19px;
+        border: 1px solid #1eb924;
+    }
+</style>
+
+
+<div class="container-fluid px-0">
+    <header class="sticky-fixed">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+                <ul class="navbar-nav mr-auto">
+                    <?php
+                    $tc = function():?TemplateControllerInterface {
+                        static $tc;
+                        if(!$tc)
+                            $tc = $this->templateController;
+                        return $tc;
+                    };
+
+                    $itemTemplate = function() use (&$tc) {
+                        static $itemTemplate;
+                        if(!$itemTemplate)
+                            $itemTemplate = $tc()->findTemplate("skyline-admin-nav-item");
+                        return $itemTemplate;
+                    };
+
+                    $itemSubTemplate = function() use (&$tc) {
+                        static $itemTemplate;
+                        if(!$itemTemplate)
+                            $itemTemplate = $tc()->findTemplate("skyline-admin-nav-item-with-submenu");
+                        return $itemTemplate;
+                    };
+
+
+                    foreach($mainMenu->getMainMenu()->getMenuItems() as $item) {
+                        if($item->getSubmenu()) {
+                            $this->renderSubTemplate($itemSubTemplate(), $item);
+                        } else {
+                            $this->renderSubTemplate($itemTemplate(), $item);
+                        }
+                    }
+                    ?>
+                </ul>
+            </div>
+            <div class="mx-auto order-0 text-left text-md-center w-100">
+                <a class="navbar-brand" href="#">
+                    <img src="/Public/Skyline-Library/Admin/Images/Logo/Skyline-Logo-64.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                    <span class="text-skyline">Sky</span>line
+                </a>
+                <button class="navbar-toggler float-right" type="button" data-toggle="collapse" data-target=".dual-collapse2">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <?php
+                        $user = $this->get('user');
+
+                        if($user instanceof UserInterface) {
+                            ?>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-outline-skyline dropdown-toggle pl-4 ml-3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div class="avatar bg-white shadow-sm" style="background-image: url('/Public/Skyline-Library/Admin/Images/user.png')">&nbsp;</div>
+                                    <?php
+                                    if(method_exists($user, 'getFullName'))
+                                        echo $user->getFullName();
+                                    else
+                                        echo $user->getUsername();
+                                    ?>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <button class="dropdown-item" type="button"><i class="fa fa-user"></i> Profile</button>
+                                    <button class="dropdown-item" type="button"><i class="fa fa-gear"></i> Settings</button>
+                                    <div class="dropdown-divider"></div>
+                                    <button class="dropdown-item" type="button"><i class="fa fa-sign-out"></i> Logout</button>
+                                </div>
+                            </div>
+                            <?php
+                        } else {
+                            ?>
+                            <button type="button" onclick="window.location.href='/admin'" class="btn btn-outline-skyline">
+                                Sign In
+                            </button>
+                            <?php
+                        }
+                        ?>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="p-0 m-0">
+        <main class="p-3 sticky-flexible">
+            <?php
+            $this->renderSubTemplate("Content");
+            ?>
+        </main>
+    </div>
+
+    <footer class="sticky-bottom bg-dark text-white border-skyline border-top">
+        <div class="container py-1">
+            © 2019 TASoft
+            <p class="text-muted font-italic" style="font-size: 80%">
+                Powered by Skyline CMS. All rights reserved.
+            </p>
+        </div>
+    </footer>
+</div>

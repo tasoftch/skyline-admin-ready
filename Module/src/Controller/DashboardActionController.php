@@ -32,10 +32,30 @@
  *
  */
 
-use Skyline\Kernel\Config\MainKernelConfig;
+namespace Skyline\Admin\Ready\Controller;
 
-return [
-    MainKernelConfig::CONFIG_SERVICES => [
 
-    ]
-];
+use Skyline\Application\Controller\AbstractActionController;
+use Skyline\CMS\Security\SecurityTrait;
+
+/**
+ * Main Controller for landing page on Skyline CMS Ready.
+ * Displays the dashboard
+ *
+ * @package Skyline\Admin\Ready\Controller
+ *
+ * @role SKYLINE.ADMIN
+ */
+class DashboardActionController extends AbstractActionController
+{
+    use SecurityTrait;
+
+    /**
+     * @route literal /
+     */
+    public function dashboardAction() {
+        $this->renderTemplate("main", [
+            "Content" => 'dashboard'
+        ]);
+    }
+}

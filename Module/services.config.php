@@ -32,10 +32,16 @@
  *
  */
 
-use Skyline\Kernel\Config\MainKernelConfig;
+use Skyline\Navigation\NavigationService;
+use TASoft\Service\Config\AbstractFileConfiguration;
 
 return [
-    MainKernelConfig::CONFIG_SERVICES => [
-
+    'mainNavigation' => [
+        AbstractFileConfiguration::SERVICE_CLASS => NavigationService::class,
+        AbstractFileConfiguration::SERVICE_INIT_ARGUMENTS => [
+            [
+                __DIR__ . "/lib/main-menu.xml"
+            ]
+        ]
     ]
 ];

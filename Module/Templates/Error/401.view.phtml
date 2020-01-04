@@ -1,0 +1,216 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+use Skyline\Kernel\Exception\SkylineKernelDetailedException;
+use Skyline\Security\Exception\Auth\NoIdentityException;
+use Skyline\Security\Exception\BadCredentialException;
+use Skyline\Security\Identity\IdentityInterface;
+use Skyline\Security\Identity\IdentityService;
+use Skyline\Security\Identity\SessionIdentity;
+use TASoft\Service\ServiceManager;
+
+/**
+ * @require FontAwesome
+ */
+
+$errorTitle = "";
+$errorMessage = "";
+$username = "";
+
+if(isset($exception) && $exception instanceof Exception) {
+    if($exception instanceof SkylineKernelDetailedException) {
+        $errorTitle = $exception->getMessage();
+        $errorMessage = $exception->getDetails();
+    } else {
+        $errorMessage = $exception->getMessage();
+        $errorTitle = "Authentication Required";
+    }
+
+    if($exception instanceof NoIdentityException) {
+        // Might be the first time
+        $errorTitle = $errorMessage = "";
+    }
+
+    if(method_exists($exception, "getUsername"))
+        $username = $exception->getUsername();
+
+    if(method_exists($exception, "getIdentity")) {
+        $identity = $exception->getIdentity();
+        if($identity instanceof IdentityInterface) {
+            $username = $identity->getToken();
+        }
+    }
+}
+?>
+<style type="text/css">
+    #cookie-warning {
+        display: none;
+    }
+    .no-cookies #cookie-warning {
+        display: block;
+    }
+
+    .no-cookies #loginFormulaElement {
+        display: none;
+    }
+</style>
+<div class="modal-dialog cascading-modal shadow" role="document" id="login-document">
+    <!--Content-->
+    <div class="modal-content position-relative">
+
+        <div class="modal-header rounded light-blue darken-3 bg-skyline text-white shadow mx-3 position-relative" style="top:-20px">
+            <span class="nav-link"><i class=" fa fa-user mr-1"></i> <strong>Login Skyline CMS</strong></span>
+        </div>
+
+        <div class="modal-body">
+            <P>
+                Welcome to protected area.
+            </P>
+            <?php
+            if($errorTitle && $errorMessage) {
+                ?>
+                <div class="alert alert-danger" role="alert">
+                    <h3 class="alert-heading"><?=$errorTitle?></h3>
+                    <p>
+                        <?=nl2br($errorMessage)?>
+                    </p>
+                </div>
+                <?php
+            }
+            ?>
+
+            <div class="alert alert-danger" role="alert" id="cookie-warning">
+                <h3 class="alert-heading">Cookies deactivated</h3>
+                <p>
+                    The build-in login system of Skyline CMS does not allow any authentication service, if cookies are disabled.
+                </p>
+            </div>
+
+            <div id="login-panel">
+                <form action="" method="post" id="loginFormulaElement">
+                    <div class="form-group">
+                        <label for="username"><i class="fa fa-user prefix"></i> Username</label>
+                        <input type="text" id="username" name="username" class="form-control" value="<?=$username?>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password"><i class="fa fa-lock prefix"></i> Password</label>
+                        <input type="password" id="password" name="password" class="form-control">
+                    </div>
+
+                    <?php
+                    if(ServiceManager::generalServiceManager()->getParameter("security.allows-remember-me")) {?>
+
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="remember_me" id="remember_me" <?php
+                            $iis = ServiceManager::generalServiceManager()->get("identityService");
+                            try {
+                                if($iis instanceof IdentityService) {
+                                    foreach($iis->getIdentities( $this->request ) as $identity) {
+                                        if($identity instanceof SessionIdentity && $identity->isRememberMe()) {
+                                            echo "checked";
+                                            break;
+                                        }
+                                    }
+                                }
+                            } catch (BadCredentialException $exception) {}
+
+                            ?>>
+                            <label class="form-check-label" for="remember_me">Remember Me</label>
+                        </div>
+
+                    <?php }
+                    ?>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-primary" type="submit">Log in
+                            <i class="fa fa-sign-in ml-1"></i>
+                        </button>
+                    </div>
+
+                    <p class="alert alert-info mt-4">
+                        <small>
+                            Skyline CMS will create a cookie to identify your login credentials.
+                        </small>
+                    </p>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <div class="options text-center text-md-right mt-1">
+                    <?if(ServiceManager::generalServiceManager()->getParameter("security.allows-new-membership")):?>
+                        <p>No access?
+                            <a href="/admin/users/register-new-membership" target="_blank" class="blue-text">Sign in</a>
+                        </p>
+                    <?endif?>
+                    <?if(ServiceManager::generalServiceManager()->getParameter("security.allows-password-reset")):?>
+                        <p>
+                            Forgot Password?
+                            <a href="/admin/users/forgot-password-requesting-reset-link" class="blue-text" target="_blank">Reset</a>
+                        </p>
+                    <?endif?>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="application/javascript">
+    $(function() {
+        $("input[name='username']").focus();
+
+        function disable_cookies() {
+            $("#login-document").addClass("no-cookies");
+        }
+        var cookieEnabled = navigator.cookieEnabled;
+
+        if (cookieEnabled === false) {
+            disable_cookies();
+            return;
+        }
+
+        // try to set a test cookie if we can't see any cookies and we're using
+        // either a browser that doesn't support navigator.cookieEnabled
+        // or IE (which always returns true for navigator.cookieEnabled)
+        if (!document.cookie && (cookieEnabled === null || /*@cc_on!@*/false))
+        {
+            document.cookie = "testcookie=1";
+
+            if (!document.cookie) {
+                disable_cookies();
+            } else {
+                document.cookie = "testcookie=; expires=" + new Date(0).toUTCString();
+            }
+        }
+    })
+</script>

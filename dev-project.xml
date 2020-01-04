@@ -35,13 +35,13 @@ This project file will be loaded by the compiler to preprocess the application
         <!--
         This section tells the compiler where it should look for source files
         -->
-        <dir type="config">vendor/skyline</dir>
         <dir type="config">./</dir>
         <dir type="uconfig">SkylineAppData/Config</dir>      <!-- Your configuration files -->
         <dir type="vendor">vendor</dir>                     <!-- vendor packages -->
-        <dir type="classes">src/</dir>
+        <dir type="classes">Module/src/</dir>
         <dir type="templates">vendor/skyline</dir>
-        <dir type="templates">./Templates</dir>
+        <dir type="templates">./Module/Templates</dir>
+        <dir type="modules">./Module</dir>
     </searchPaths>
     <CORS>
         <!--

@@ -1,0 +1,42 @@
+<?php
+use Skyline\Navigation\NavigationBarItem;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ * @var DefaultRenderContext $this
+ * @var NavigationBarItem $item
+ */
+
+$item = $this->getAdditionalInfo();
+
+$title = $item->getTitle();
+$action = $item->getAction();
+
+$id = uniqid("ndd_");
+
+?>
+<li class="nav-item dropdown<?=$item->isSelected()?' active':''?>">
+    <a class="nav-link dropdown-toggle" href="#" id="<?=$id?>" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <?=$item->getTitle()?>
+    </a>
+    <div class="dropdown-menu" aria-labelledby="<?=$id?>">
+        <?php
+        /** @var NavigationBarItem $menuItem */
+        foreach($item->getSubmenu()->getMenuItems() as $menuItem) {
+            if($menuItem->isEnabled() == false) {
+                ?>
+                <a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true"><?=$menuItem->getTitle()?></a>
+                <?php
+            } elseif($menuItem->isSeparatorItem()) {
+                ?>
+                <div class="dropdown-divider"></div>
+                <?php
+            } else {
+                ?>
+                <a class="dropdown-item<?=$menuItem->isSelected() ? ' active':''?>" href="<?=$menuItem->getAction() ? $menuItem->getAction()->getExportedActionVersion(): '#'?>"><?=$menuItem->getTitle()?></a>
+                <?php
+            }
+        }
+        ?>
+    </div>
+</li>
