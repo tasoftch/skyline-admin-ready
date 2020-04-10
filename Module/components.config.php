@@ -40,7 +40,8 @@ use Skyline\Component\Config\JavaScriptPostLoadComponent;
 use Skyline\Component\Config\OpenDirectoryComponent;
 
 $skylineLogo64 = __DIR__ . '/Components/Images/Logo/skyline-256.png';
-$skylineCoreJS = __DIR__ . "/Components/js/skyline-core.js";
+$skylineCoreJS = __DIR__ . "/Components/JavaScript/skyline-core.js";
+$bootstrapJS = __DIR__ . "/Components/JavaScript/bootstrap.min.js";
 
 
 return [
@@ -52,10 +53,15 @@ return [
             NULL,
             CompilerContext::getCurrentCompiler()->getRelativeProjectPath($skylineLogo64)
         ),
-        'bootstrap-js' => new JavaScriptPostLoadComponent('https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.bundle.min.js', "sha384-VoPFvGr9GxhDT3n8vqqZ46twP5lgex+raTCfICQy73NLhN7ZqSfCtfSn4mLA2EFA"),
         AbstractComponent::COMP_REQUIREMENTS => [
             "jQuery"
         ],
+		'bootstrap-js' => new JavaScriptPostLoadComponent(
+			'/Public/Skyline-Library/Admin/JavaScript/bootstrap.min.js',
+			'sha384-'.hash_file("sha384", $bootstrapJS),
+			NULL,
+			CompilerContext::getCurrentCompiler()->getRelativeProjectPath($bootstrapJS)
+		),
         "core-js" => new JavaScriptPostLoadComponent(
             "/Public/Skyline-Library/Admin/JavaScript/skyline-core.js",
             'sha384-'.hash_file("sha384", $skylineCoreJS),
