@@ -36,7 +36,7 @@ use Skyline\Navigation\NavigationService;
 use TASoft\Service\Config\AbstractFileConfiguration;
 
 return [
-    'mainNavigation' => [
+    'adminNavigation' => [
         AbstractFileConfiguration::SERVICE_CLASS => NavigationService::class,
         AbstractFileConfiguration::SERVICE_INIT_ARGUMENTS => [
             [
