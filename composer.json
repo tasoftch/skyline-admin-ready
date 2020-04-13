@@ -11,7 +11,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "Skyline\\Admin\\Ready\\" : "src"
+      "Skyline\\Admin\\Ready\\" : "Module/src"
     }
   },
   "require" : {
