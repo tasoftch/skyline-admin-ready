@@ -24,7 +24,6 @@
     "skyline/pdo": "dev-master",
     "skyline/cms-security": "dev-master",
     "skyline/compiler": "dev-master",
-    "skyline/route-annotation-compiler": "dev-master",
     "skyline/component-jquery": "dev-master",
     "skyline-admin/component-css": "dev-master",
     "skyline/modules": "dev-master",
