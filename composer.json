@@ -16,21 +16,21 @@
   },
   "require" : {
     "php": "^7.2",
-    "skyline/core-application": "dev-master",
-    "skyline/html-render": "dev-master",
-    "skyline/component-animation": "dev-master",
+    "skyline-admin/component-css": "dev-master",
     "skyline/api": "dev-master",
-    "skyline/component-api": "dev-master",
-    "skyline/pdo": "dev-master",
     "skyline/cms-security": "dev-master",
     "skyline/compiler": "dev-master",
+    "skyline/component-animation": "dev-master",
+    "skyline/component-api": "dev-master",
     "skyline/component-jquery": "dev-master",
-    "skyline-admin/component-css": "dev-master",
-    "skyline/modules": "dev-master",
+    "skyline/core-application": "dev-master",
     "skyline/direct-components-forwarding": "dev-master",
-    "skyline/translation": "dev-master",
+    "skyline/html-render": "dev-master",
+    "skyline/modules": "dev-master",
     "skyline/navigation": "dev-master",
-    "skyline/pdo-initialisation": "dev-master"
+    "skyline/pdo": "dev-master",
+    "skyline/pdo-initialisation": "^0.8",
+    "skyline/translation": "dev-master"
   },
   "require-dev": {
     "skyline/binary": "dev-master"
