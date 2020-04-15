@@ -29,7 +29,8 @@
     "skyline/modules": "dev-master",
     "skyline/direct-components-forwarding": "dev-master",
     "skyline/translation": "dev-master",
-    "skyline/navigation": "dev-master"
+    "skyline/navigation": "dev-master",
+    "skyline/pdo-initialisation": "dev-master"
   },
   "require-dev": {
     "skyline/binary": "dev-master"
