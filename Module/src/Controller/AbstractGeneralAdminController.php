@@ -34,22 +34,29 @@
 
 namespace Skyline\Admin\Ready\Controller;
 
-/**
- * Main Controller for landing page on Skyline CMS Ready.
- * Displays the dashboard
- *
- * @package Skyline\Admin\Ready\Controller
- *
- * @role SKYLINE.ADMIN
- */
-class DashboardActionController extends AbstractGeneralAdminController
+
+use Skyline\Application\Controller\AbstractActionController;
+use Skyline\CMS\Security\Controller\SecurityActionControllerInterface;
+use Skyline\CMS\Security\SecurityTrait;
+use Skyline\Render\Info\RenderInfoInterface;
+use Skyline\Router\Description\ActionDescriptionInterface;
+
+abstract class AbstractGeneralAdminController extends AbstractActionController implements SecurityActionControllerInterface
 {
-    /**
-     * @route literal /
-     */
-    public function dashboardAction() {
-        $this->renderTemplate("admin-main", [
-            "Content" => 'dashboard'
-        ]);
-    }
+	use SecurityTrait;
+
+
+	public function prepareActionForChallenge(ActionDescriptionInterface $actionDescription, RenderInfoInterface $renderInfo, $challengeInfo)
+	{
+		$uiConf = SkyGetPath("$(/)/UI/config.php");
+
+		if(!$uiConf) {
+
+		}
+
+		$this->setupRenderInfo($renderInfo, function() {
+			$this->renderTitle("Skyline :: Ready :: Identification");
+			$this->renderDescription("Please identify yourself to get access to the Skyline CMS Administration panel.");
+		});
+	}
 }
