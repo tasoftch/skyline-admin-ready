@@ -54,7 +54,7 @@ class DashboardActionController extends AbstractActionController
      * @route literal /
      */
     public function dashboardAction() {
-        $this->renderTemplate("main", [
+        $this->renderTemplate("admin-main", [
             "Content" => 'dashboard'
         ]);
     }
