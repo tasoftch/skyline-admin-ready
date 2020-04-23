@@ -17,7 +17,7 @@
   "require": {
     "php": "^7.2",
     "skyline-admin/component-css": "dev-master",
-    "skyline/api": "",
+    "skyline/api": "^0.8",
     "skyline/cms-security": "dev-master",
     "skyline/compiler": "^0.8",
     "skyline/component-animation": "^3.7",
