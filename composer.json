@@ -1,8 +1,4 @@
 {
-  "name": "skyline-admin/ready",
-  "description": "This is the most easy user interface for a Skyline CMS Application. Everything is already pre configured and you are able to start right away creating your own website.",
-  "license": "BSD-3-Clause",
-  "minimum-stability": "dev",
   "authors": [
     {
       "name": "Thomas Abplanalp",
@@ -11,47 +7,51 @@
   ],
   "autoload": {
     "psr-4": {
-      "Skyline\\Admin\\Ready\\" : "Module/src"
+      "Skyline\\Admin\\Ready\\": "Module/src"
     }
   },
-  "require" : {
+  "description": "This is the most easy user interface for a Skyline CMS Application. Everything is already pre configured and you are able to start right away creating your own website.",
+  "license": "BSD-3-Clause",
+  "minimum-stability": "dev",
+  "name": "skyline-admin/ready",
+  "require": {
     "php": "^7.2",
     "skyline-admin/component-css": "dev-master",
-    "skyline/api": "dev-master",
+    "skyline/api": "",
     "skyline/cms-security": "dev-master",
-    "skyline/compiler": "dev-master",
-    "skyline/component-animation": "dev-master",
-    "skyline/component-api": "dev-master",
-    "skyline/component-jquery": "dev-master",
-    "skyline/core-application": "dev-master",
-    "skyline/direct-components-forwarding": "dev-master",
-    "skyline/html-render": "dev-master",
-    "skyline/modules": "dev-master",
-    "skyline/navigation": "dev-master",
-    "skyline/pdo": "dev-master",
+    "skyline/compiler": "^0.8",
+    "skyline/component-animation": "^3.7",
+    "skyline/component-api": "^0.8",
+    "skyline/component-jquery": "^3.4",
+    "skyline/core-application": "^0.8",
+    "skyline/direct-components-forwarding": "^0.8",
+    "skyline/html-render": "^0.8",
+    "skyline/modules": "^0.8",
+    "skyline/navigation": "^0.8",
+    "skyline/pdo": "^0.9",
     "skyline/pdo-initialisation": "^0.8",
-    "skyline/translation": "dev-master"
+    "skyline/translation": "^0.8"
   },
   "require-dev": {
-    "skyline/binary": "dev-master"
+    "skyline/binary": "^0.8"
   },
   "scripts": {
-  "compile:live": "php vendor/bin/skyline.phar compile --project live-project.xml --no-interaction",
-  "compile": "php vendor/bin/skyline.phar compile --project dev-project.xml --dev --no-interaction --zero ",
-  "post-create-project-cmd": "@compile",
-  "publish:dev": [
-    "composer update",
-    "@compile"
-  ],
-  "publish:test": [
-    "composer update",
-    "php vendor/bin/skyline.phar compile --project live-project.xml --no-interaction --test"
-  ],
-  "publish": [
-    "composer update",
-    "@compile:live",
-    "composer update --no-dev"
-  ],
-  "compile:pdo": "php vendor/bin/skyline.phar compile --project Tests/dev-project.xml --dev --no-interaction --zero --with-pdo"
-}
+    "compile:live": "php vendor/bin/skyline.phar compile --project live-project.xml --no-interaction",
+    "compile": "php vendor/bin/skyline.phar compile --project dev-project.xml --dev --no-interaction --zero ",
+    "post-create-project-cmd": "@compile",
+    "publish:dev": [
+      "composer update",
+      "@compile"
+    ],
+    "publish:test": [
+      "composer update",
+      "php vendor/bin/skyline.phar compile --project live-project.xml --no-interaction --test"
+    ],
+    "publish": [
+      "composer update",
+      "@compile:live",
+      "composer update --no-dev"
+    ],
+    "compile:pdo": "php vendor/bin/skyline.phar compile --project Tests/dev-project.xml --dev --no-interaction --zero --with-pdo"
+  }
 }
