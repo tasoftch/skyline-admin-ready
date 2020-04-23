@@ -17,6 +17,8 @@
   "require": {
     "php": "^7.2",
     "skyline-admin/component-css": "dev-master",
+    "skyline-admin/pdo-initialisation": "^0.8",
+
     "skyline/api": "^0.8",
     "skyline/cms-security": "dev-master",
     "skyline/compiler": "^0.8",
@@ -29,7 +31,7 @@
     "skyline/modules": "^0.8",
     "skyline/navigation": "^0.8",
     "skyline/pdo": "^0.9",
-    "skyline/pdo-initialisation": "^0.8",
+
     "skyline/translation": "^0.8"
   },
   "require-dev": {
