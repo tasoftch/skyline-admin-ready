@@ -33,27 +33,186 @@
  */
 
 use Skyline\Render\Context\DefaultRenderContext;
+use TASoft\Service\ServiceManager;
 
 /**
+ *
  * @var DefaultRenderContext $this
  * @var Generator $DATA_BASES
+ *
+ * @var bool $PDO
+ * @var string $PDO_PROBLEM
  */
+
+$option = function($key, $selected = NULL) use ($PDO) {
+	$selected = $key == $selected ? ' selected': '';
+	echo "<option$selected value='$key'>", $this->translate($key), "</option>";
+};
+
 ?>
-<h1>Configuration</h1>
-<div class="alert alert-danger">
-	Your Skyline CMS Administration panel is not yet ready to use. Please go through the following steps to configure the application.
+<style type="text/css">
+	.btn.action {
+		padding-top: 0.5em;
+		padding-bottom: 0.5em;
+		border-top-left-radius: 5em;
+		border-top-right-radius: 5em;
+		border-bottom-left-radius: 5em;
+		border-bottom-right-radius: 5em;
+		padding-left: 0.5em;
+		padding-right: 0.5em;
+		width: 3.5em;
+		height: 3.5em;
+		text-align: center;
+		vertical-align: center;
+	}
+
+	.md-form {
+		margin-bottom: 2rem;
+	}
+</style>
+<h1><?=$this->translate("Configuration")?></h1>
+<div class="alert alert-primary">
+	<?=$this->translate('Your Skyline CMS Administration panel is not yet ready to use. Please go through the following steps to configure the application.')?>
 </div>
 
 <hr>
 <section class="section">
-	<h3>Database</h3>
-	<p>
-		The Skyline CMS needs a database to store all dynamical data.<br>
-	</p>
+		<div class="card z-depth-0 bordered">
+			<div class="card-header <?=!$PDO["ok"] ? ' alert-danger':''?>">
+				<h5 class="mb-0">
+					<?=$this->translate("Database")?>
+				</h5>
+			</div>
 
-	<form action="" method="post">
-		<?php
+			<div class="card-body container">
+				<div class="row">
+					<div class="col-lg-8">
+						<form action="" method="post">
+							<input type="hidden" name="skyline-config-csrf" value="<?=$CSRF?>">
 
-		?>
-	</form>
+							<div class="md-form">
+								<label for="primary"><?=$this->translate('Primary')?></label>
+								<select class="form-control" id="primary" name="pdo.primary">
+									<?php
+									$option("MySQL", $PDO["primary"]);
+									$option("SQLite", $PDO["primary"]);
+									?>
+								</select>
+							</div>
+
+							<div class="md-form">
+								<label for="secondary"><?=$this->translate('Secondary')?></label>
+								<select class="form-control" id="secondary" name="pdo.secondary">
+									<?php
+									$option("MySQL", $PDO["secondary"]);
+									$option("SQLite", $PDO["secondary"]);
+									?>
+								</select>
+							</div>
+
+							<h3>SQLite</h3>
+
+							<div class="md-form">
+								<label for="sqlite-filename"><?=$this->translate("SQLite Filename")?></label>
+								<input type="text" id="sqlite-filename" name="pdo.sqlite.filename" class="form-control <?=$PDO["sqlite_ok"]?'is-valid':'is-invalid'?>" value="<?=$PDO['sqlite_filename']?>">
+								<div class="invalid-feedback">
+									<?=$this->translate("File does not exist"); ?>
+								</div>
+							</div>
+
+							<h3>MySQL</h3>
+
+							<div class="md-form">
+								<label for="user-name"><?=$this->translate("Username", 'general')?></label>
+								<input type="text" id="user-name" name="pdo.mysql.username" class="form-control <?=$PDO["mysql_ok"]?'is-valid':'is-invalid'?>" value="<?=$PDO["mysql_username"]?>">
+							</div>
+
+							<div class="md-form">
+								<label for="passwd"><?=$this->translate("Password", 'general')?></label>
+								<input type="text" id="passwd" placeholder="<?=$PDO["mysql_pass"]?$this->translate('password entered'):$this->translate('empty password')?>" name="pdo.mysql.password" class="form-control <?=$PDO["mysql_ok"]?'is-valid':'is-invalid'?>" value="">
+								<div class="invalid-feedback">
+									<?=$this->translate("Username and/or password and/or database is not correct.")?>
+								</div>
+							</div>
+
+							<div class="md-form">
+								<label for="mysql_db"><?=$this->translate('DB Name')?></label>
+								<select class="form-control <?=isset($PDO['mysql_db_e'])?'is-invalid':''?>" id="mysql_db" name="pdo.mysql.dataBase">
+									<option value="0"><?=$this->translate("No selection", 'general')?></option>
+									<?php
+									if($dbs = $PDO["mysql_dbs"]) {
+										foreach($dbs as $db) {
+											if($db == $PDO["mysql_db"])
+												echo "<option selected>$db</option>";
+											else
+												echo "<option>$db</option>";
+										}
+									}
+									?>
+								</select>
+								<?php
+								if(isset($PDO['mysql_db_e'])) {
+									?>
+									<div class="invalid-feedback">
+										<?=$PDO['mysql_db_e']?>
+									</div>
+									<?php
+								}
+								?>
+							</div>
+
+							<div class="d-flex justify-content-center align-content-center">
+								<button title="Daten speichern" name="updateDB" class="action btn btn-outline-primary"><i class="fa fa-save fa-2x"></i></button>
+							</div>
+						</form>
+					</div>
+					<div class="col-lg-4 text-muted">
+						<?php
+
+						echo $this->translate("<p>Skyline uses a database to store users, credentials, access control information, contents and more.</p>
+<p>It is designed to choose from two database sources: MySQL and SQLite. If Skyline is not able to connect to the primary source, it will choose the secondary.</p>
+<p>Here you can specify the order and the connection information.</p>
+<p class='text-danger'>The password is never transmitted to this page. So an empty field does not mean no password.</p>");
+
+						echo "<p class='alert-primary p-2 rounded shadow-sm'>";
+						if(!$PDO["instance"])
+							echo $this->translate("No connection to database possible.");
+						else
+							echo $this->translate(get_class($PDO["instance"]));
+						echo "</p>";
+						?>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="card z-depth-0 bordered mt-5">
+			<div class="card-header <?=!$CNT["ok"] ? ' alert-danger':''?>">
+				<h5 class="mb-0">
+					<?=$this->translate("Contents")?>
+				</h5>
+			</div>
+
+			<div class="card-body container">
+				<div class="row">
+					<div class="col-lg-8">
+						<form action="" method="post">
+							<input type="hidden" name="skyline-config-update" value="<?=$CSRF?>">
+
+
+
+							<div class="d-flex justify-content-center align-content-center">
+								<button title="Daten speichern" name="updateName" class="action btn btn-outline-primary"><i class="fa fa-save fa-2x"></i></button>
+							</div>
+						</form>
+					</div>
+					<div class="col-lg-4 text-muted">
+						<?php
+
+						?>
+					</div>
+				</div>
+			</div>
+		</div>
 </section>
