@@ -38,17 +38,7 @@ use TASoft\Service\ServiceManager;
 /**
  *
  * @var DefaultRenderContext $this
- * @var Generator $DATA_BASES
- *
- * @var bool $PDO
- * @var string $PDO_PROBLEM
  */
-
-$option = function($key, $selected = NULL) use ($PDO) {
-	$selected = $key == $selected ? ' selected': '';
-	echo "<option$selected value='$key'>", $this->translate($key), "</option>";
-};
-
 ?>
 <style type="text/css">
 	.btn.action {
@@ -76,143 +66,69 @@ $option = function($key, $selected = NULL) use ($PDO) {
 </div>
 
 <hr>
-<section class="section">
-		<div class="card z-depth-0 bordered">
-			<div class="card-header <?=!$PDO["ok"] ? ' alert-danger':''?>">
-				<h5 class="mb-0">
-					<?=$this->translate("Database")?>
-				</h5>
+
+<div class="row">
+	<div class="col-md-6 mt-3">
+		<div class="card">
+			<h4 class="card-header"><?=$this->translate("Security")?></h4>
+			<div class="card-body">
+				<p>
+					<?= $this->translate('The security system is responsable to grant or deny access to your administration pages or also your website (if needed).<br>
+					There are some settings you need to decide, how Skyline CMS should handle cases.') ?>
+				</p>
+				<span class="badge badge-danger badge-pill"><?= $this->translate('Not yet configured') ?></span>
 			</div>
-
-			<div class="card-body container">
-				<div class="row">
-					<div class="col-lg-8">
-						<form action="" method="post">
-							<input type="hidden" name="skyline-config-csrf" value="<?=$CSRF?>">
-
-							<div class="md-form">
-								<label for="primary"><?=$this->translate('Primary')?></label>
-								<select class="form-control" id="primary" name="pdo.primary">
-									<?php
-									$option("MySQL", $PDO["primary"]);
-									$option("SQLite", $PDO["primary"]);
-									?>
-								</select>
-							</div>
-
-							<div class="md-form">
-								<label for="secondary"><?=$this->translate('Secondary')?></label>
-								<select class="form-control" id="secondary" name="pdo.secondary">
-									<?php
-									$option("MySQL", $PDO["secondary"]);
-									$option("SQLite", $PDO["secondary"]);
-									?>
-								</select>
-							</div>
-
-							<h3>SQLite</h3>
-
-							<div class="md-form">
-								<label for="sqlite-filename"><?=$this->translate("SQLite Filename")?></label>
-								<input type="text" id="sqlite-filename" name="pdo.sqlite.filename" class="form-control <?=$PDO["sqlite_ok"]?'is-valid':'is-invalid'?>" value="<?=$PDO['sqlite_filename']?>">
-								<div class="invalid-feedback">
-									<?=$this->translate("File does not exist"); ?>
-								</div>
-							</div>
-
-							<h3>MySQL</h3>
-
-							<div class="md-form">
-								<label for="user-name"><?=$this->translate("Username", 'general')?></label>
-								<input type="text" id="user-name" name="pdo.mysql.username" class="form-control <?=$PDO["mysql_ok"]?'is-valid':'is-invalid'?>" value="<?=$PDO["mysql_username"]?>">
-							</div>
-
-							<div class="md-form">
-								<label for="passwd"><?=$this->translate("Password", 'general')?></label>
-								<input type="text" id="passwd" placeholder="<?=$PDO["mysql_pass"]?$this->translate('password entered'):$this->translate('empty password')?>" name="pdo.mysql.password" class="form-control <?=$PDO["mysql_ok"]?'is-valid':'is-invalid'?>" value="">
-								<div class="invalid-feedback">
-									<?=$this->translate("Username and/or password and/or database is not correct.")?>
-								</div>
-							</div>
-
-							<div class="md-form">
-								<label for="mysql_db"><?=$this->translate('DB Name')?></label>
-								<select class="form-control <?=isset($PDO['mysql_db_e'])?'is-invalid':''?>" id="mysql_db" name="pdo.mysql.dataBase">
-									<option value="0"><?=$this->translate("No selection", 'general')?></option>
-									<?php
-									if($dbs = $PDO["mysql_dbs"]) {
-										foreach($dbs as $db) {
-											if($db == $PDO["mysql_db"])
-												echo "<option selected>$db</option>";
-											else
-												echo "<option>$db</option>";
-										}
-									}
-									?>
-								</select>
-								<?php
-								if(isset($PDO['mysql_db_e'])) {
-									?>
-									<div class="invalid-feedback">
-										<?=$PDO['mysql_db_e']?>
-									</div>
-									<?php
-								}
-								?>
-							</div>
-
-							<div class="d-flex justify-content-center align-content-center">
-								<button title="Daten speichern" name="updateDB" class="action btn btn-outline-primary"><i class="fa fa-save fa-2x"></i></button>
-							</div>
-						</form>
-					</div>
-					<div class="col-lg-4 text-muted">
-						<?php
-
-						echo $this->translate("<p>Skyline uses a database to store users, credentials, access control information, contents and more.</p>
-<p>It is designed to choose from two database sources: MySQL and SQLite. If Skyline is not able to connect to the primary source, it will choose the secondary.</p>
-<p>Here you can specify the order and the connection information.</p>
-<p class='text-danger'>The password is never transmitted to this page. So an empty field does not mean no password.</p>");
-
-						echo "<p class='alert-primary p-2 rounded shadow-sm'>";
-						if(!$PDO["instance"])
-							echo $this->translate("No connection to database possible.");
-						else
-							echo $this->translate(get_class($PDO["instance"]));
-						echo "</p>";
-						?>
-					</div>
-				</div>
+			<div class="card-footer d-flex justify-content-between">
+				<button class="btn-sm btn btn-primary" onclick="location.href='<?=$this->buildURL('Admin', '/config-security')?>'"><?= $this->translate('Setup') ?></button>
 			</div>
 		</div>
+	</div>
 
-
-		<div class="card z-depth-0 bordered mt-5">
-			<div class="card-header <?=!$CNT["ok"] ? ' alert-danger':''?>">
-				<h5 class="mb-0">
-					<?=$this->translate("Contents")?>
-				</h5>
+	<div class="col-md-6 mt-3">
+		<div class="card">
+			<h4 class="card-header"><?=$this->translate("User System")?></h4>
+			<div class="card-body">
+				<p>
+					<?= $this->translate('With the user system you can switch between two different login systems.<br>
+					There is a simple login system (without database) and a complex.') ?>
+				</p>
+				<span class="badge badge-danger badge-pill"><?= $this->translate('Not yet configured') ?></span>
+				<span class="badge badge-warning badge-pill"><?= $this->translate('Works with current setup') ?></span>
 			</div>
-
-			<div class="card-body container">
-				<div class="row">
-					<div class="col-lg-8">
-						<form action="" method="post">
-							<input type="hidden" name="skyline-config-update" value="<?=$CSRF?>">
-
-
-
-							<div class="d-flex justify-content-center align-content-center">
-								<button title="Daten speichern" name="updateName" class="action btn btn-outline-primary"><i class="fa fa-save fa-2x"></i></button>
-							</div>
-						</form>
-					</div>
-					<div class="col-lg-4 text-muted">
-						<?php
-
-						?>
-					</div>
-				</div>
+			<div class="card-footer d-flex justify-content-between">
+				<button class="btn-sm btn btn-primary" onclick="location.href='<?=$this->buildURL('Admin', '/config-user-system')?>'"><?= $this->translate('Setup') ?></button>
 			</div>
 		</div>
-</section>
+	</div>
+
+	<div class="col-md-6 mt-3">
+		<div class="card">
+			<h4 class="card-header"><?=$this->translate("Database")?></h4>
+			<div class="card-body">
+				<p>
+					<?= $this->translate('Probably your application requires a database access. If you choose the complex user system, then Skyline CMS requires access to a database as well.<br>
+					You can specify a primary database and a fallback database, if the primary does not work.') ?>
+				</p>
+				<span class="badge badge-danger badge-pill"><?= $this->translate('Not configured') ?></span>
+			</div>
+			<div class="card-footer d-flex justify-content-between">
+				<button class="btn-sm btn btn-primary" onclick="location.href='<?=$this->buildURL('Admin', '/config-data-base')?>'"><?= $this->translate('Setup') ?></button>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6 mt-3">
+		<div class="card">
+			<h4 class="card-header"><?=$this->translate("Your Project")?></h4>
+			<div class="card-body">
+				<p>
+					<?= $this->translate('If all works fine, you need to provide Skyline CMS some information about your website for correct delivery.') ?>
+				</p>
+				<span class="badge badge-danger badge-pill"><?= $this->translate('Not configured') ?></span>
+			</div>
+			<div class="card-footer d-flex justify-content-between">
+				<button class="btn-sm btn btn-primary" onclick="location.href='<?=$this->buildURL('Admin', '/config-project')?>'"><?= $this->translate('Setup') ?></button>
+			</div>
+		</div>
+	</div>
+</div>
