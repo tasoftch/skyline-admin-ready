@@ -34,7 +34,6 @@
 
 use Skyline\Compiler\CompilerContext;
 use Skyline\Component\Config\AbstractComponent;
-use Skyline\Component\Config\CSSComponent;
 use Skyline\Component\Config\IconComponent;
 use Skyline\Component\Config\JavaScriptPostLoadComponent;
 use Skyline\Component\Config\OpenDirectoryComponent;
@@ -67,9 +66,6 @@ return [
             'sha384-'.hash_file("sha384", $skylineCoreJS),
             NULL,
             CompilerContext::getCurrentCompiler()->getRelativeProjectPath($skylineCoreJS))
-    ],
-    "FontAwesome" => [
-        'css' => new CSSComponent("https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css", 'all', "sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"),
     ],
     new OpenDirectoryComponent(
         '/Skyline-Library/Admin',

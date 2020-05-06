@@ -32,26 +32,7 @@
  *
  */
 
-use Skyline\CMS\Security\Authentication\AuthenticationServiceFactory;
-use Skyline\CMS\Security\Identity\IdentityServiceFactory;
-use Skyline\Security\Encoder\MessageDigestPasswordEncoder;
 
 return [
-	'security.identity.order' => [
-		// By default, the Skyline Admin only allows direct login with HTTP Form or its session
-		// Add further to customize
-		IdentityServiceFactory::PROVIDER_NAME_HTTP_POST,
-		IdentityServiceFactory::PROVIDER_NAME_SESSION
-	],
-	"security.password-encoders.enabled" => [
-		// Include one of the strong password encoders
 
-		MessageDigestPasswordEncoder::class
-	],
-
-	"security.validators.enabled" => [
-		AuthenticationServiceFactory::VALIDATOR_CLIENT_BRUTE_FORCE,
-		AuthenticationServiceFactory::VALIDATOR_AUTO_LOGOUT,
-		AuthenticationServiceFactory::VALIDATOR_PERMISSION_CHANGED
-	],
 ];

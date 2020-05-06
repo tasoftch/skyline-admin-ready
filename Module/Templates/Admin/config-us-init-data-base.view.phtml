@@ -1,0 +1,176 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\Render\Context\DefaultRenderContext;
+use TASoft\Service\ServiceManager;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var int $PROBLEM
+ * @var array $PDO
+ */
+?>
+<style type="text/css">
+
+</style>
+
+<?=$BREAD?>
+
+<h1><?=$this->translate("Init Database")?></h1>
+<div class="alert alert-primary">
+	<?= $this->translate('This assistant will guide you through the steps to initialize your selected database for the Skyline CMS\'s multiple user system.') ?>
+</div>
+
+<hr>
+
+<div class="card">
+	<h4 class="card-header"><?= $this->translate('Root User') ?></h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+				<ul class="list-group">
+					<li class="list-group-item d-flex justify-content-between">
+						<strong>Service</strong>
+						<em><?=$PDO["service"]?></em>
+					</li>
+					<li class="list-group-item d-flex justify-content-between list-group-item-<?=$PDO["ok"]?'success':'danger'?>">
+						<strong>Driver</strong>
+						<em><?=$PDO["driver"]?></em>
+					</li>
+				</ul>
+
+				<?php
+				if($PDO["ok"]) {
+					?>
+					<div class="alert alert-success mb-4">
+						Skyline CMS will run the SQL file located at:<br>
+						<code>vendor/skyline-admin/pdo-initialisation/SQL/User-System/create.<?=$PDO["driver"]?>.sql</code>
+					</div>
+					<?php
+				} else {
+					?>
+					<div class="alert alert-danger mb-4">
+						We're very sorry, but Skyline CMS does not support an initialisation sql script for your required database server.
+					</div>
+					<?php
+				}
+				?>
+
+				<div class="form-group row">
+					<label for="username" class="col-md-2 col-form-label">Username</label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-user"></i></span>
+							</div>
+							<input type="text" class="form-control<?php
+							switch ($PROBLEM) {
+								case 1: echo " is-invalid"; break;
+								case 0: break;
+								default: echo " is-valid";
+							}
+							?>" id="username" name="username" value="<?=htmlspecialchars($ROOT_USER["name"])?>">
+							<div class="invalid-feedback ml-5">
+								Username must not be empty.
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="password" class="col-md-2 col-form-label">Password</label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-key"></i></span>
+							</div>
+							<input type="password" class="form-control<?php
+							switch ($PROBLEM) {
+								case 2: echo " is-invalid"; break;
+								case 0: break;
+								default: echo " is-valid";
+							}
+							?>" id="password" name="password" value="">
+							<div class="invalid-feedback ml-5">
+								Passwort must not be empty.
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="passwordv" class="col-md-2 col-form-label">Verify</label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-key"></i></span>
+							</div>
+							<input type="password" class="form-control<?php
+							switch ($PROBLEM) {
+								case 3: echo " is-invalid"; break;
+								case 0: break;
+								default: echo " is-valid";
+							}
+							?>" id="passwordv" name="passwordv" value="">
+							<div class="invalid-feedback ml-5">
+								Password not verified. There is probaply a typo.
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<?php
+				if($PDO["ok"]) {
+					?>
+					<div class="form-group">
+						<button name="init-db" class="btn btn-outline-primary"><?= $this->translate('Initialize Now') ?></button>
+					</div>
+					<?php
+				}
+				?>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<p>
+				You must declare a root user here to be able to login to Skyline CMS as this user.
+			</p>
+			<p class="alert alert-danger">
+				Skyline CMS allows here any password except an empty one! Please use a secure password!
+			</p>
+		</div>
+	</div>
+</div>

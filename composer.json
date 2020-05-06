@@ -16,17 +16,20 @@
   "name": "skyline-admin/ready",
   "require": {
     "php": "^7.2",
-    "skyline-admin/component-css": "dev-master",
-    "skyline-admin/pdo-initialisation": "^0.8",
 
-    "skyline/api": "^0.8",
-    "skyline/cms-security": "dev-master",
-    "skyline/compiler": "^0.8",
+    "skyline-admin/component-css": "dev-master",
     "skyline/component-animation": "^3.7",
-    "skyline/component-api": "^0.8",
     "skyline/component-jquery": "^3.4",
-    "skyline/core-application": "^0.8",
+    "skyline/component-bootstrap": "^4.3",
     "skyline/direct-components-forwarding": "^0.8",
+
+    "skyline-admin/pdo-initialisation": "^0.8",
+    "skyline-admin/tools": "^0.8",
+
+    "skyline/cms-security": "^0.8",
+    "skyline/compiler": "^0.8",
+
+    "skyline/core-application": "^0.8",
     "skyline/html-render": "^0.8",
     "skyline/modules": "^0.8",
     "skyline/navigation": "^0.8",

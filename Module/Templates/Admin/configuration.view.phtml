@@ -32,34 +32,22 @@
  *
  */
 
+use Skyline\HTML\Bootstrap\Breadcrumb;
 use Skyline\Render\Context\DefaultRenderContext;
-use TASoft\Service\ServiceManager;
 
 /**
  *
  * @var DefaultRenderContext $this
+ * @var Breadcrumb $BREAD
+ * @var int $security
  */
 ?>
 <style type="text/css">
-	.btn.action {
-		padding-top: 0.5em;
-		padding-bottom: 0.5em;
-		border-top-left-radius: 5em;
-		border-top-right-radius: 5em;
-		border-bottom-left-radius: 5em;
-		border-bottom-right-radius: 5em;
-		padding-left: 0.5em;
-		padding-right: 0.5em;
-		width: 3.5em;
-		height: 3.5em;
-		text-align: center;
-		vertical-align: center;
-	}
 
-	.md-form {
-		margin-bottom: 2rem;
-	}
 </style>
+
+<?=$BREAD?>
+
 <h1><?=$this->translate("Configuration")?></h1>
 <div class="alert alert-primary">
 	<?=$this->translate('Your Skyline CMS Administration panel is not yet ready to use. Please go through the following steps to configure the application.')?>
@@ -76,7 +64,14 @@ use TASoft\Service\ServiceManager;
 					<?= $this->translate('The security system is responsable to grant or deny access to your administration pages or also your website (if needed).<br>
 					There are some settings you need to decide, how Skyline CMS should handle cases.') ?>
 				</p>
-				<span class="badge badge-danger badge-pill"><?= $this->translate('Not yet configured') ?></span>
+				<?php
+				if($security == 0 || $security & 2 || $security & 8)
+					echo " <span class=\"badge badge-success badge-pill\">", $this->translate('Configured'), "</span>";
+				if($security & 1 || $security & 4)
+					echo " <span class=\"badge badge-danger badge-pill\">", $this->translate('Not Configured'), "</span>";
+				if($security & 2 || $security & 8)
+					echo " <span class=\"badge badge-warning badge-pill\">", $this->translate('Development'), "</span>";
+				?>
 			</div>
 			<div class="card-footer d-flex justify-content-between">
 				<button class="btn-sm btn btn-primary" onclick="location.href='<?=$this->buildURL('Admin', '/config-security')?>'"><?= $this->translate('Setup') ?></button>
@@ -109,7 +104,19 @@ use TASoft\Service\ServiceManager;
 					<?= $this->translate('Probably your application requires a database access. If you choose the complex user system, then Skyline CMS requires access to a database as well.<br>
 					You can specify a primary database and a fallback database, if the primary does not work.') ?>
 				</p>
-				<span class="badge badge-danger badge-pill"><?= $this->translate('Not configured') ?></span>
+				<?php
+				/**
+				 * @var string|int $data_base
+				 */
+
+				if($data_base === 0)
+					echo "<span class=\"badge badge-danger badge-pill\">", $this->translate('Not configured'), "</span>";
+				elseif($data_base === -1)
+					echo "<span class=\"badge badge-danger badge-pill\">", $this->translate('No Service'), "</span>";
+				else
+					echo "<span class=\"badge badge-success badge-pill\">", $this->translate("Configured"), " ($data_base)</span>";
+
+				?>
 			</div>
 			<div class="card-footer d-flex justify-content-between">
 				<button class="btn-sm btn btn-primary" onclick="location.href='<?=$this->buildURL('Admin', '/config-data-base')?>'"><?= $this->translate('Setup') ?></button>

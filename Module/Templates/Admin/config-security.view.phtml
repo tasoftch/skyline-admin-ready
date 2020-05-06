@@ -1,0 +1,361 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\Render\Context\DefaultRenderContext;
+use TASoft\Service\ServiceManager;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var array $ENCODERS
+ * @var int|string $PROBLEM
+ * @var array $PROVIDERS
+ */
+
+$recommended = $this->translate('(recommended)');
+$optional = $this->translate('(optional)');
+$devOnly = $this->translate('(dev only!)');
+?>
+<style type="text/css">
+
+</style>
+
+<?=$BREAD?>
+
+<h1><?=$this->translate("Security")?></h1>
+<div class="alert alert-primary">
+	<?= $this->translate('The security system is responsable to grant or deny access to your administration pages or also your website (if needed).<br>
+					There are some settings you need to decide, how Skyline CMS should handle cases.') ?>
+</div>
+
+<hr>
+
+<div class="card">
+	<h4 class="card-header"><?= $this->translate('Password Encryption') ?></h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$ENCODERS['encoders'] & 1 ? 'checked':''?> name="encoder[]" value="1" aria-label="<?= $enableDisable = $this->translate('Enable or disable password encoder') ?>" title="<?=$enableDisable?>">
+							</div>
+							<div class="input-group-text">
+								<input type="radio" <?=$ENCODERS['main'] == 1 ? 'checked':''?> name="main" value="1" class="is-invalid" aria-label="<?= $markEncoder = $this->translate('Mark this encoder as main encoder') ?>" title="<?=$markEncoder?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Message Digest') ?>" aria-describedby="md-help" aria-label="<?= $text = $this->translate('The message digest encryption') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $recommended ?></span>
+						</div>
+					</div>
+					<small id="md-help" class="form-text text-muted"><?= $this->translate('The Message Digest encryption is a very common encryption method.') ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$ENCODERS['encoders'] & 2 ? 'checked':''?> name="encoder[]" value="2" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+							</div>
+							<div class="input-group-text">
+								<input type="radio" <?=$ENCODERS['main'] == 2 ? 'checked':''?> name="main" value="2" aria-label="<?=$markEncoder?>" title="<?=$markEncoder?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('BCrypt') ?>" aria-describedby="bc-help" aria-label="<?= $text = $this->translate('The bcryt encryption') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $optional ?></span>
+						</div>
+					</div>
+					<small id="bc-help" class="form-text text-muted"><?= $this->translate('The bcrypt is special designed for password encryption') ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$ENCODERS['encoders'] & 4 ? 'checked':''?> name="encoder[]" value="4" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+							</div>
+							<div class="input-group-text">
+								<input type="radio" <?=$ENCODERS['main'] == 4 ? 'checked':''?> name="main" value="4" aria-label="<?=$markEncoder?>" title="<?=$markEncoder?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('HTTP Digest A1') ?>" aria-describedby="a1-help" aria-label="<?= $text = $this->translate('The builtin http digest encryption') ?>" title="<?=$text?>">
+						<input type="text" class="form-control" value="<?=htmlspecialchars($ENCODERS['realm'])?>" name="realm" placeholder="<?= $this->translate('Realm') ?>" aria-label="<?= $text = $this->translate('The realm of your Application.') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $optional ?></span>
+						</div>
+					</div>
+					<small id="a1-help" class="form-text text-muted"><?= $this->translate('If you want to identify your client by the default http mechanism, then you should enable the A1 encryption and also mark it as main encoder.') ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$ENCODERS['encoders'] & 8 ? 'checked':''?> name="encoder[]" value="8" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+							</div>
+							<div class="input-group-text">
+								<input type="radio" <?=$ENCODERS['main'] == 8 ? 'checked':''?> name="main" value="8" aria-label="<?=$markEncoder?>" title="<?=$markEncoder?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Plaintext With Salt') ?>" aria-describedby="ps-help" aria-label="<?= $text = $this->translate('Plaintext With Salt') ?>" title="<?=$text?>">
+						<input type="text" class="form-control" value="<?=htmlspecialchars($ENCODERS['salt'])?>" name="salt" placeholder="<?= $this->translate('Salt') ?>" aria-label="<?= $text = $this->translate('A salt string to make difference beteen applications') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $devOnly ?></span>
+						</div>
+					</div>
+					<small id="ps-help" class="form-text text-muted"><?= $this->translate('This encoder appends the salt to the plain password to distinguish between diffent applications with same credentials.') ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$ENCODERS['encoders'] & 16 ? 'checked':''?> name="encoder[]" value="16" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+							</div>
+							<div class="input-group-text">
+								<input type="radio" <?=$ENCODERS['main'] == 16 ? 'checked':''?> name="main" value="16" aria-label="<?=$markEncoder?>" title="<?=$markEncoder?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Plaintext') ?>" aria-describedby="p-help" aria-label="<?= $text = $this->translate('Plaintext') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $devOnly ?></span>
+						</div>
+					</div>
+					<small id="p-help" class="form-text text-muted"><?= $this->translate('This encoder does not encrypt any password.') ?></small>
+				</div>
+
+				<div class="form-group">
+					<button class="btn btn-outline-primary" name="apply-encryption">Save</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<p>
+				Here you specify the password encryption order.
+			</p>
+			<p class="alert alert-danger">
+				Skyline CMS never stores plain passwords in production!<br>
+				If you don't disable those encoders, then a login might fail.
+			</p>
+			<p>
+				The encryption order means, that a password may be stored in one of the enabled encryption.<br>
+				On login, Skyline CMS tries to verify the password by the given encryption order.
+			</p>
+			<p>
+				If you create a new user or assuming you allow new membership, then Skyline CMS will encode a new password using the encoder marked as main encoder.
+			</p>
+			<p>
+				To reset an entered value, type <code>@default</code>.
+			</p>
+		</div>
+	</div>
+</div>
+
+
+<div class="card mt-5">
+	<h4 class="card-header"><?= $this->translate('Identity') ?></h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$PROVIDERS['providers'] & 1 ? 'checked' : ''?> name="identity[]" value="1" aria-label="<?= $enableDisable = $this->translate('Enable or disable identity provider') ?>" title="<?=$enableDisable?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('HTML Form Data Provider') ?>" aria-describedby="frm-help" aria-label="<?= $text = $this->translate('Reads a HTML Form request to obtain username and password.') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $recommended ?></span>
+						</div>
+					</div>
+					<small id="frm-help" class="form-text text-muted"><?= $text ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$PROVIDERS['providers'] & 2 ? 'checked' : ''?> name="identity[]" value="2" aria-label="<?= $enableDisable  ?>" title="<?=$enableDisable?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Session') ?>" aria-describedby="sess-help" aria-label="<?= $text = $this->translate('If the login was successful, the credentials are stored in the session. The session finishes when the client close his browser.') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $recommended ?></span>
+						</div>
+					</div>
+					<small id="sess-help" class="form-text text-muted"><?= $text ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$PROVIDERS['providers'] & 4 ? 'checked' : ''?> name="identity[]" value="4" aria-label="<?= $enableDisable  ?>" title="<?=$enableDisable?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Remember Me') ?>" aria-describedby="rem-help" aria-label="<?= $text = $this->translate('Again, if the login was successful, the credentials are stored in a remember me token. This is longer valid. See the security settings later in your application.') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $optional ?></span>
+						</div>
+					</div>
+					<small id="rem-help" class="form-text text-muted"><?= $text ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$PROVIDERS['providers'] & 8 ? 'checked' : ''?> name="identity[]" value="8" aria-label="<?= $enableDisable  ?>" title="<?=$enableDisable?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('HTTP Digest') ?>" aria-describedby="dig-help" aria-label="<?= $desc = $this->translate('Challenge the client by the builtin http authentication method digest. If you choose this, you should also choose the http digest A1 password encoder.') ?>" title="<?=$desc?>">
+						<input type="text" class="form-control" value="<?=htmlspecialchars($ENCODERS['realm'])?>" name="realm-digest" placeholder="<?= $this->translate('Realm') ?>" aria-label="<?= $text = $this->translate('The realm of your Application.') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $optional ?></span>
+						</div>
+					</div>
+					<small id="dig-help" class="form-text text-muted"><?= $desc ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$PROVIDERS['providers'] & 16 ? 'checked' : ''?> name="identity[]" value="16" aria-label="<?= $enableDisable  ?>" title="<?=$enableDisable?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('HTTP Basic') ?>" aria-describedby="bas-help" aria-label="<?= $desc = $this->translate('Challenge the client by the builtin http authentication method basic. This requires the plaintext password encoder and is only allowed in develompent') ?>" title="<?=$desc?>">
+						<input type="text" class="form-control" value="<?=htmlspecialchars($PROVIDERS['realm'])?>" name="realm-basic" placeholder="<?= $this->translate('Realm') ?>" aria-label="<?= $text = $this->translate('The realm of your Application.') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $devOnly ?></span>
+						</div>
+					</div>
+					<small id="bas-help" class="form-text text-muted"><?= $desc ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$PROVIDERS['providers'] & 32 ? 'checked' : ''?> name="identity[]" value="32" aria-label="<?= $enableDisable  ?>" title="<?=$enableDisable?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Anonymous') ?>" aria-describedby="ano-help" aria-label="<?= $desc = $this->translate('Creates an anonymous identity for each client without username and password. But a client has always the same identity.') ?>" title="<?=$desc?>">
+						<input type="text" class="form-control" value="<?=htmlspecialchars($PROVIDERS['anonymous'])?>" name="anonymous-user" placeholder="<?= $this->translate('Anonymous Username') ?>" aria-label="<?= $text = $this->translate('The realm of your Application.') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $optional ?></span>
+						</div>
+					</div>
+					<small id="ano-help" class="form-text text-muted"><?= $desc ?></small>
+				</div>
+
+				<div class="form-group">
+					<button name="apply-identity" class="btn btn-outline-primary">Save</button>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<p>
+				Identity providers tell Skyline CMS how to obtain and challenge a client for its identity.
+			</p>
+		</div>
+	</div>
+</div>
+
+<?php
+
+if(is_string($PROBLEM )) {
+	?>
+	<div class="modal banner fade" id="modal-failed" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+		<div class="modal-dialog success" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-danger text-white">
+					<h4 class="modal-title text-center">Settings Not Updated</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="white-text">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="text-center">
+						<i class="fa fa-times fa-4x text-danger animated rotateIn mb-3"></i>
+						<p>
+							<?=$PROBLEM?>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="application/javascript">
+        $(function() {
+            $("#modal-failed").modal("show");
+        });
+	</script>
+	<?php
+} elseif($_SESSION["updated"] ?? false) {
+	unset($_SESSION["updated"]);
+	?>
+	<div class="modal banner fade" id="modal-success" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+		<div class="modal-dialog success" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<h4 class="modal-title text-center" id="modal-success-title">Settings Updated</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="white-text">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="text-center">
+						<i class="fa fa-check fa-4x text-success animated rotateIn mb-3"></i>
+						<p>
+							The changed settings were updated successfully.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="application/javascript">
+		$(function() {
+			$("#modal-success").modal("show");
+		});
+	</script>
+	<?php
+}

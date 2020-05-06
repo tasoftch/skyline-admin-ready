@@ -38,8 +38,12 @@ namespace Skyline\Admin\Ready\Controller;
 use Skyline\Application\Controller\AbstractActionController;
 use Skyline\CMS\Security\Controller\SecurityActionControllerInterface;
 use Skyline\CMS\Security\SecurityTrait;
+use Skyline\Kernel\Exception\SkylineKernelDetailedException;
 use Skyline\Render\Info\RenderInfoInterface;
 use Skyline\Router\Description\ActionDescriptionInterface;
+use Skyline\Security\CSRF\CSRFToken;
+use Skyline\Security\CSRF\CSRFTokenManager;
+use Skyline\Translation\TranslationManager;
 
 abstract class AbstractGeneralAdminController extends AbstractActionController implements SecurityActionControllerInterface
 {
@@ -59,5 +63,20 @@ abstract class AbstractGeneralAdminController extends AbstractActionController i
 			$this->renderTitle("Skyline :: Ready :: Identification");
 			$this->renderDescription("Please identify yourself to get access to the Skyline CMS Administration panel.");
 		});
+	}
+
+	protected function verifyCSRF() {
+		/** @var CSRFTokenManager $csrf */
+		$csrf = $this->CSRFManager;
+
+		$token = new CSRFToken('skyline-admin-csrf', $_POST['skyline-admin-csrf'] ?? "");
+		if(!$csrf->isTokenValid($token)) {
+			/** @var TranslationManager $tm */
+			$tm = $this->translationManager;
+
+			$e = new SkylineKernelDetailedException($tm->translateGlobal("CSRF Token Missmatch"), 403);
+			$e->setDetails($tm->translateGlobal("The request is not valid because of the csrf token"));
+			throw $e;
+		}
 	}
 }

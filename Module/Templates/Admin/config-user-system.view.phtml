@@ -1,0 +1,276 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\Render\Context\DefaultRenderContext;
+use TASoft\Service\ServiceManager;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var int|string $PROBLEM
+ * @var array $INIT_USER
+ */
+?>
+<style type="text/css">
+
+</style>
+
+<?=$BREAD?>
+
+<h1><?=$this->translate("User System")?></h1>
+<div class="alert alert-primary">
+	<?= $this->translate('With the user system you can switch between two different login systems.<br>
+					There is a simple login system (without database) and a complex.') ?>
+</div>
+
+<hr>
+
+<div class="card">
+	<h4 class="card-header <?=($prio = $INIT_USER['enabled'])!==false?'alert-success':''?>">
+		<?php
+		echo $this->translate('Single User System');
+		if($prio !== false)
+			echo "<span class='float-right badge badge-pill badge-success'>", $this->translate('Priority'), " ", $prio +1, '</span>';
+		?>
+	</h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+				<div class="form-group row">
+					<label for="username" class="col-md-2 col-form-label">Username</label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-user"></i></span>
+							</div>
+							<input type="text" class="form-control" id="username" name="username" value="<?=htmlspecialchars($INIT_USER["name"])?>">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="password" class="col-md-2 col-form-label">Password</label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-key"></i></span>
+							</div>
+							<input type="password" class="form-control" placeholder="<?=$pwd = $INIT_USER['pwd'] ? $this->translate('Password exists') : $this->translate('No password!') ?>" id="password" name="password" value="">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="passwordv" class="col-md-2 col-form-label">Verify</label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-key"></i></span>
+							</div>
+							<input type="password" class="form-control" id="passwordv" placeholder="<?=$pwd?>" name="passwordv" value="">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<button name="apply-initial" class="btn btn-outline-primary"><?= $this->translate('Save') ?></button>
+					<?php
+					if($INIT_USER['enabled'] !== false)
+						echo "<button name=\"disable-initial\" class=\"btn btn-outline-danger\">", $this->translate('Deactivate'), "</button>";
+					else
+						echo "<button name=\"enable-initial\" class=\"btn btn-outline-success\">", $this->translate('Activate'), "</button>";
+					?>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<p>
+				The single user system only allows one user. The username and its credentials must be declared here and are saved in the parameters.addon.config.php file.
+			</p>
+			<p class="alert alert-danger">
+				Please note, that Skyline CMS never transmits passwords to this page. You get a hint, if a password was set or not.
+			</p>
+		</div>
+	</div>
+</div>
+
+	<div class="card mt-5">
+		<h4 class="card-header <?=($prio = $MUL_USER['enabled'])!==false?'alert-success':''?>">
+			<?php
+			echo $this->translate('Multiple User System');
+			if($prio !== false)
+				echo "<span class='float-right badge badge-pill badge-success'>", $this->translate('Priority'), " ", $prio +1, '</span>';
+			?>
+		</h4>
+		<div class="card-body row">
+			<div class="col-lg-8">
+				<form action="" method="post">
+					<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+					<?php
+					/**
+					 * @var array $MUL_USER
+					 */
+
+					if(!$MUL_USER["service"]) {
+						?>
+						<div class="alert alert-warning">
+							<h4 class="alert-heading">Warning</h4>
+							<p>
+								To enable the multiple user system you need to configure the data base first.
+							</p>
+						</div>
+						<?php
+					} else {
+						?>
+					<ul class="list-group mb-4">
+						<li class="list-group-item list-group-item-success d-flex justify-content-between">
+							<strong>Selected Database</strong>
+							<em><?=$MUL_USER["service"]?></em>
+						</li>
+						<li class="list-group-item d-flex justify-content-between">
+							<strong>Users</strong>
+							<em><?=($users = $MUL_USER["usersCount"]) >= 0 ? $users : '-.-'?></em>
+						</li>
+						<li class="list-group-item d-flex justify-content-between">
+							<strong>Groups</strong>
+							<em><?=($users = $MUL_USER["groupsCount"]) >= 0 ? $users : '-.-'?></em>
+						</li>
+						<li class="list-group-item d-flex justify-content-between">
+							<strong>Roles</strong>
+							<em><?=($users = $MUL_USER["rolesCount"]) >= 0 ? $users : '-.-'?></em>
+						</li>
+					</ul>
+						<?php
+
+						if($users == -1) {
+							?>
+							<div class="alert alert-danger">
+								<h5 class="alert-heading">Initialisation</h5>
+								The selected database is not yet initialized to use as multiple user system.<br>
+								Please press the "Initialize" button.
+							</div>
+							<?php
+						}
+					}
+					?>
+
+
+					<div class="form-group">
+						<?php
+						$disabled = $MUL_USER["service"] ? '' : 'disabled';
+						if($MUL_USER["enabled"] !== false)
+							echo "<button name=\"disable-db\" class=\"btn btn-outline-danger\">", $this->translate('Deactivate'), "</button>";
+						else
+							echo "<button name=\"enable-db\" class=\"btn btn-outline-success\" $disabled>", $this->translate('Activate'), "</button>";
+
+						if(isset($users)) {
+							if($users == -1)
+								echo "<button name=\"initialize-db\" class=\"btn btn-outline-primary ml-5\" $disabled>", $this->translate('Initialize'), "</button>";
+							else
+								echo "<button onclick=\"return confirm('Do you really want to delete the current User System? This action will remove all stored user information immediately and can not be undone!');\" name=\"delete-db\" class=\"btn btn-outline-danger ml-2\" $disabled>", $this->translate('Delete User System'), "</button>";
+						}
+						?>
+					</div>
+				</form>
+			</div>
+			<div class="col-lg-4">
+				<p>
+					The nultiple user system allows many users. You can assign groups and roles to grant and deny very specific actions.
+				</p>
+			</div>
+		</div>
+	</div>
+
+<?php
+
+if(is_string($PROBLEM )) {
+	?>
+	<div class="modal banner fade" id="modal-failed" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+		<div class="modal-dialog success" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-danger text-white">
+					<h4 class="modal-title text-center">Settings Not Updated</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="white-text">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="text-center">
+						<i class="fa fa-times fa-4x text-danger animated rotateIn mb-3"></i>
+						<p>
+							<?=$PROBLEM?>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="application/javascript">
+        $(function() {
+            $("#modal-failed").modal("show");
+        });
+	</script>
+	<?php
+} elseif($_SESSION["updated"] ?? false) {
+	unset($_SESSION["updated"]);
+	?>
+	<div class="modal banner fade" id="modal-success" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+		<div class="modal-dialog success" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<h4 class="modal-title text-center" id="modal-success-title">Settings Updated</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="white-text">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="text-center">
+						<i class="fa fa-check fa-4x text-success animated rotateIn mb-3"></i>
+						<p>
+							The changed settings were updated successfully.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="application/javascript">
+		$(function() {
+			$("#modal-success").modal("show");
+		});
+	</script>
+	<?php
+}

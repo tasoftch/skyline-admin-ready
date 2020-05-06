@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1abca4cd767b8b3ab726e35dc7f5cf1",
+    "content-hash": "1148141662b28e361b135105ed4d9062",
     "packages": [
         {
             "name": "skyline-admin/component-css",
@@ -43,38 +43,62 @@
             "time": "2019-11-02T10:26:17+00:00"
         },
         {
-            "name": "skyline/api",
-            "version": "dev-master",
+            "name": "skyline-admin/pdo-initialisation",
+            "version": "v0.8.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tasoftch/skyline-api.git",
-                "reference": "8f233dd1afd709ba714d1406ca697c3b1d9676f0"
+                "url": "https://github.com/tasoftch/skyline-pdo-initialisation.git",
+                "reference": "f33285db074755585cf7a8c865f828f230d06f0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-api/zipball/8f233dd1afd709ba714d1406ca697c3b1d9676f0",
-                "reference": "8f233dd1afd709ba714d1406ca697c3b1d9676f0",
+                "url": "https://api.github.com/repos/tasoftch/skyline-pdo-initialisation/zipball/f33285db074755585cf7a8c865f828f230d06f0e",
+                "reference": "f33285db074755585cf7a8c865f828f230d06f0e",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Abplanalp",
+                    "email": "info@tasoft.ch"
+                }
+            ],
+            "time": "2020-04-23T14:27:35+00:00"
+        },
+        {
+            "name": "skyline-admin/tools",
+            "version": "v0.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tasoftch/skyline-admin-tools.git",
+                "reference": "cfb5c72c7004455b6ffb11c0965b236bf16ee47a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tasoftch/skyline-admin-tools/zipball/cfb5c72c7004455b6ffb11c0965b236bf16ee47a",
+                "reference": "cfb5c72c7004455b6ffb11c0965b236bf16ee47a",
                 "shasum": ""
             },
             "require": {
-                "ext-dom": "*",
-                "ext-json": "*",
-                "ext-simplexml": "*",
+                "ext-pdo": "*",
                 "php": "^7.2",
-                "skyline/core-application": "dev-master",
-                "symfony/http-foundation": "dev-master"
+                "skyline/cms-security": "^0.8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6"
             },
-            "suggest": {
-                "ext-simplexml": "To enable "
-            },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Skyline\\API\\": "src"
-                }
+                    "Skyline\\Admin\\Tool\\": "src"
+                },
+                "files": [
+                    "Constants.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -86,35 +110,34 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "description": "The Skyline API package provides an action controller to manager api requests",
-            "time": "2020-02-09T09:22:45+00:00"
+            "time": "2020-05-06T12:06:35+00:00"
         },
         {
             "name": "skyline/cms-security",
-            "version": "dev-master",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-cms-security.git",
-                "reference": "5c02748c4f4ccec5b6c296a9ca6b25c73e47cb96"
+                "reference": "97ddefe4e458aaefe019684d15494584f290aee0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-cms-security/zipball/5c02748c4f4ccec5b6c296a9ca6b25c73e47cb96",
-                "reference": "5c02748c4f4ccec5b6c296a9ca6b25c73e47cb96",
+                "url": "https://api.github.com/repos/tasoftch/skyline-cms-security/zipball/97ddefe4e458aaefe019684d15494584f290aee0",
+                "reference": "97ddefe4e458aaefe019684d15494584f290aee0",
                 "shasum": ""
             },
             "require": {
                 "ext-openssl": "*",
                 "php": "^7.2",
-                "skyline/core-application": "dev-master",
-                "skyline/pdo": "dev-master",
-                "skyline/security": "dev-master",
-                "tasoft/value-injector": "dev-master"
+                "skyline/core-application": "^0.8",
+                "skyline/pdo": "^0.9",
+                "skyline/security": "^0.8",
+                "tasoft/value-injector": "^1.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6",
-                "skyline/compiler": "dev-master",
-                "skyline/exposed-symbols": "dev-master"
+                "skyline/compiler": "^0.8",
+                "skyline/exposed-symbols": "^0.8"
             },
             "type": "library",
             "autoload": {
@@ -135,20 +158,20 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-04-15T10:32:25+00:00"
+            "time": "2020-05-06T13:47:23+00:00"
         },
         {
             "name": "skyline/compiler",
-            "version": "dev-master",
+            "version": "v0.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-compiler.git",
-                "reference": "ec6cb2bce693312d5176485950d10c7de8e85cb5"
+                "reference": "fe68d684c4789959a471189c4f90c5a8d7d54df7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-compiler/zipball/ec6cb2bce693312d5176485950d10c7de8e85cb5",
-                "reference": "ec6cb2bce693312d5176485950d10c7de8e85cb5",
+                "url": "https://api.github.com/repos/tasoftch/skyline-compiler/zipball/fe68d684c4789959a471189c4f90c5a8d7d54df7",
+                "reference": "fe68d684c4789959a471189c4f90c5a8d7d54df7",
                 "shasum": ""
             },
             "require": {
@@ -156,15 +179,14 @@
                 "ext-libxml": "*",
                 "ext-simplexml": "*",
                 "php": "^7.2",
-                "skyline/kernel": "dev-master",
-                "symfony/filesystem": "dev-master",
-                "tasoft/config": "dev-master",
-                "tasoft/service-manager": "dev-master",
-                "tasoft/tools-path": "dev-master"
+                "skyline/kernel": "^0.8",
+                "symfony/filesystem": "5.0.7",
+                "tasoft/config": "^3",
+                "tasoft/service-manager": "^2.2",
+                "tasoft/tools-path": "^1.5"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6",
-                "skyline/modules": "dev-master"
+                "phpunit/phpunit": "^6"
             },
             "type": "library",
             "autoload": {
@@ -183,27 +205,27 @@
                 }
             ],
             "description": "The compiler package allows you to manually edit the source files and compile them to a bootable structure, so any Skyline Application is able to boot from that compilation.",
-            "time": "2019-11-13T19:32:30+00:00"
+            "time": "2020-04-29T12:56:49+00:00"
         },
         {
             "name": "skyline/component-animation",
-            "version": "dev-master",
+            "version": "v3.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-component-animation.git",
-                "reference": "954d21b10da8a0bc4c0a5d29e0e3ef3ccd4b6b52"
+                "reference": "b5af9db5f390eacaba47574d80682af3b408a89f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-component-animation/zipball/954d21b10da8a0bc4c0a5d29e0e3ef3ccd4b6b52",
-                "reference": "954d21b10da8a0bc4c0a5d29e0e3ef3ccd4b6b52",
+                "url": "https://api.github.com/repos/tasoftch/skyline-component-animation/zipball/b5af9db5f390eacaba47574d80682af3b408a89f",
+                "reference": "b5af9db5f390eacaba47574d80682af3b408a89f",
                 "shasum": ""
             },
             "require": {
-                "skyline/direct-components": "dev-master"
+                "skyline/direct-components": "^0.8"
             },
             "require-dev": {
-                "skyline/compiler": "dev-master"
+                "skyline/compiler": "^0.8"
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
@@ -220,29 +242,37 @@
                 }
             ],
             "description": "Includes the animation css framework by Daniel Eden",
-            "time": "2019-09-19T09:22:36+00:00"
+            "time": "2020-04-23T11:28:02+00:00"
         },
         {
-            "name": "skyline/component-api",
-            "version": "dev-master",
+            "name": "skyline/component-bootstrap",
+            "version": "v4.3.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tasoftch/skyline-component-api.git",
-                "reference": "f9a77ecb0ba06af3100c9845f624571b05fd73e2"
+                "url": "https://github.com/tasoftch/skyline-component-bootstrap.git",
+                "reference": "9704c4d0398a4d88274e7178f4bf4341907b4b6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-component-api/zipball/f9a77ecb0ba06af3100c9845f624571b05fd73e2",
-                "reference": "f9a77ecb0ba06af3100c9845f624571b05fd73e2",
+                "url": "https://api.github.com/repos/tasoftch/skyline-component-bootstrap/zipball/9704c4d0398a4d88274e7178f4bf4341907b4b6b",
+                "reference": "9704c4d0398a4d88274e7178f4bf4341907b4b6b",
                 "shasum": ""
             },
             "require": {
-                "skyline/direct-components": "dev-master"
+                "php": "^7.2",
+                "skyline/component-jquery": "^3.4",
+                "skyline/direct-components": "^0.8",
+                "skyline/html-form": "^0.8"
             },
             "require-dev": {
-                "skyline/compiler": "dev-master"
+                "phpunit/phpunit": "^6"
             },
             "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Skyline\\HTML\\Bootstrap\\": "src"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
@@ -253,25 +283,26 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-01-19T18:19:05+00:00"
+            "description": "Describes a Skyline Application compatible component package to include the Bootstrap CSS framework",
+            "time": "2020-05-06T14:10:52+00:00"
         },
         {
             "name": "skyline/component-jquery",
-            "version": "dev-master",
+            "version": "v3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-component-jquery.git",
-                "reference": "4986d596fabb5320e501a26c7c227f0b4588ce7b"
+                "reference": "0123edcd696a710a54c45f85c4865e29f7529d86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-component-jquery/zipball/4986d596fabb5320e501a26c7c227f0b4588ce7b",
-                "reference": "4986d596fabb5320e501a26c7c227f0b4588ce7b",
+                "url": "https://api.github.com/repos/tasoftch/skyline-component-jquery/zipball/0123edcd696a710a54c45f85c4865e29f7529d86",
+                "reference": "0123edcd696a710a54c45f85c4865e29f7529d86",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "skyline/direct-components": "dev-master"
+                "skyline/direct-components": "^0.8"
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
@@ -284,36 +315,36 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2019-08-19T15:13:02+00:00"
+            "time": "2020-04-23T11:31:33+00:00"
         },
         {
             "name": "skyline/core-application",
-            "version": "dev-master",
+            "version": "v0.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-core-application.git",
-                "reference": "3debf5f6dd09ee4a55d5044ecbacea1f740e6c79"
+                "reference": "5ed64ecaa17f7aa886b4412d212c386829009634"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-core-application/zipball/3debf5f6dd09ee4a55d5044ecbacea1f740e6c79",
-                "reference": "3debf5f6dd09ee4a55d5044ecbacea1f740e6c79",
+                "url": "https://api.github.com/repos/tasoftch/skyline-core-application/zipball/5ed64ecaa17f7aa886b4412d212c386829009634",
+                "reference": "5ed64ecaa17f7aa886b4412d212c386829009634",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "skyline/kernel": "dev-master",
-                "skyline/render": "dev-master",
-                "skyline/router": "dev-master",
-                "symfony/http-foundation": "dev-master",
-                "tasoft/event-manager": "dev-master",
-                "tasoft/service-manager": "dev-master"
+                "skyline/kernel": "^0.8",
+                "skyline/render": "^0.8",
+                "skyline/router": "^0.8",
+                "symfony/http-foundation": "^5.0",
+                "tasoft/event-manager": "^1.0",
+                "tasoft/service-manager": "^2.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6",
-                "skyline/api": "dev-master",
-                "skyline/binary": "dev-master",
-                "skyline/compiler": "dev-master"
+                "skyline/api": "^0.8",
+                "skyline/binary": "^0.8",
+                "skyline/compiler": "^0.8"
             },
             "type": "library",
             "autoload": {
@@ -335,26 +366,26 @@
                 }
             ],
             "description": "Required package to create any kind of Skyline Applications. It will add all necessary packages to launch the application for any purpose like web application or php server.",
-            "time": "2020-04-15T11:00:31+00:00"
+            "time": "2020-04-29T09:30:59+00:00"
         },
         {
             "name": "skyline/direct-components",
-            "version": "dev-master",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-direct-components.git",
-                "reference": "61c57855be0c462940ca92d74155f1a229599898"
+                "reference": "0e710fb95a07babad69a727d6a36b4c505dd7f5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-direct-components/zipball/61c57855be0c462940ca92d74155f1a229599898",
-                "reference": "61c57855be0c462940ca92d74155f1a229599898",
+                "url": "https://api.github.com/repos/tasoftch/skyline-direct-components/zipball/0e710fb95a07babad69a727d6a36b4c505dd7f5a",
+                "reference": "0e710fb95a07babad69a727d6a36b4c505dd7f5a",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "skyline/html-render": "dev-master",
-                "skyline/kernel": "dev-master",
+                "skyline/html-render": "^0.8",
+                "skyline/kernel": "^0.8",
                 "tasoft/mime": "^1"
             },
             "require-dev": {
@@ -380,28 +411,28 @@
                 }
             ],
             "description": "Direct component access plugin for Skyline CMS Applications",
-            "time": "2019-11-01T22:18:19+00:00"
+            "time": "2020-04-23T11:19:16+00:00"
         },
         {
             "name": "skyline/direct-components-forwarding",
-            "version": "dev-master",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-direct-components-forwarding.git",
-                "reference": "69431b0171cacdfa74fa83a80dcc3ffba4b9b310"
+                "reference": "e46bad992cc1d646869fafa5528f02c91ee0532e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-direct-components-forwarding/zipball/69431b0171cacdfa74fa83a80dcc3ffba4b9b310",
-                "reference": "69431b0171cacdfa74fa83a80dcc3ffba4b9b310",
+                "url": "https://api.github.com/repos/tasoftch/skyline-direct-components-forwarding/zipball/e46bad992cc1d646869fafa5528f02c91ee0532e",
+                "reference": "e46bad992cc1d646869fafa5528f02c91ee0532e",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "skyline/direct-components": "dev-master"
+                "skyline/direct-components": "^0.8"
             },
             "require-dev": {
-                "skyline/compiler": "dev-master"
+                "skyline/compiler": "^0.8"
             },
             "type": "library",
             "autoload": {
@@ -419,25 +450,65 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2019-11-01T22:51:09+00:00"
+            "time": "2020-04-23T11:16:25+00:00"
         },
         {
-            "name": "skyline/html-elements",
-            "version": "dev-master",
+            "name": "skyline/exposed-symbols",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tasoftch/skyline-html-elements.git",
-                "reference": "eb8c2a4d8168ad45da74f393239828e9b5a76d2b"
+                "url": "https://github.com/tasoftch/skyline-exposed-symbols.git",
+                "reference": "4d514af08b75ae937eb52feba4f6b2dac41bdcd9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-html-elements/zipball/eb8c2a4d8168ad45da74f393239828e9b5a76d2b",
-                "reference": "eb8c2a4d8168ad45da74f393239828e9b5a76d2b",
+                "url": "https://api.github.com/repos/tasoftch/skyline-exposed-symbols/zipball/4d514af08b75ae937eb52feba4f6b2dac41bdcd9",
+                "reference": "4d514af08b75ae937eb52feba4f6b2dac41bdcd9",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6",
+                "skyline/compiler": "^0.8",
+                "skyline/html-form": "^0.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Skyline\\Expose\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Abplanalp",
+                    "email": "info@tasoft.ch"
+                }
+            ],
+            "time": "2020-04-23T11:42:27+00:00"
+        },
+        {
+            "name": "skyline/html-elements",
+            "version": "v0.8.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tasoftch/skyline-html-elements.git",
+                "reference": "730738d46f6ad35276e914040bf8dc98cabe75c5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tasoftch/skyline-html-elements/zipball/730738d46f6ad35276e914040bf8dc98cabe75c5",
+                "reference": "730738d46f6ad35276e914040bf8dc98cabe75c5",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "skyline/render": "dev-master"
+                "skyline/render": "^0.8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6"
@@ -459,34 +530,80 @@
                 }
             ],
             "description": "The skyline html elements package defines several render templates to render html bricks.",
-            "time": "2019-11-20T14:23:00+00:00"
+            "time": "2020-04-23T11:23:00+00:00"
         },
         {
-            "name": "skyline/html-render",
-            "version": "dev-master",
+            "name": "skyline/html-form",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tasoftch/skyline-html-render.git",
-                "reference": "fcee72e97796fa7983404974354caa11f331972e"
+                "url": "https://github.com/tasoftch/skyline-html-form.git",
+                "reference": "7dc87023091e2606492de78d7b7c3427cc3fa9a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-html-render/zipball/fcee72e97796fa7983404974354caa11f331972e",
-                "reference": "fcee72e97796fa7983404974354caa11f331972e",
+                "url": "https://api.github.com/repos/tasoftch/skyline-html-form/zipball/7dc87023091e2606492de78d7b7c3427cc3fa9a7",
+                "reference": "7dc87023091e2606492de78d7b7c3427cc3fa9a7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pdo": "*",
+                "php": "^7.2",
+                "skyline/html-elements": "^0.8"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6",
+                "skyline/security": "^0.8",
+                "tasoft/php-pdo": "^0.7"
+            },
+            "suggest": {
+                "skyline/security": "Add the Skyline Security package to use secure forms including csrf tokens.",
+                "tasoft/php-pdo": "Used for Date and Time text field to allow specified values to directly insert into data base"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Skyline\\HTML\\Form\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Abplanalp",
+                    "email": "info@tasoft.ch"
+                }
+            ],
+            "time": "2020-04-23T11:33:43+00:00"
+        },
+        {
+            "name": "skyline/html-render",
+            "version": "v0.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tasoftch/skyline-html-render.git",
+                "reference": "58332c7cc9ce0e1bee460b92484bb26e2e9b6538"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tasoftch/skyline-html-render/zipball/58332c7cc9ce0e1bee460b92484bb26e2e9b6538",
+                "reference": "58332c7cc9ce0e1bee460b92484bb26e2e9b6538",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "skyline/direct-components": "dev-master",
-                "skyline/html-elements": "dev-master",
-                "skyline/render": "dev-master",
-                "tasoft/php-string-parser": "dev-master"
+                "skyline/direct-components": "^0.8",
+                "skyline/html-elements": "^0.8",
+                "skyline/render": "^0.8",
+                "tasoft/php-string-parser": "^0.9"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6",
-                "skyline/compiler": "dev-master",
-                "skyline/direct-components-forwarding": "dev-master",
-                "skyline/translation": "dev-master"
+                "skyline/compiler": "^0.8",
+                "skyline/direct-components-forwarding": "^0.8",
+                "skyline/translation": "^0.8"
             },
             "type": "library",
             "autoload": {
@@ -505,37 +622,35 @@
                 }
             ],
             "description": "Extension to skyline/render which prepares more routings, extended renders for specially html css and js rendering",
-            "time": "2019-11-20T14:22:19+00:00"
+            "time": "2020-04-23T11:26:13+00:00"
         },
         {
             "name": "skyline/kernel",
-            "version": "dev-master",
+            "version": "v0.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-kernel.git",
-                "reference": "e1951e33468c26315947d1467afa1b9567cae372"
+                "reference": "577f931360b52c1d9172348d2be6d8fa0a2d3c2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-kernel/zipball/e1951e33468c26315947d1467afa1b9567cae372",
-                "reference": "e1951e33468c26315947d1467afa1b9567cae372",
+                "url": "https://api.github.com/repos/tasoftch/skyline-kernel/zipball/577f931360b52c1d9172348d2be6d8fa0a2d3c2b",
+                "reference": "577f931360b52c1d9172348d2be6d8fa0a2d3c2b",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-pdo": "*",
                 "php": "^7.2",
-                "symfony/http-foundation": "dev-master",
-                "tasoft/config": "dev-master",
-                "tasoft/dependency-injection": "dev-master",
-                "tasoft/event-manager": "dev-master",
-                "tasoft/service-manager": "dev-master",
-                "tasoft/tools-path": "dev-master"
+                "symfony/http-foundation": "^5.0",
+                "tasoft/config": "^3",
+                "tasoft/dependency-injection": "^1",
+                "tasoft/event-manager": "^1",
+                "tasoft/service-manager": "^2",
+                "tasoft/tools-path": "^1.5"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6",
-                "skyline/modules": "dev-master",
-                "tasoft/php-pdo": "dev-master"
+                "phpunit/phpunit": "^6"
             },
             "type": "library",
             "autoload": {
@@ -557,30 +672,30 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-02-16T08:04:42+00:00"
+            "time": "2020-05-06T13:57:13+00:00"
         },
         {
             "name": "skyline/modules",
-            "version": "dev-master",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-modules.git",
-                "reference": "4e20b0d6f9097c867d959408d3da95e9fc4bc7a5"
+                "reference": "2249f29b630c4b5c6439af57622bad1ebd349e70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-modules/zipball/4e20b0d6f9097c867d959408d3da95e9fc4bc7a5",
-                "reference": "4e20b0d6f9097c867d959408d3da95e9fc4bc7a5",
+                "url": "https://api.github.com/repos/tasoftch/skyline-modules/zipball/2249f29b630c4b5c6439af57622bad1ebd349e70",
+                "reference": "2249f29b630c4b5c6439af57622bad1ebd349e70",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "skyline/html-render": "dev-master"
+                "skyline/html-render": "^0.8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6",
-                "skyline/compiler": "dev-master",
-                "skyline/core-application": "dev-master"
+                "skyline/compiler": "^0.8",
+                "skyline/core-application": "^0.8"
             },
             "type": "library",
             "autoload": {
@@ -598,33 +713,33 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2019-11-21T15:37:30+00:00"
+            "time": "2020-04-23T12:31:25+00:00"
         },
         {
             "name": "skyline/navigation",
-            "version": "dev-master",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-navigation.git",
-                "reference": "de64ba8210e2f682a4cc5be9afaedfd66997e9b1"
+                "reference": "2b77037d093089bc863211337336d5ea68c558c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-navigation/zipball/de64ba8210e2f682a4cc5be9afaedfd66997e9b1",
-                "reference": "de64ba8210e2f682a4cc5be9afaedfd66997e9b1",
+                "url": "https://api.github.com/repos/tasoftch/skyline-navigation/zipball/2b77037d093089bc863211337336d5ea68c558c4",
+                "reference": "2b77037d093089bc863211337336d5ea68c558c4",
                 "shasum": ""
             },
             "require": {
                 "ext-simplexml": "*",
                 "php": "^7.2",
-                "skyline/render": "dev-master",
-                "tasoft/menu-service": "dev-master",
-                "tasoft/service-manager": "dev-master",
-                "tasoft/tools-path": "dev-master"
+                "skyline/render": "^0.8",
+                "tasoft/menu-service": "^0.9",
+                "tasoft/service-manager": "^2.2",
+                "tasoft/tools-path": "^1.5"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6",
-                "skyline/component-bootstrap": "dev-master"
+                "skyline/component-bootstrap": "^4.3"
             },
             "suggest": {
                 "skyline/component-bootstrap": "Using internal navigation templates need the bootstrap component"
@@ -645,30 +760,30 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-01-30T16:27:20+00:00"
+            "time": "2020-04-23T11:39:11+00:00"
         },
         {
             "name": "skyline/pdo",
-            "version": "dev-master",
+            "version": "v0.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-pdo.git",
-                "reference": "885cd62a7b031bc8f5ebc0e1ca5961d847684fc9"
+                "reference": "e95ce0cc639673511886d99b640227e4220730f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-pdo/zipball/885cd62a7b031bc8f5ebc0e1ca5961d847684fc9",
-                "reference": "885cd62a7b031bc8f5ebc0e1ca5961d847684fc9",
+                "url": "https://api.github.com/repos/tasoftch/skyline-pdo/zipball/e95ce0cc639673511886d99b640227e4220730f4",
+                "reference": "e95ce0cc639673511886d99b640227e4220730f4",
                 "shasum": ""
             },
             "require": {
                 "ext-pdo": "*",
                 "php": "^7.2",
-                "tasoft/php-pdo": "dev-master"
+                "tasoft/php-pdo": "^0.7"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6",
-                "skyline/compiler": "dev-master",
+                "skyline/compiler": "^0.8",
                 "tasoft/php-parser": "dev-master"
             },
             "bin": [
@@ -690,59 +805,33 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-01-08T10:25:16+00:00"
-        },
-        {
-            "name": "skyline/pdo-initialisation",
-            "version": "v0.8.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/tasoftch/skyline-pdo-initialisation.git",
-                "reference": "87a7e4fb2efdf3677f23566122e4cfdb2cd9715e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-pdo-initialisation/zipball/87a7e4fb2efdf3677f23566122e4cfdb2cd9715e",
-                "reference": "87a7e4fb2efdf3677f23566122e4cfdb2cd9715e",
-                "shasum": ""
-            },
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Thomas Abplanalp",
-                    "email": "info@tasoft.ch"
-                }
-            ],
-            "time": "2020-04-15T14:57:34+00:00"
+            "time": "2020-05-05T15:05:58+00:00"
         },
         {
             "name": "skyline/render",
-            "version": "dev-master",
+            "version": "v0.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-render.git",
-                "reference": "cc00f87a488666e3cb16a85fcd44a2dccd0791fd"
+                "reference": "bfc527016a4f1cd78c174436c4419293a95700f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-render/zipball/cc00f87a488666e3cb16a85fcd44a2dccd0791fd",
-                "reference": "cc00f87a488666e3cb16a85fcd44a2dccd0791fd",
+                "url": "https://api.github.com/repos/tasoftch/skyline-render/zipball/bfc527016a4f1cd78c174436c4419293a95700f0",
+                "reference": "bfc527016a4f1cd78c174436c4419293a95700f0",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "skyline/router": "dev-master",
-                "symfony/http-foundation": "dev-master",
-                "tasoft/event-manager": "dev-master",
-                "tasoft/service-manager": "dev-master"
+                "skyline/exposed-symbols": "^0.8",
+                "skyline/router": "^0.8",
+                "symfony/http-foundation": "5.0.0",
+                "tasoft/event-manager": "^1.0",
+                "tasoft/service-manager": "^2.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6",
-                "skyline/compiler": "dev-master"
+                "skyline/compiler": "^0.8"
             },
             "type": "library",
             "autoload": {
@@ -761,26 +850,26 @@
                 }
             ],
             "description": "The Skyline Render package is responsible to transform the results from action controllers into valid http responses.",
-            "time": "2020-04-15T09:02:51+00:00"
+            "time": "2020-04-29T12:40:55+00:00"
         },
         {
             "name": "skyline/router",
-            "version": "dev-master",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-router.git",
-                "reference": "b1463391dfd676ad43a29a68dcdac1d74208e7e3"
+                "reference": "e7d397af967edc9465b5b572a9dcf0df8de101e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-router/zipball/b1463391dfd676ad43a29a68dcdac1d74208e7e3",
-                "reference": "b1463391dfd676ad43a29a68dcdac1d74208e7e3",
+                "url": "https://api.github.com/repos/tasoftch/skyline-router/zipball/e7d397af967edc9465b5b572a9dcf0df8de101e2",
+                "reference": "e7d397af967edc9465b5b572a9dcf0df8de101e2",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "symfony/http-foundation": "dev-master",
-                "tasoft/event-manager": "dev-master"
+                "symfony/http-foundation": "5.0.0",
+                "tasoft/event-manager": "^1"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6",
@@ -802,32 +891,32 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-01-08T12:50:31+00:00"
+            "time": "2020-04-23T10:54:20+00:00"
         },
         {
             "name": "skyline/security",
-            "version": "dev-master",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-security.git",
-                "reference": "b308f1e32270ab34555f44f7feaa1a32faa5afcc"
+                "reference": "fa1c44abab7425995f19c1d01289e3108013d2f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-security/zipball/b308f1e32270ab34555f44f7feaa1a32faa5afcc",
-                "reference": "b308f1e32270ab34555f44f7feaa1a32faa5afcc",
+                "url": "https://api.github.com/repos/tasoftch/skyline-security/zipball/fa1c44abab7425995f19c1d01289e3108013d2f7",
+                "reference": "fa1c44abab7425995f19c1d01289e3108013d2f7",
                 "shasum": ""
             },
             "require": {
                 "ext-openssl": "*",
                 "php": "^7.2",
-                "skyline/kernel": "dev-master",
-                "symfony/http-foundation": "dev-master",
-                "tasoft/cached-generator": "dev-master"
+                "skyline/kernel": "^0.8",
+                "symfony/http-foundation": "^5.0",
+                "tasoft/cached-generator": "^0.9"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6",
-                "skyline/render": "dev-master"
+                "skyline/render": "^0.8"
             },
             "suggest": {
                 "skyline/render": "Enable client challenges using templates for html forms and HTTP\\POSTFieldsIdentityProvider"
@@ -840,7 +929,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "MIT"
+                "BSD-3-Clause"
             ],
             "authors": [
                 {
@@ -848,28 +937,32 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-01-08T12:57:55+00:00"
+            "time": "2020-05-06T13:53:18+00:00"
         },
         {
             "name": "skyline/translation",
-            "version": "dev-master",
+            "version": "v0.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-translation.git",
-                "reference": "f9ad9718100b98542479a620530ce4fb4b31cd69"
+                "reference": "8ca0f6b4b94945f6eff1b00068e222102a642985"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-translation/zipball/f9ad9718100b98542479a620530ce4fb4b31cd69",
-                "reference": "f9ad9718100b98542479a620530ce4fb4b31cd69",
+                "url": "https://api.github.com/repos/tasoftch/skyline-translation/zipball/8ca0f6b4b94945f6eff1b00068e222102a642985",
+                "reference": "8ca0f6b4b94945f6eff1b00068e222102a642985",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "symfony/http-foundation": "dev-master"
+                "skyline/kernel": "^0.8",
+                "symfony/http-foundation": "^5.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6"
+                "phpunit/phpunit": "^6",
+                "skyline/binary": "^0.8",
+                "skyline/compiler": "^0.8",
+                "skyline/render": "^0.8"
             },
             "type": "library",
             "autoload": {
@@ -887,66 +980,21 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2019-11-07T16:41:28+00:00"
-        },
-        {
-            "name": "symfony/deprecation-contracts",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "ede224dcbc36138943a296107db2b8b2a690ac1c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/ede224dcbc36138943a296107db2b8b2a690ac1c",
-                "reference": "ede224dcbc36138943a296107db2b8b2a690ac1c",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1-dev"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "function.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "A generic function and convention to trigger deprecation notices",
-            "homepage": "https://symfony.com",
-            "time": "2020-02-14T07:31:56+00:00"
+            "description": "Translation and locale management for Skyline CMS",
+            "time": "2020-05-02T06:49:52+00:00"
         },
         {
             "name": "symfony/filesystem",
-            "version": "dev-master",
+            "version": "v5.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "b3ee7d5b1c50a1e85455664805012ce56f35267a"
+                "reference": "ca3b87dd09fff9b771731637f5379965fbfab420"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/b3ee7d5b1c50a1e85455664805012ce56f35267a",
-                "reference": "b3ee7d5b1c50a1e85455664805012ce56f35267a",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/ca3b87dd09fff9b771731637f5379965fbfab420",
+                "reference": "ca3b87dd09fff9b771731637f5379965fbfab420",
                 "shasum": ""
             },
             "require": {
@@ -956,7 +1004,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.1-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -983,41 +1031,35 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2020-04-12T14:42:09+00:00"
+            "time": "2020-03-27T16:56:45+00:00"
         },
         {
             "name": "symfony/http-foundation",
-            "version": "dev-master",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "ae3bd6be161b4831d2006aff2dce8d223c300fd0"
+                "reference": "c5c226b6f164ae4f95c4bffbe940c81050940eda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/ae3bd6be161b4831d2006aff2dce8d223c300fd0",
-                "reference": "ae3bd6be161b4831d2006aff2dce8d223c300fd0",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/c5c226b6f164ae4f95c4bffbe940c81050940eda",
+                "reference": "c5c226b6f164ae4f95c4bffbe940c81050940eda",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2.5",
-                "symfony/deprecation-contracts": "^2.1",
-                "symfony/polyfill-mbstring": "~1.1",
-                "symfony/polyfill-php80": "^1.15"
+                "symfony/mime": "^4.4|^5.0",
+                "symfony/polyfill-mbstring": "~1.1"
             },
             "require-dev": {
                 "predis/predis": "~1.0",
-                "symfony/cache": "^4.4|^5.0",
-                "symfony/expression-language": "^4.4|^5.0",
-                "symfony/mime": "^4.4|^5.0"
-            },
-            "suggest": {
-                "symfony/mime": "To use the file extension guesser"
+                "symfony/expression-language": "^4.4|^5.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.1-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -1044,7 +1086,70 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2020-04-13T20:42:08+00:00"
+            "time": "2019-11-18T17:27:11+00:00"
+        },
+        {
+            "name": "symfony/mime",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/mime.git",
+                "reference": "e2c903bce82b6840609a910cad7dd0fa148dad7c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/e2c903bce82b6840609a910cad7dd0fa148dad7c",
+                "reference": "e2c903bce82b6840609a910cad7dd0fa148dad7c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2.5",
+                "symfony/polyfill-intl-idn": "^1.10",
+                "symfony/polyfill-mbstring": "^1.0",
+                "symfony/polyfill-php80": "^1.15"
+            },
+            "conflict": {
+                "symfony/mailer": "<4.4"
+            },
+            "require-dev": {
+                "egulias/email-validator": "^2.1.10",
+                "symfony/dependency-injection": "^4.4|^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Mime\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "A library to manipulate MIME messages",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "mime",
+                "mime-type"
+            ],
+            "time": "2020-04-18T20:50:29+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1103,6 +1208,68 @@
                 "portable"
             ],
             "time": "2020-02-27T09:26:54+00:00"
+        },
+        {
+            "name": "symfony/polyfill-intl-idn",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-intl-idn.git",
+                "reference": "47bd6aa45beb1cd7c6a16b7d1810133b728bdfcf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/47bd6aa45beb1cd7c6a16b7d1810133b728bdfcf",
+                "reference": "47bd6aa45beb1cd7c6a16b7d1810133b728bdfcf",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3",
+                "symfony/polyfill-mbstring": "^1.3",
+                "symfony/polyfill-php72": "^1.10"
+            },
+            "suggest": {
+                "ext-intl": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.15-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Idn\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Laurent Bassin",
+                    "email": "laurent@bassin.info"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for intl's idn_to_ascii and idn_to_utf8 functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "idn",
+                "intl",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2020-03-09T19:04:49+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1164,17 +1331,72 @@
             "time": "2020-03-09T19:04:49+00:00"
         },
         {
+            "name": "symfony/polyfill-php72",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php72.git",
+                "reference": "41d115ace412a5a006a92f29a51c7d863e28482b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/41d115ace412a5a006a92f29a51c7d863e28482b",
+                "reference": "41d115ace412a5a006a92f29a51c7d863e28482b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.15-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php72\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 7.2+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "time": "2020-04-13T15:22:19+00:00"
+        },
+        {
             "name": "symfony/polyfill-php80",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "8854dc880784d2ae32908b75824754339b5c0555"
+                "reference": "cb64c503a89a49bcf6334a57639e244e488b0fe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/8854dc880784d2ae32908b75824754339b5c0555",
-                "reference": "8854dc880784d2ae32908b75824754339b5c0555",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/cb64c503a89a49bcf6334a57639e244e488b0fe9",
+                "reference": "cb64c503a89a49bcf6334a57639e244e488b0fe9",
                 "shasum": ""
             },
             "require": {
@@ -1223,11 +1445,11 @@
                 "portable",
                 "shim"
             ],
-            "time": "2020-03-03T16:59:03+00:00"
+            "time": "2020-04-23T15:16:55+00:00"
         },
         {
             "name": "tasoft/cached-generator",
-            "version": "dev-master",
+            "version": "v0.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-cached-generator.git",
@@ -1265,7 +1487,7 @@
         },
         {
             "name": "tasoft/collection",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-collection.git",
@@ -1303,16 +1525,16 @@
         },
         {
             "name": "tasoft/config",
-            "version": "dev-master",
+            "version": "v3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/config.git",
-                "reference": "d477794dec429bf368b12a324220b00a415741b2"
+                "reference": "82b1e54ef65c6e543f61568034b01a7ddd16c507"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/config/zipball/d477794dec429bf368b12a324220b00a415741b2",
-                "reference": "d477794dec429bf368b12a324220b00a415741b2",
+                "url": "https://api.github.com/repos/tasoftch/config/zipball/82b1e54ef65c6e543f61568034b01a7ddd16c507",
+                "reference": "82b1e54ef65c6e543f61568034b01a7ddd16c507",
                 "shasum": ""
             },
             "require": {
@@ -1338,30 +1560,30 @@
                 }
             ],
             "description": "Configuration extension to set up configurations.",
-            "time": "2019-11-02T09:13:41+00:00"
+            "time": "2020-04-21T19:20:51+00:00"
         },
         {
             "name": "tasoft/dependency-injection",
-            "version": "dev-master",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-dependency-injection.git",
-                "reference": "e58807b5fcdd7527fe73f99ebcbf423bb580bff9"
+                "reference": "42c344814541f82231775e44e498ff59752e2120"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/php-dependency-injection/zipball/e58807b5fcdd7527fe73f99ebcbf423bb580bff9",
-                "reference": "e58807b5fcdd7527fe73f99ebcbf423bb580bff9",
+                "url": "https://api.github.com/repos/tasoftch/php-dependency-injection/zipball/42c344814541f82231775e44e498ff59752e2120",
+                "reference": "42c344814541f82231775e44e498ff59752e2120",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "tasoft/collection": "dev-master",
-                "tasoft/method-signature": "dev-master"
+                "tasoft/collection": "^1.0",
+                "tasoft/method-signature": "^0.8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6",
-                "tasoft/service-manager": "dev-master"
+                "tasoft/service-manager": "^2"
             },
             "suggest": {
                 "tasoft/service-manager": "dev-master"
@@ -1382,25 +1604,25 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2019-05-27T15:51:08+00:00"
+            "time": "2020-04-21T18:44:30+00:00"
         },
         {
             "name": "tasoft/event-manager",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-event-manager.git",
-                "reference": "8817286d5208c1ee0977a3301dc0494436fb3dc1"
+                "reference": "aeefa3f91d106ee1feb67bb98449d1505750dffa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/php-event-manager/zipball/8817286d5208c1ee0977a3301dc0494436fb3dc1",
-                "reference": "8817286d5208c1ee0977a3301dc0494436fb3dc1",
+                "url": "https://api.github.com/repos/tasoftch/php-event-manager/zipball/aeefa3f91d106ee1feb67bb98449d1505750dffa",
+                "reference": "aeefa3f91d106ee1feb67bb98449d1505750dffa",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "tasoft/collection": "dev-master"
+                "tasoft/collection": "^1.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6"
@@ -1421,11 +1643,11 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2019-10-13T09:57:24+00:00"
+            "time": "2020-04-21T18:24:57+00:00"
         },
         {
             "name": "tasoft/menu-service",
-            "version": "dev-master",
+            "version": "v0.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-menu-service.git",
@@ -1463,7 +1685,7 @@
         },
         {
             "name": "tasoft/method-signature",
-            "version": "dev-master",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-method-signature.git",
@@ -1539,7 +1761,7 @@
         },
         {
             "name": "tasoft/php-pdo",
-            "version": "dev-master",
+            "version": "v0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-pdo.git",
@@ -1578,16 +1800,16 @@
         },
         {
             "name": "tasoft/php-string-parser",
-            "version": "dev-master",
+            "version": "v0.9.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-string-parser.git",
-                "reference": "759200b80e64333cd1530be236dbdad3a1fa77bf"
+                "reference": "8096b10c81bfce78a140c48bf462fd6c67419ca2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/php-string-parser/zipball/759200b80e64333cd1530be236dbdad3a1fa77bf",
-                "reference": "759200b80e64333cd1530be236dbdad3a1fa77bf",
+                "url": "https://api.github.com/repos/tasoftch/php-string-parser/zipball/8096b10c81bfce78a140c48bf462fd6c67419ca2",
+                "reference": "8096b10c81bfce78a140c48bf462fd6c67419ca2",
                 "shasum": ""
             },
             "require": {
@@ -1612,26 +1834,26 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2019-11-13T14:55:09+00:00"
+            "time": "2020-04-23T11:25:04+00:00"
         },
         {
             "name": "tasoft/service-manager",
-            "version": "dev-master",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-service-manager.git",
-                "reference": "1f25d4a0292b45c8f5340f66f06f281c54c5fcb4"
+                "reference": "6ce02924b8453d43d25b01dcde479617321d0d82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/php-service-manager/zipball/1f25d4a0292b45c8f5340f66f06f281c54c5fcb4",
-                "reference": "1f25d4a0292b45c8f5340f66f06f281c54c5fcb4",
+                "url": "https://api.github.com/repos/tasoftch/php-service-manager/zipball/6ce02924b8453d43d25b01dcde479617321d0d82",
+                "reference": "6ce02924b8453d43d25b01dcde479617321d0d82",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "tasoft/collection": "dev-master",
-                "tasoft/method-signature": "dev-master"
+                "tasoft/collection": "^1.0",
+                "tasoft/method-signature": "^0.8"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6"
@@ -1655,20 +1877,20 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-01-09T12:14:15+00:00"
+            "time": "2020-05-06T13:51:17+00:00"
         },
         {
             "name": "tasoft/tools-path",
-            "version": "dev-master",
+            "version": "v1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-path-tools.git",
-                "reference": "d26a08964754c152dced6ca8ec9c1191791deae2"
+                "reference": "93ff41e368a1ccbe9f93e5974b961e5ceb191b95"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/php-path-tools/zipball/d26a08964754c152dced6ca8ec9c1191791deae2",
-                "reference": "d26a08964754c152dced6ca8ec9c1191791deae2",
+                "url": "https://api.github.com/repos/tasoftch/php-path-tools/zipball/93ff41e368a1ccbe9f93e5974b961e5ceb191b95",
+                "reference": "93ff41e368a1ccbe9f93e5974b961e5ceb191b95",
                 "shasum": ""
             },
             "require": {
@@ -1694,20 +1916,20 @@
                 }
             ],
             "description": "Simple library to manipulate virtual paths",
-            "time": "2019-08-22T11:47:11+00:00"
+            "time": "2020-04-17T15:32:24+00:00"
         },
         {
             "name": "tasoft/value-injector",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-value-injector.git",
-                "reference": "e75a928ab33bd5556620982459314b774f46f2bf"
+                "reference": "f03f4077bd73c5ba81f5ceff0592d7ade6dc94ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/php-value-injector/zipball/e75a928ab33bd5556620982459314b774f46f2bf",
-                "reference": "e75a928ab33bd5556620982459314b774f46f2bf",
+                "url": "https://api.github.com/repos/tasoftch/php-value-injector/zipball/f03f4077bd73c5ba81f5ceff0592d7ade6dc94ae",
+                "reference": "f03f4077bd73c5ba81f5ceff0592d7ade6dc94ae",
                 "shasum": ""
             },
             "require": {
@@ -1732,34 +1954,34 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2019-11-28T12:33:44+00:00"
+            "time": "2020-04-21T18:29:33+00:00"
         }
     ],
     "packages-dev": [
         {
             "name": "skyline/binary",
-            "version": "dev-master",
+            "version": "v0.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-binary.git",
-                "reference": "aa8097712c7914a9f6bf3e60172baf7de7b46fc3"
+                "reference": "f6963271db2bb45d0d9ea5b16c0079801219ec19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-binary/zipball/aa8097712c7914a9f6bf3e60172baf7de7b46fc3",
-                "reference": "aa8097712c7914a9f6bf3e60172baf7de7b46fc3",
+                "url": "https://api.github.com/repos/tasoftch/skyline-binary/zipball/f6963271db2bb45d0d9ea5b16c0079801219ec19",
+                "reference": "f6963271db2bb45d0d9ea5b16c0079801219ec19",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2",
-                "skyline/compiler": "dev-master"
+                "skyline/compiler": "^0.8"
             },
             "require-dev": {
                 "ext-json": "*",
                 "ext-sockets": "*",
-                "skyline/core-application": "dev-master",
-                "symfony/console": "dev-master",
-                "symfony/filesystem": "dev-master"
+                "skyline/core-application": "^0.8",
+                "symfony/console": "^5.0",
+                "symfony/filesystem": "^5.0"
             },
             "bin": [
                 "dist/skyline.phar"
@@ -1776,27 +1998,13 @@
                 }
             ],
             "description": "The Skyline CMS Binary Project is distributed to help developers compiling and testing Skyline CMS Application.",
-            "time": "2020-04-15T13:07:07+00:00"
+            "time": "2020-05-01T14:34:48+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "skyline-admin/component-css": 20,
-        "skyline/api": 20,
-        "skyline/cms-security": 20,
-        "skyline/compiler": 20,
-        "skyline/component-animation": 20,
-        "skyline/component-api": 20,
-        "skyline/component-jquery": 20,
-        "skyline/core-application": 20,
-        "skyline/direct-components-forwarding": 20,
-        "skyline/html-render": 20,
-        "skyline/modules": 20,
-        "skyline/navigation": 20,
-        "skyline/pdo": 20,
-        "skyline/translation": 20,
-        "skyline/binary": 20
+        "skyline-admin/component-css": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

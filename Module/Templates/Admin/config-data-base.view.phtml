@@ -1,0 +1,366 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\Render\Context\DefaultRenderContext;
+use TASoft\Service\ServiceManager;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var int|string $PROBLEM
+ *
+ * @var array $PDO
+ */
+
+
+
+$option = function($key, $selected = NULL) use ($PDO) {
+	$selected = $key == $selected ? ' selected': '';
+	echo "<option$selected value='$key'>", $this->translate($key), "</option>";
+};
+?>
+<style type="text/css">
+
+</style>
+
+<?=$BREAD?>
+
+<h1><?=$this->translate("Database")?></h1>
+<div class="alert alert-primary">
+	<?= $this->translate('Probably your application requires a database access. If you choose the complex user system, then Skyline CMS requires access to a database as well.<br>
+					You can specify a primary database and a fallback database, if the primary does not work.') ?>
+</div>
+
+<hr>
+
+<div class="card">
+	<h4 class="card-header"><?= $this->translate('Database Order') ?></h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+				<div class="form-group">
+					<label for="primary"><?=$this->translate('Primary')?></label>
+					<select class="form-control<?php
+					$SELECTED = $PDO['db_selected'];
+
+					if($SELECTED["s"] === 'p') {
+						echo " is-valid";
+						$SELECTED['s'] = 0;
+					} else
+						echo " is-invalid";
+					?>" id="primary" name="primary">
+						<?php
+						foreach(array_keys($PDO["db_types"]) as $type)
+							$option($type, $PDO["primary"]);
+						?>
+					</select>
+					<?php
+					if($r = $SELECTED["r1"]) {
+						?>
+						<div class="invalid-feedback">
+							<?=$r?>
+						</div>
+						<?php
+					}
+					?>
+					<div class="valid-feedback">
+						Is in use.
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="secondary"><?=$this->translate('Secondary')?></label>
+					<select class="form-control<?php
+					if($SELECTED["s"] === 's')
+						echo " is-valid";
+					elseif($SELECTED['s'] !== 0)
+						echo " is-invalid";
+					?>" id="secondary" name="secondary">
+						<?php
+						foreach(array_keys($PDO["db_types"]) as $type)
+							$option($type, $PDO["secondary"]);
+						?>
+					</select>
+					<?php
+					if($r = $SELECTED["r2"]) {
+						?>
+						<div class="invalid-feedback">
+							<?=$r?>
+						</div>
+						<?php
+					}
+					?>
+					<div class="valid-feedback">
+						Is in use.
+					</div>
+				</div>
+
+				<div class="form-group">
+					<button name="apply-db-order" class="btn btn-outline-primary"><?= $this->translate('Save') ?></button>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<?=$this->translate('<p>Skyline uses a database to store users, credentials, access control information, contents and more.</p>
+<p>It is designed to choose from two database sources: MySQL and SQLite. If Skyline is not able to connect to the primary source, it will choose the secondary.</p>
+<p>Here you can specify the order and the connection information.</p>')?>
+			<?php
+			if($PDO['db_selected'] === 0) {
+				?>
+			<p class="alert alert-danger">
+				Skyline CMS could not connect to one of your desired database servers.
+			</p>
+				<?php
+			}
+			?>
+		</div>
+	</div>
+</div>
+
+	<div class="card mt-5">
+		<h4 class="card-header"><?= $this->translate('MySQL') ?></h4>
+		<div class="card-body row">
+			<div class="col-lg-8">
+				<form action="" method="post">
+					<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+					<div class="form-group row">
+						<label for="host" class="col-md-2 col-form-label">Host</label>
+						<div class="col-md-10">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-globe"></i></span>
+								</div>
+								<input type="text" class="form-control" placeholder="No Host!" id="host" name="host" value="<?=htmlspecialchars($PDO["mysql_host"])?>">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="username" class="col-md-2 col-form-label">Username</label>
+						<div class="col-md-10">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-user"></i></span>
+								</div>
+								<input type="text" class="form-control" placeholder="No Username!" id="username" name="username" value="<?=htmlspecialchars($PDO["mysql_username"])?>">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="password" class="col-md-2 col-form-label">Password</label>
+						<div class="col-md-10">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-key"></i></span>
+								</div>
+								<input type="password" class="form-control" placeholder="<?=$PDO["mysql_pass"]?$this->translate('Password exists') : $this->translate('No password!')?>" id="password" name="password" value="">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="db_name" class="col-md-2 col-form-label">Database</label>
+						<div class="col-md-10">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-database"></i></span>
+								</div>
+								<select id="db_name" name="db_name" class="form-control">
+									<option value="0">No DB available</option>
+									<?php
+									foreach($PDO["mysql_dbs"] as $db) {
+										if($db == $PDO["mysql_db"])
+											echo "<option selected>$db</option>";
+										else
+											echo "<option>$db</option>";
+									}
+									?>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<?php
+					if($PDO["mysql_ok"]) {
+						?>
+						<div class="alert alert-success">
+							<h5 class="alert-heading">Connection Verified</h5>
+							<p>
+								Skyline CMS is able to connect to the required mysql server with the given credentials.
+							</p>
+						</div>
+						<?php
+					} else {
+						?>
+						<div class="alert alert-danger">
+							<h5 class="alert-heading">Connection Not Verified</h5>
+							<p>
+								Skyline CMS could not verify the connection credentials yet.<br>
+								Please enter and save them and then press "Verify".
+							</p>
+						</div>
+						<?php
+					}
+					?>
+
+					<div class="form-group">
+						<button name="apply-mysql" class="btn btn-outline-primary"><?= $this->translate('Save') ?></button>
+						<button name="verify-mysql" class="btn btn-outline-success ml-3"><?= $this->translate('Verify') ?></button>
+					</div>
+				</form>
+			</div>
+			<div class="col-lg-4">
+				Provide valid connection information to the mysql server.
+				<p class="alert alert-danger">
+					Please note, that Skyline CMS never transmits passwords to this page. You get a hint, if a password was set or not.
+				</p>
+
+				<div class="alert alert-warning">
+					<h5 class="alert-heading">Warning</h5>
+					Most mysql servers will block too many failed login attempts.<br>
+					So please only verify the connection if you are sure about the credentials.
+				</div>
+			</div>
+		</div>
+	</div>
+<?php
+
+if($PROBLEM !== 0) {
+	?>
+	<div class="modal banner fade" id="modal-failed" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+		<div class="modal-dialog success" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-danger text-white">
+					<h4 class="modal-title text-center">Settings Not Updated</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="white-text">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="text-center">
+						<i class="fa fa-times fa-4x text-danger animated rotateIn mb-3"></i>
+						<?php
+						if($PROBLEM == -4) {
+							?>
+							<div class="alert alert-danger">
+								<h4 class="alert-heading">DB Host Error</h4>
+								<p>
+									Skyline CMS is not able to reach a mysql server on given host.
+								</p>
+							</div>
+							<?php
+						} elseif($PROBLEM == -1) {
+							?>
+							<div class="alert alert-danger">
+								<h4 class="alert-heading">DB Login Error</h4>
+								<p>
+									Skyline CMS is not able to login on mysql server with the given credentials.
+								</p>
+							</div>
+							<?php
+						} elseif($PROBLEM == -2) {
+							?>
+							<div class="alert alert-danger">
+								<h4 class="alert-heading">DB Error</h4>
+								<p>
+									The database server does not allow you to use the given database with this credentials.
+								</p>
+							</div>
+							<?php
+						} elseif($PROBLEM == -3) {
+							?>
+							<div class="alert alert-danger">
+								<h4 class="alert-heading">DB Error</h4>
+								<p>
+									The requested mysql server seems to reject any further request.<br>
+									Probably because of too many failed login attempts.
+								</p>
+							</div>
+							<?php
+						} elseif($PROBLEM == -5) {
+							?>
+							<div class="alert alert-warning">
+								<h4 class="alert-heading">DB Warning</h4>
+								<p>
+									No database selected.
+								</p>
+							</div>
+							<?php
+						}
+						?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="application/javascript">
+        $(function() {
+            $("#modal-failed").modal("show");
+        });
+	</script>
+	<?php
+} elseif($_SESSION["updated"] ?? false) {
+	unset($_SESSION["updated"]);
+	?>
+	<div class="modal banner fade" id="modal-success" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+		<div class="modal-dialog success" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<h4 class="modal-title text-center" id="modal-success-title">Settings Updated</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="white-text">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="text-center">
+						<i class="fa fa-check fa-4x text-success animated rotateIn mb-3"></i>
+						<p>
+							The changed settings were updated successfully.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="application/javascript">
+		$(function() {
+			$("#modal-success").modal("show");
+		});
+	</script>
+	<?php
+}
