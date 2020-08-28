@@ -34,6 +34,7 @@
     "skyline/html-form": "^0.8",
     "skyline/modules": "^0.8",
     "skyline/navigation": "^0.8",
+    "skyline/navigation-annotation-compiler": "^0.8",
     "skyline/pdo": "^0.9",
 
     "skyline/translation": "^0.8"
