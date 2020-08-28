@@ -28,60 +28,66 @@ class SynchronizeComponentsCompiler extends \Skyline\Compiler\AbstractCompiler
 
 			$linkDependencies = [];
 
-			foreach($config as $componentName => $parts) {
-				if(!$PDO->selectFieldValue("SELECT count(id) AS C FROM COMPONENT WHERE name = ?", 'C', [$componentName])) {
-					$PDO->inject("INSERT INTO COMPONENT (name, internal) VALUES (?, 1)")->send([
-						$componentName
-					]);
-					$CID = $PDO->lastInsertId("COMPONENT");
+			try {
+				foreach ($config as $componentName => $parts) {
+					if (!$PDO->selectFieldValue("SELECT count(id) AS C FROM COMPONENT WHERE name = ?", 'C', [$componentName])) {
+						$PDO->inject("INSERT INTO COMPONENT (name, internal) VALUES (?, 1)")->send([
+							$componentName
+						]);
+						$CID = $PDO->lastInsertId("COMPONENT");
 
-					$componentMap[$componentName] = $CID;
+						$componentMap[$componentName] = $CID;
 
-					foreach($parts as $partName => $partInfo) {
-						if($class = $partInfo["class"] ?? NULL) {
-							$arguments = $partInfo["arguments"] ?? [];
+						foreach ($parts as $partName => $partInfo) {
+							if ($class = $partInfo["class"] ?? NULL) {
+								$arguments = $partInfo["arguments"] ?? [];
 
-							if(count($arguments)) {
-								$TYPE_ID = max(1, $PDO->selectFieldValue("SELECT id FROM COMPONENT_ITEM_TYPE WHERE className = ?", 'id', [$class]) * 1);
-
-								$cross_origin = NULL;
-								$integrity = NULL;
-								$media = NULL;
-								$local_file = NULL;
-								$TYPE_ID = 0;
-
-
-								switch ($class) {
-									case RemoteSourceLink::class:
-										list(,,$mime,$cross_origin, $integrity) = $arguments;
-										$TYPE_ID = max(1, $PDO->selectFieldValue("SELECT id FROM COMPONENT_ITEM_TYPE WHERE className = ? AND mimeType = ?", 'id', [$class, $mime]) * 1);
-										break;
-									case LinkCSS::class: list(,$media,$cross_origin, $integrity) = $arguments; break;
-									default:
-										list(,,$cross_origin, $integrity) = $arguments;
-								}
-
-								if(!$TYPE_ID)
+								if (count($arguments)) {
 									$TYPE_ID = max(1, $PDO->selectFieldValue("SELECT id FROM COMPONENT_ITEM_TYPE WHERE className = ?", 'id', [$class]) * 1);
 
-								if($target = $links[ strtolower($arguments[0]) ] ?? false) {
-									$local_file = $target;
+									$cross_origin = NULL;
+									$integrity = NULL;
+									$media = NULL;
+									$local_file = NULL;
+									$TYPE_ID = 0;
+
+
+									switch ($class) {
+										case RemoteSourceLink::class:
+											list(, , $mime, $cross_origin, $integrity) = $arguments;
+											$TYPE_ID = max(1, $PDO->selectFieldValue("SELECT id FROM COMPONENT_ITEM_TYPE WHERE className = ? AND mimeType = ?", 'id', [$class, $mime]) * 1);
+											break;
+										case LinkCSS::class:
+											list(, $media, $cross_origin, $integrity) = $arguments;
+											break;
+										default:
+											list(, , $cross_origin, $integrity) = $arguments;
+									}
+
+									if (!$TYPE_ID)
+										$TYPE_ID = max(1, $PDO->selectFieldValue("SELECT id FROM COMPONENT_ITEM_TYPE WHERE className = ?", 'id', [$class]) * 1);
+
+									if ($target = $links[strtolower($arguments[0])] ?? false) {
+										$local_file = $target;
+									}
+
+									$PDO->inject("INSERT INTO COMPONENT_ITEM (component, shorthand, slug, type, cross_origin, integrity, media, local_file) VALUES ($CID, ?, ?, $TYPE_ID, ?, ?, ?, ?)")->send([
+										$partName,
+										$arguments[0],
+										$cross_origin,
+										$integrity,
+										$media,
+										$local_file ? 1 : 0
+									]);
+
+									$linkDependencies[$componentName] = $dependencies[$componentName] ?? [];
 								}
-
-								$PDO->inject("INSERT INTO COMPONENT_ITEM (component, shorthand, slug, type, cross_origin, integrity, media, local_file) VALUES ($CID, ?, ?, $TYPE_ID, ?, ?, ?, ?)")->send([
-									$partName,
-									$arguments[0],
-									$cross_origin,
-									$integrity,
-									$media,
-									$local_file ? 1 : 0
-								]);
-
-								$linkDependencies[$componentName] = $dependencies[$componentName] ?? [];
 							}
 						}
 					}
 				}
+			} catch (\Exception $exception) {
+				$context->getLogger()->logException($exception);
 			}
 
 			if($linkDependencies) {
