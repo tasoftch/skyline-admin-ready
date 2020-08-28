@@ -13,13 +13,22 @@ abstract class AbstractConfigurationActionController extends AbstractGeneralAdmi
 	public static $checkLocalhostByAddress = true;
 	public static $checkLocalhostByIp = false;
 
-	protected function isLocalhost(Request $request): bool {
-		if(static::$checkLocalhostByAddress && static::$checkLocalhostByIp) {
-			return $request->getHost() == 'localhost' && $request->getClientIp() == '127.0.0.1';
+	public static $validIPAddress = "";
+
+	public static function isLocalhost(Request $request): bool {
+		 if(static::$checkLocalhostByAddress && static::$checkLocalhostByIp) {
+			if( $request->getHost() == 'localhost' && $request->getClientIp() == '127.0.0.1' )
+				return true;
+			if(static::$validIPAddress) {
+				return $request->getClientIp() == static::$validIPAddress;
+			}
 		} elseif(static::$checkLocalhostByAddress)
 			return $request->getHost() == 'localhost';
 		elseif(self::$checkLocalhostByIp)
 			return $request->getClientIp() == '127.0.0.1';
+		elseif(static::$validIPAddress) {
+			return $request->getClientIp() == static::$validIPAddress;
+		}
 
 		// Skyline does not accept configuration request by default.
 		return false;
@@ -32,7 +41,7 @@ abstract class AbstractConfigurationActionController extends AbstractGeneralAdmi
 	public function performAction(ActionDescriptionInterface $actionDescription, RenderInfoInterface $renderInfo)
 	{
 		if($this->isAllowedOnLocalhostOnly($actionDescription, $renderInfo)) {
-			if(!$this->isLocalhost($this->getRequest())) {
+			if(!static::isLocalhost($this->getRequest())) {
 				// Configuration is only allowed in a local network.
 				// You should never use it in production!
 

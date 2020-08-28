@@ -32,12 +32,16 @@
  *
  */
 
+use Skyline\Admin\Ready\Compiler\CreateContentsPDOCompiler;
+use Skyline\Admin\Ready\Compiler\SynchronizeComponentsCompiler;
+use Skyline\Admin\Ready\Compiler\SynchronizeTemplatesCompiler;
 use Skyline\Compiler\Factory\AbstractExtendedCompilerFactory;
 use Skyline\Compiler\Predef\CreateDirectoriesCompiler;
+use Skyline\Compiler\Predef\CreateDirectoriesIfNotExistCompiler;
 
 return [
     'create-ui' => [
-        AbstractExtendedCompilerFactory::COMPILER_CLASS_KEY                            => CreateDirectoriesCompiler::class,
+        AbstractExtendedCompilerFactory::COMPILER_CLASS_KEY                            => CreateDirectoriesIfNotExistCompiler::class,
         AbstractExtendedCompilerFactory::COMPILER_ARGUMENTS_KEY => [
             'directoryNames' => [
                 'UI'
@@ -46,5 +50,19 @@ return [
         AbstractExtendedCompilerFactory::COMPILER_DEPENDENCIES_KEY => [
             'composer-packages-order'
         ]
-    ]
+    ],
+	'create-ui-pdo' => [
+		AbstractExtendedCompilerFactory::COMPILER_CLASS_KEY => CreateContentsPDOCompiler::class,
+		AbstractExtendedCompilerFactory::COMPILER_DEPENDENCIES_KEY => [
+			'create-ui',
+		]
+	],
+	'synchronize-components' => [
+		AbstractExtendedCompilerFactory::COMPILER_CLASS_KEY => SynchronizeComponentsCompiler::class,
+		AbstractExtendedCompilerFactory::COMPILER_DEPENDENCIES_KEY => [
+			'create-ui-pdo',
+			'components-config',
+			"expose-symbols"
+		]
+	]
 ];

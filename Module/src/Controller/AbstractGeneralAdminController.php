@@ -35,6 +35,7 @@
 namespace Skyline\Admin\Ready\Controller;
 
 
+use PHPMailer\PHPMailer\PHPMailer;
 use Skyline\Application\Controller\AbstractActionController;
 use Skyline\CMS\Security\Controller\SecurityActionControllerInterface;
 use Skyline\CMS\Security\SecurityTrait;
@@ -44,6 +45,10 @@ use Skyline\Router\Description\ActionDescriptionInterface;
 use Skyline\Security\CSRF\CSRFToken;
 use Skyline\Security\CSRF\CSRFTokenManager;
 use Skyline\Translation\TranslationManager;
+use Skyline\Mailer\Account\EmailAddress;
+use Skyline\Mailer\Mail\HTMLMail;
+use Skyline\Mailer\Mail\PlainMail;
+use Skyline\Mailer\MailService;
 
 abstract class AbstractGeneralAdminController extends AbstractActionController implements SecurityActionControllerInterface
 {
@@ -52,16 +57,20 @@ abstract class AbstractGeneralAdminController extends AbstractActionController i
 
 	public function prepareActionForChallenge(ActionDescriptionInterface $actionDescription, RenderInfoInterface $renderInfo, $challengeInfo)
 	{
-		$uiConf = SkyGetPath("$(/)/UI/config.php");
+		$uiConf = SkyGetPath("$(C)/config_ok");
 
 		if(!$uiConf && $_SERVER["REQUEST_URI"] != '/admin/config' && $_SERVER["REQUEST_URI"] != '/config') {
 			header("Location: /admin/config");
 			exit();
 		}
 
-		$this->setupRenderInfo($renderInfo, function() {
-			$this->renderTitle("Skyline :: Ready :: Identification");
-			$this->renderDescription("Please identify yourself to get access to the Skyline CMS Administration panel.");
+		/** @var TranslationManager $tm */
+		$tm = $this->get(TranslationManager::SERVICE_NAME);
+		$tm->setDefaultGlobalTableName("admin");
+
+		$this->setupRenderInfo($renderInfo, function() use ($tm) {
+			$this->renderTitle("Skyline :: Ready :: " . $tm->translateGlobal("Identification"));
+			$this->renderDescription($tm->translateGlobal("Please identify yourself to get access to the Skyline CMS Administration panel."));
 		});
 	}
 
@@ -78,5 +87,39 @@ abstract class AbstractGeneralAdminController extends AbstractActionController i
 			$e->setDetails($tm->translateGlobal("The request is not valid because of the csrf token"));
 			throw $e;
 		}
+	}
+
+	protected function makeCSRFToken($name = "skyline-admin-csrf") {
+		/** @var CSRFTokenManager $csrf */
+		$csrf = $this->CSRFManager;
+		return $csrf->getToken($name);
+	}
+
+	protected function sendAdminEmail($to, $subject, $contents, bool $html = false): bool {
+		if(class_exists(MailService::class)) {
+			/** @var MailService $ms */
+			$ms = $this->get(MailService::SERVICE_NAME);
+
+			/** @var HTMLMail $mail */
+			if($html)
+				$mail = $ms->makeMailFromDefaultAccount(HTMLMail::class);
+			else
+				$mail = $ms->makeMailFromDefaultAccount(PlainMail::class);
+			$mail->setCharSet( PHPMailer::CHARSET_UTF8 );
+
+			$mail->addAddress(new EmailAddress($user->getEmail(), $user->getFullName()));
+			$mail->setSubject($subject);
+			$mail->appendText($contents);
+
+			return $ms->sendMail($mail);
+		} else {
+			$header = "MIME-Version: 1.0\r\n";
+			if($html)
+				$header .= "Content-type: text/html; charset=utf-8\r\n";
+			$header .= "X-Mailer: Skyline CMS (PHP ". phpversion().")";
+
+			return mail($to, $subject, $contents, $header);
+		}
+		return false;
 	}
 }

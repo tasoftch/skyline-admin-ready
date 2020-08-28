@@ -48,7 +48,7 @@ return [
         "icon" => new IconComponent(
             '/Public/Skyline-Library/Admin/Images/Logo/skyline-256.png',
             NULL,
-            'sha384-'.hash_file("sha384", $skylineLogo64),
+            'sha384-'.base64_encode(hash_file("sha384", $skylineLogo64, true)),
             NULL,
             CompilerContext::getCurrentCompiler()->getRelativeProjectPath($skylineLogo64)
         ),
@@ -57,13 +57,13 @@ return [
         ],
 		'bootstrap-js' => new JavaScriptPostLoadComponent(
 			'/Public/Skyline-Library/Admin/JavaScript/bootstrap.min.js',
-			'sha384-'.hash_file("sha384", $bootstrapJS),
+			'sha384-'.base64_encode(hash_file("sha384", $bootstrapJS, true)),
 			NULL,
 			CompilerContext::getCurrentCompiler()->getRelativeProjectPath($bootstrapJS)
 		),
         "core-js" => new JavaScriptPostLoadComponent(
             "/Public/Skyline-Library/Admin/JavaScript/skyline-core.js",
-            'sha384-'.hash_file("sha384", $skylineCoreJS),
+            'sha384-'.base64_encode(hash_file("sha384", $skylineCoreJS, true)),
             NULL,
             CompilerContext::getCurrentCompiler()->getRelativeProjectPath($skylineCoreJS))
     ],

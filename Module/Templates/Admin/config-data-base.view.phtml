@@ -73,7 +73,7 @@ $option = function($key, $selected = NULL) use ($PDO) {
 
 				<div class="form-group">
 					<label for="primary"><?=$this->translate('Primary')?></label>
-					<select class="form-control<?php
+					<select class="custom-select<?php
 					$SELECTED = $PDO['db_selected'];
 
 					if($SELECTED["s"] === 'p') {
@@ -103,7 +103,7 @@ $option = function($key, $selected = NULL) use ($PDO) {
 
 				<div class="form-group">
 					<label for="secondary"><?=$this->translate('Secondary')?></label>
-					<select class="form-control<?php
+					<select class="custom-select<?php
 					if($SELECTED["s"] === 's')
 						echo " is-valid";
 					elseif($SELECTED['s'] !== 0)
@@ -124,7 +124,7 @@ $option = function($key, $selected = NULL) use ($PDO) {
 					}
 					?>
 					<div class="valid-feedback">
-						Is in use.
+						<?= $this->translate('Is in use.') ?>
 					</div>
 				</div>
 
@@ -141,7 +141,7 @@ $option = function($key, $selected = NULL) use ($PDO) {
 			if($PDO['db_selected'] === 0) {
 				?>
 			<p class="alert alert-danger">
-				Skyline CMS could not connect to one of your desired database servers.
+				<?= $this->translate('Skyline CMS could not connect to one of your desired database servers.') ?>
 			</p>
 				<?php
 			}
@@ -158,7 +158,7 @@ $option = function($key, $selected = NULL) use ($PDO) {
 					<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
 
 					<div class="form-group row">
-						<label for="host" class="col-md-2 col-form-label">Host</label>
+						<label for="host" class="col-md-2 col-form-label"><?= $this->translate('Host') ?></label>
 						<div class="col-md-10">
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -170,7 +170,7 @@ $option = function($key, $selected = NULL) use ($PDO) {
 					</div>
 
 					<div class="form-group row">
-						<label for="username" class="col-md-2 col-form-label">Username</label>
+						<label for="username" class="col-md-2 col-form-label"><?= $this->translate('Username') ?></label>
 						<div class="col-md-10">
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -182,7 +182,7 @@ $option = function($key, $selected = NULL) use ($PDO) {
 					</div>
 
 					<div class="form-group row">
-						<label for="password" class="col-md-2 col-form-label">Password</label>
+						<label for="password" class="col-md-2 col-form-label"><?= $this->translate('Password') ?></label>
 						<div class="col-md-10">
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -194,14 +194,14 @@ $option = function($key, $selected = NULL) use ($PDO) {
 					</div>
 
 					<div class="form-group row">
-						<label for="db_name" class="col-md-2 col-form-label">Database</label>
+						<label for="db_name" class="col-md-2 col-form-label"><?= $this->translate('Database') ?></label>
 						<div class="col-md-10">
 							<div class="input-group">
 								<div class="input-group-prepend">
 									<span class="input-group-text"><i class="fa fa-database"></i></span>
 								</div>
-								<select id="db_name" name="db_name" class="form-control">
-									<option value="0">No DB available</option>
+								<select id="db_name" name="db_name" class="custom-select">
+									<option value="0"><?= $this->translate('No DB available') ?></option>
 									<?php
 									foreach($PDO["mysql_dbs"] as $db) {
 										if($db == $PDO["mysql_db"])
@@ -219,19 +219,19 @@ $option = function($key, $selected = NULL) use ($PDO) {
 					if($PDO["mysql_ok"]) {
 						?>
 						<div class="alert alert-success">
-							<h5 class="alert-heading">Connection Verified</h5>
+							<h5 class="alert-heading"><?= $this->translate('Connection Verified') ?></h5>
 							<p>
-								Skyline CMS is able to connect to the required mysql server with the given credentials.
+								<?= $this->translate('Skyline CMS is able to connect to the required mysql server with the given credentials.') ?>
 							</p>
 						</div>
 						<?php
 					} else {
 						?>
 						<div class="alert alert-danger">
-							<h5 class="alert-heading">Connection Not Verified</h5>
+							<h5 class="alert-heading"><?= $this->translate('Connection Not Verified') ?></h5>
 							<p>
-								Skyline CMS could not verify the connection credentials yet.<br>
-								Please enter and save them and then press "Verify".
+								<?= $this->translate('Skyline CMS could not verify the connection credentials yet.<br>
+								Please enter and save them and then press "Verify".') ?>
 							</p>
 						</div>
 						<?php
@@ -245,15 +245,15 @@ $option = function($key, $selected = NULL) use ($PDO) {
 				</form>
 			</div>
 			<div class="col-lg-4">
-				Provide valid connection information to the mysql server.
+				<?= $this->translate('Provide valid connection information to the mysql server.') ?>
 				<p class="alert alert-danger">
-					Please note, that Skyline CMS never transmits passwords to this page. You get a hint, if a password was set or not.
+					<?= $this->translate('Please note, that Skyline CMS never transmits passwords to this page. You get a hint, if a password was set or not.') ?>
 				</p>
 
 				<div class="alert alert-warning">
-					<h5 class="alert-heading">Warning</h5>
-					Most mysql servers will block too many failed login attempts.<br>
-					So please only verify the connection if you are sure about the credentials.
+					<h5 class="alert-heading"><?= $this->translate('Warning') ?></h5>
+					<?= $this->translate('Most mysql servers will block too many failed login attempts.<br>
+					So please only verify the connection if you are sure about the credentials.') ?>
 				</div>
 			</div>
 		</div>
@@ -266,7 +266,7 @@ if($PROBLEM !== 0) {
 		<div class="modal-dialog success" role="document">
 			<div class="modal-content">
 				<div class="modal-header bg-danger text-white">
-					<h4 class="modal-title text-center">Settings Not Updated</h4>
+					<h4 class="modal-title text-center"><?= $this->translate('Settings Not Updated') ?></h4>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true" class="white-text">&times;</span>
 					</button>
@@ -278,46 +278,46 @@ if($PROBLEM !== 0) {
 						if($PROBLEM == -4) {
 							?>
 							<div class="alert alert-danger">
-								<h4 class="alert-heading">DB Host Error</h4>
+								<h4 class="alert-heading"><?= $this->translate('DB Host Error') ?></h4>
 								<p>
-									Skyline CMS is not able to reach a mysql server on given host.
+									<?= $this->translate('Skyline CMS is not able to reach a mysql server on given host.') ?>
 								</p>
 							</div>
 							<?php
 						} elseif($PROBLEM == -1) {
 							?>
 							<div class="alert alert-danger">
-								<h4 class="alert-heading">DB Login Error</h4>
+								<h4 class="alert-heading"><?= $this->translate('DB Login Error') ?></h4>
 								<p>
-									Skyline CMS is not able to login on mysql server with the given credentials.
+									<?= $this->translate('Skyline CMS is not able to login on mysql server with the given credentials.') ?>
 								</p>
 							</div>
 							<?php
 						} elseif($PROBLEM == -2) {
 							?>
 							<div class="alert alert-danger">
-								<h4 class="alert-heading">DB Error</h4>
+								<h4 class="alert-heading"><?= $this->translate('DB Error') ?></h4>
 								<p>
-									The database server does not allow you to use the given database with this credentials.
+									<?= $this->translate('The database server does not allow you to use the given database with this credentials.') ?>
 								</p>
 							</div>
 							<?php
 						} elseif($PROBLEM == -3) {
 							?>
 							<div class="alert alert-danger">
-								<h4 class="alert-heading">DB Error</h4>
+								<h4 class="alert-heading"><?= $this->translate('DB Error') ?></h4>
 								<p>
-									The requested mysql server seems to reject any further request.<br>
-									Probably because of too many failed login attempts.
+									<?= $this->translate('The requested mysql server seems to reject any further request.<br>
+									Probably because of too many failed login attempts.') ?>
 								</p>
 							</div>
 							<?php
 						} elseif($PROBLEM == -5) {
 							?>
 							<div class="alert alert-warning">
-								<h4 class="alert-heading">DB Warning</h4>
+								<h4 class="alert-heading"><?= $this->translate('DB Warning') ?></h4>
 								<p>
-									No database selected.
+									<?= $this->translate('No database selected.') ?>
 								</p>
 							</div>
 							<?php
@@ -341,7 +341,7 @@ if($PROBLEM !== 0) {
 		<div class="modal-dialog success" role="document">
 			<div class="modal-content">
 				<div class="modal-header bg-success text-white">
-					<h4 class="modal-title text-center" id="modal-success-title">Settings Updated</h4>
+					<h4 class="modal-title text-center" id="modal-success-title"><?= $this->translate('Settings Updated') ?></h4>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true" class="white-text">&times;</span>
 					</button>
@@ -350,7 +350,7 @@ if($PROBLEM !== 0) {
 					<div class="text-center">
 						<i class="fa fa-check fa-4x text-success animated rotateIn mb-3"></i>
 						<p>
-							The changed settings were updated successfully.
+							<?= $this->translate('The changed settings were updated successfully.') ?>
 						</p>
 					</div>
 				</div>

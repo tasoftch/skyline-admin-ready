@@ -64,11 +64,11 @@ use TASoft\Service\ServiceManager;
 
 				<ul class="list-group">
 					<li class="list-group-item d-flex justify-content-between">
-						<strong>Service</strong>
+						<strong><?= $this->translate('Service') ?></strong>
 						<em><?=$PDO["service"]?></em>
 					</li>
 					<li class="list-group-item d-flex justify-content-between list-group-item-<?=$PDO["ok"]?'success':'danger'?>">
-						<strong>Driver</strong>
+						<strong><?= $this->translate('Driver') ?></strong>
 						<em><?=$PDO["driver"]?></em>
 					</li>
 				</ul>
@@ -77,21 +77,21 @@ use TASoft\Service\ServiceManager;
 				if($PDO["ok"]) {
 					?>
 					<div class="alert alert-success mb-4">
-						Skyline CMS will run the SQL file located at:<br>
+						<?= $this->translate('Skyline CMS will run the SQL file located at:') ?><br>
 						<code>vendor/skyline-admin/pdo-initialisation/SQL/User-System/create.<?=$PDO["driver"]?>.sql</code>
 					</div>
 					<?php
 				} else {
 					?>
 					<div class="alert alert-danger mb-4">
-						We're very sorry, but Skyline CMS does not support an initialisation sql script for your required database server.
+					<?= $this->translate('We\'re very sorry, but Skyline CMS does not support an initialisation sql script for your required database server . ')?>
 					</div>
 					<?php
 				}
 				?>
 
 				<div class="form-group row">
-					<label for="username" class="col-md-2 col-form-label">Username</label>
+					<label for="username" class="col-md-2 col-form-label"><?=$this->translate('Username')?></label>
 					<div class="col-md-10">
 						<div class="input-group">
 							<div class="input-group-prepend">
@@ -105,14 +105,35 @@ use TASoft\Service\ServiceManager;
 							}
 							?>" id="username" name="username" value="<?=htmlspecialchars($ROOT_USER["name"])?>">
 							<div class="invalid-feedback ml-5">
-								Username must not be empty.
+								<?= $this->translate('Username must not be empty.') ?>
 							</div>
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="password" class="col-md-2 col-form-label">Password</label>
+					<label for="email" class="col-md-2 col-form-label"><?= $this->translate('Email') ?></label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-at"></i></span>
+							</div>
+							<input type="text" class="form-control<?php
+							switch ($PROBLEM) {
+								case 5: echo " is-invalid"; break;
+								case 0: break;
+								default: echo " is-valid";
+							}
+							?>" id="username" name="email" value="<?=htmlspecialchars($ROOT_USER["email"])?>">
+							<div class="invalid-feedback ml-5">
+								<?= $this->translate('Email is not valid') ?>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="password" class="col-md-2 col-form-label"><?= $this->translate('Password') ?></label>
 					<div class="col-md-10">
 						<div class="input-group">
 							<div class="input-group-prepend">
@@ -126,14 +147,14 @@ use TASoft\Service\ServiceManager;
 							}
 							?>" id="password" name="password" value="">
 							<div class="invalid-feedback ml-5">
-								Passwort must not be empty.
+								<?= $this->translate('Passwort must not be empty.') ?>
 							</div>
 						</div>
 					</div>
 				</div>
 
 				<div class="form-group row">
-					<label for="passwordv" class="col-md-2 col-form-label">Verify</label>
+					<label for="passwordv" class="col-md-2 col-form-label"><?= $this->translate('Verify') ?></label>
 					<div class="col-md-10">
 						<div class="input-group">
 							<div class="input-group-prepend">
@@ -147,13 +168,31 @@ use TASoft\Service\ServiceManager;
 							}
 							?>" id="passwordv" name="passwordv" value="">
 							<div class="invalid-feedback ml-5">
-								Password not verified. There is probaply a typo.
+								<?= $this->translate('Password not verified. There is probaply a typo.') ?>
 							</div>
 						</div>
 					</div>
 				</div>
 
+				<div class="form-group row">
+					<label for="entitlement" class="col-md-2 col-form-label"><?= $this->translate('Entitlement') ?></label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-sign-in"></i></span>
+							</div>
+
+							<select class="custom-select" id="entitlement" name="entitlement">
+								<option value="1"><?= $this->translate('Administrator') ?></option>
+								<option value="2"><?= $this->translate('Root') ?></option>
+							</select>
+						</div>
+					</div>
+				</div>
+
 				<?php
+
+
 				if($PDO["ok"]) {
 					?>
 					<div class="form-group">
@@ -166,10 +205,10 @@ use TASoft\Service\ServiceManager;
 		</div>
 		<div class="col-lg-4">
 			<p>
-				You must declare a root user here to be able to login to Skyline CMS as this user.
+				<?= $this->translate('You must declare a root user here to be able to login to Skyline CMS as this user.') ?>
 			</p>
 			<p class="alert alert-danger">
-				Skyline CMS allows here any password except an empty one! Please use a secure password!
+				<?= $this->translate('Skyline CMS allows here any password except an empty one! Please use a secure password!') ?>
 			</p>
 		</div>
 	</div>

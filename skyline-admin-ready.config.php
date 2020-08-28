@@ -32,10 +32,18 @@
  *
  */
 
+use Skyline\Admin\Ready\Service\EmailContentsService;
 use Skyline\Kernel\Config\MainKernelConfig;
+use TASoft\Service\Config\AbstractFileConfiguration;
 
 return [
     MainKernelConfig::CONFIG_SERVICES => [
-
+		EmailContentsService::SERVICE_NAME => [
+			AbstractFileConfiguration::SERVICE_CLASS => EmailContentsService::class,
+			AbstractFileConfiguration::SERVICE_INIT_ARGUMENTS => [
+				'vendor/skyline-admin/ready/Module/Templates/Email',
+				'$(/)/Templates/Email'
+			]
+		]
     ]
 ];

@@ -33,7 +33,6 @@
  */
 
 use Skyline\Render\Context\DefaultRenderContext;
-use TASoft\Service\ServiceManager;
 
 /**
  *
@@ -41,10 +40,22 @@ use TASoft\Service\ServiceManager;
  * @var int|string $PROBLEM
  * @var array $INIT_USER
  */
-?>
-<style type="text/css">
 
-</style>
+$recommended = $this->translate('(recommended)');
+$optional = $this->translate('(optional)');
+?>
+<script type="application/javascript">
+function toggle_email_enabled(sender) {
+	var $inp = $("#enable-verify");
+	if($inp.val() == '1') {
+	    $inp.val(0);
+	    $(sender).removeClass("text-primary");
+	} else {
+        $inp.val(1);
+        $(sender).addClass("text-primary");
+	}
+}
+</script>
 
 <?=$BREAD?>
 
@@ -70,7 +81,7 @@ use TASoft\Service\ServiceManager;
 				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
 
 				<div class="form-group row">
-					<label for="username" class="col-md-2 col-form-label">Username</label>
+					<label for="username" class="col-md-2 col-form-label"><?= $this->translate('Username') ?></label>
 					<div class="col-md-10">
 						<div class="input-group">
 							<div class="input-group-prepend">
@@ -82,7 +93,7 @@ use TASoft\Service\ServiceManager;
 				</div>
 
 				<div class="form-group row">
-					<label for="password" class="col-md-2 col-form-label">Password</label>
+					<label for="password" class="col-md-2 col-form-label"><?= $this->translate('Password') ?></label>
 					<div class="col-md-10">
 						<div class="input-group">
 							<div class="input-group-prepend">
@@ -94,7 +105,7 @@ use TASoft\Service\ServiceManager;
 				</div>
 
 				<div class="form-group row">
-					<label for="passwordv" class="col-md-2 col-form-label">Verify</label>
+					<label for="passwordv" class="col-md-2 col-form-label"><?= $this->translate('Verify') ?></label>
 					<div class="col-md-10">
 						<div class="input-group">
 							<div class="input-group-prepend">
@@ -118,10 +129,10 @@ use TASoft\Service\ServiceManager;
 		</div>
 		<div class="col-lg-4">
 			<p>
-				The single user system only allows one user. The username and its credentials must be declared here and are saved in the parameters.addon.config.php file.
+				<?= $this->translate('The single user system only allows one user. The username and its credentials must be declared here and are saved in the parameters.addon.config.php file.') ?>
 			</p>
 			<p class="alert alert-danger">
-				Please note, that Skyline CMS never transmits passwords to this page. You get a hint, if a password was set or not.
+				<?= $this->translate('Please note, that Skyline CMS never transmits passwords to this page. You get a hint, if a password was set or not.') ?>
 			</p>
 		</div>
 	</div>
@@ -149,7 +160,7 @@ use TASoft\Service\ServiceManager;
 						<div class="alert alert-warning">
 							<h4 class="alert-heading">Warning</h4>
 							<p>
-								To enable the multiple user system you need to configure the data base first.
+								<?= $this->translate('To enable the multiple user system you need to configure the data base first.') ?>
 							</p>
 						</div>
 						<?php
@@ -157,58 +168,297 @@ use TASoft\Service\ServiceManager;
 						?>
 					<ul class="list-group mb-4">
 						<li class="list-group-item list-group-item-success d-flex justify-content-between">
-							<strong>Selected Database</strong>
+							<strong><?= $this->translate('Selected Database') ?></strong>
 							<em><?=$MUL_USER["service"]?></em>
 						</li>
 						<li class="list-group-item d-flex justify-content-between">
-							<strong>Users</strong>
+							<strong><?= $this->translate('Users') ?></strong>
 							<em><?=($users = $MUL_USER["usersCount"]) >= 0 ? $users : '-.-'?></em>
 						</li>
 						<li class="list-group-item d-flex justify-content-between">
-							<strong>Groups</strong>
-							<em><?=($users = $MUL_USER["groupsCount"]) >= 0 ? $users : '-.-'?></em>
+							<strong><?= $this->translate('Groups') ?></strong>
+							<em><?=count(($groups = $MUL_USER["groupsCount"])) >= 0 ? count($groups) : '-.-'?></em>
 						</li>
 						<li class="list-group-item d-flex justify-content-between">
-							<strong>Roles</strong>
+							<strong><?= $this->translate('Roles') ?></strong>
 							<em><?=($users = $MUL_USER["rolesCount"]) >= 0 ? $users : '-.-'?></em>
 						</li>
 					</ul>
 						<?php
 
-						if($users == -1) {
+						if($users == -1 && $MUL_USER["enabled"] !== false) {
 							?>
 							<div class="alert alert-danger">
-								<h5 class="alert-heading">Initialisation</h5>
-								The selected database is not yet initialized to use as multiple user system.<br>
-								Please press the "Initialize" button.
+								<h5 class="alert-heading"><?= $this->translate('Initialisation') ?></h5>
+								<?= $this->translate('The selected database is not yet initialized to use as multiple user system.<br>
+								Please press the "Initialize" button.') ?>
 							</div>
 							<?php
 						}
 					}
 					?>
 
-
 					<div class="form-group">
 						<?php
 						$disabled = $MUL_USER["service"] ? '' : 'disabled';
-						if($MUL_USER["enabled"] !== false)
+						if($MUL_USER["enabled"] !== false) {
 							echo "<button name=\"disable-db\" class=\"btn btn-outline-danger\">", $this->translate('Deactivate'), "</button>";
-						else
-							echo "<button name=\"enable-db\" class=\"btn btn-outline-success\" $disabled>", $this->translate('Activate'), "</button>";
-
-						if(isset($users)) {
+							if(isset($users)) {
 							if($users == -1)
 								echo "<button name=\"initialize-db\" class=\"btn btn-outline-primary ml-5\" $disabled>", $this->translate('Initialize'), "</button>";
 							else
 								echo "<button onclick=\"return confirm('Do you really want to delete the current User System? This action will remove all stored user information immediately and can not be undone!');\" name=\"delete-db\" class=\"btn btn-outline-danger ml-2\" $disabled>", $this->translate('Delete User System'), "</button>";
+							}
 						}
+						else
+							echo "<button name=\"enable-db\" class=\"btn btn-outline-success\" $disabled>", $this->translate('Activate'), "</button>";
 						?>
 					</div>
 				</form>
 			</div>
 			<div class="col-lg-4">
 				<p>
-					The nultiple user system allows many users. You can assign groups and roles to grant and deny very specific actions.
+					<?= $this->translate('The nultiple user system allows many users. You can assign groups and roles to grant and deny very specific actions.') ?>
+				</p>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="card mt-5">
+		<h4 class="card-header"><?= $this->translate('Membership') ?></h4>
+		<div class="card-body row">
+			<div class="col-lg-8">
+				<form action="" method="post">
+					<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" <?=$MUL_USER["sec_mem"]?'checked':''?> name="enable-membership" value="1" aria-label="<?= $enableDisable ?>" title="<?=$enableDisable?>">
+								</div>
+							</div>
+							<input type="text" class="form-control" readonly value="<?= $this->translate('Allows Membership') ?>" aria-describedby="em-help" aria-label="<?= $text = $this->translate('Allows anyone to request a new membership (Only possible with the multiple user-system.)') ?>" title="<?=$text?>">
+							<select class="custom-select" name="membership-group">
+								<option value="0"><?= $this->translate('Add To…') ?></option>
+								<?php
+								foreach($groups as $group) {
+									if($group['id'] == $MUL_USER["sec_mem_grp"])
+										printf("<option selected value=\"%d\">%s</option>", $group["id"], htmlspecialchars($group["name"]));
+									else
+										printf("<option value=\"%d\">%s</option>", $group["id"], htmlspecialchars($group["name"]));
+								}
+								?>
+							</select>
+							<div class="input-group-append">
+								<span class="input-group-text"><?= $optional ?></span>
+							</div>
+						</div>
+						<small id="em-help" class="form-text text-muted"><?= $text ?></small>
+					</div>
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" <?=$MUL_USER['sec_mem_vfy'] ? 'checked':''?> name="enable-verify" value="1" id="enable-verify">
+								</div>
+							</div>
+							<input type="text" class="form-control" readonly value="<?= $text = $this->translate('Verify Email Address') ?>" aria-describedby="sc-help" aria-label="<?= $text ?>" title="<?=$text?>">
+							<div class="input-group-append">
+								<span class="input-group-text"><?= $recommended ?></span>
+							</div>
+						</div>
+						<small id="sc-help" class="form-text text-muted"><?= $this->translate('Verifies the new member\'s email address by sending an activation link.') ?></small>
+					</div>
+
+					<div class="form-group">
+						<?php
+						echo "<button name=\"apply-membership\" class=\"btn btn-outline-primary\">", $this->translate('Save'), "</button>";
+						?>
+					</div>
+				</form>
+			</div>
+
+			<div class="col-lg-4">
+				<p>
+					<?= $this->translate('It is also possible to allow new members to join a membership on your application.<br>
+					In that case it is a good idea to create a special group of "greenhorns", so later you can assign individual groups and roles.') ?>
+				</p>
+				<p class="alert alert-warning">
+					<?= $this->translate('Please do not grant too many actions to new members for security reasons!') ?>
+				</p>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="card mt-5">
+		<h4 class="card-header"><?= $this->translate('Password Reset') ?></h4>
+		<div class="card-body row">
+			<div class="col-lg-8">
+				<form action="" method="post">
+					<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" <?=$MUL_USER["pass_reset"]?'checked':''?> name="enable-reset" value="1" aria-label="<?= $enableDisable = $this->translate('Enable or disable') ?>" title="<?=$enableDisable?>">
+								</div>
+							</div>
+							<input type="text" class="form-control" readonly value="<?= $this->translate('Allows Password Reset') ?>" aria-describedby="er-help" aria-label="<?= $text = $this->translate('Allows all registered members to reset their passwords.') ?>" title="<?=$text?>">
+							<div class="input-group-append">
+								<span class="input-group-text"><?= $recommended ?></span>
+							</div>
+						</div>
+						<small id="er-help" class="form-text text-muted"><?= $text ?></small>
+					</div>
+
+					<h5><?= $this->translate('Password Conditions') ?></h5>
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" <?=$MUL_USER['pass_reset_conds'] & 1 ? 'checked':''?> name="pass_reset_conds[]" value="1" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+								</div>
+							</div>
+							<input type="text" class="form-control" readonly value="<?= $text = $this->translate('Not Empty') ?>" aria-describedby="ne-help" aria-label="<?= $text ?>" title="<?=$text?>">
+							<div class="input-group-append">
+								<span class="input-group-text"><?= $recommended ?></span>
+							</div>
+						</div>
+						<small id="ne-help" class="form-text text-muted"><?= $this->translate('Passwort must not be empty') ?></small>
+					</div>
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" <?=$MUL_USER['pass_reset_conds'] & 2 ? 'checked':''?> name="pass_reset_conds[]" value="2" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+								</div>
+							</div>
+							<input type="text" class="form-control" readonly value="<?= $text = $this->translate('Minimum Length') ?>" aria-describedby="ml-help" aria-label="<?= $text ?>" title="<?=$text?>">
+							<input type="text" class="form-control" name="pw_cond_min_length" value="<?=$MUL_USER["pw_cond_min_length"]?>" aria-label="<?= $text = $this->translate("Minimum character length") ?>" title="<?=$text?>">
+							<div class="input-group-append">
+								<span class="input-group-text"><?= $recommended ?></span>
+							</div>
+						</div>
+						<small id="ml-help" class="form-text text-muted"><?= $this->translate('Passwort must contain at least a minimum amount of characters.') ?></small>
+					</div>
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" <?=$MUL_USER['pass_reset_conds'] & 4 ? 'checked':''?> name="pass_reset_conds[]" value="4" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+								</div>
+							</div>
+							<input type="text" class="form-control" readonly value="<?= $text = $this->translate('Numbers') ?>" aria-describedby="nrs-help" aria-label="<?= $text ?>" title="<?=$text?>">
+							<div class="input-group-append">
+								<span class="input-group-text"><?= $recommended ?></span>
+							</div>
+						</div>
+						<small id="nrs-help" class="form-text text-muted"><?= $this->translate('Passwort must contain at least one number 0-9.') ?></small>
+					</div>
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" <?=$MUL_USER['pass_reset_conds'] & 8 ? 'checked':''?> name="pass_reset_conds[]" value="8" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+								</div>
+							</div>
+							<input type="text" class="form-control" readonly value="<?= $text = $this->translate('Upper Case Characters') ?>" aria-describedby="uc-help" aria-label="<?= $text ?>" title="<?=$text?>">
+							<div class="input-group-append">
+								<span class="input-group-text"><?= $recommended ?></span>
+							</div>
+						</div>
+						<small id="uc-help" class="form-text text-muted"><?= $this->translate('Passwort must contain at least one uppercase character A-Z.') ?></small>
+					</div>
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" <?=$MUL_USER['pass_reset_conds'] & 16 ? 'checked':''?> name="pass_reset_conds[]" value="16" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+								</div>
+							</div>
+							<input type="text" class="form-control" readonly value="<?= $text = $this->translate('Lower Case Characters') ?>" aria-describedby="lc-help" aria-label="<?= $text ?>" title="<?=$text?>">
+							<div class="input-group-append">
+								<span class="input-group-text"><?= $recommended ?></span>
+							</div>
+						</div>
+						<small id="lc-help" class="form-text text-muted"><?= $this->translate('Passwort must contain at least one lowercase character a-z.') ?></small>
+					</div>
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" <?=$MUL_USER['pass_reset_conds'] & 32 ? 'checked':''?> name="pass_reset_conds[]" value="32" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+								</div>
+							</div>
+							<input type="text" class="form-control" readonly value="<?= $text = $this->translate('Special Characters') ?>" aria-describedby="sc-help" aria-label="<?= $text ?>" title="<?=$text?>">
+							<div class="input-group-append">
+								<span class="input-group-text"><?= $recommended ?></span>
+							</div>
+						</div>
+						<small id="sc-help" class="form-text text-muted"><?= $this->translate('Passwort must contain at least one special character: +-*/?!$;:_%%&@(){}[]#=') ?></small>
+					</div>
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" <?=$MUL_USER['pass_reset_conds'] & 64 ? 'checked':''?> name="pass_reset_conds[]" value="64" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+								</div>
+							</div>
+							<input type="text" class="form-control" readonly value="<?= $text = $this->translate('Must Contain Characters') ?>" aria-describedby="ml-help" aria-label="<?= $text ?>" title="<?=$text?>">
+							<input type="text" class="form-control" placeholder="ex: a-zA-RU-Y2-8\-_\\^" name="pw_cond_must_contain" value="<?=htmlspecialchars($MUL_USER["pw_cond_must_contain"])?>" aria-label="<?= $text = $this->translate("List all characters that are required as a new password.") ?>" title="<?=$text?>">
+							<div class="input-group-append">
+								<span class="input-group-text"><?= $recommended ?></span>
+							</div>
+						</div>
+						<small id="ml-help" class="form-text text-muted"><?= $this->translate('Password may only use the given characters. A-Z and 0-9 shorthands are allowed. Minus: \- and backslash: \\') ?></small>
+					</div>
+
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<div class="input-group-text">
+									<input type="checkbox" <?=$MUL_USER['pass_reset_conds'] & 128 ? 'checked':''?> name="pass_reset_conds[]" value="128" aria-label="<?=$enableDisable?>" title="<?=$enableDisable?>">
+								</div>
+							</div>
+							<input type="text" class="form-control" readonly value="<?= $text = $this->translate('Must Not Contain Characters') ?>" aria-describedby="ml-help" aria-label="<?= $text ?>" title="<?=$text?>">
+							<input type="text" class="form-control" placeholder="ex: öäüç/" name="pw_cond_must_not_contain" value="<?=htmlspecialchars($MUL_USER["pw_cond_must_not_contain"])?>" aria-label="<?= $text = $this->translate("List all characters that are forbidden in a new password.") ?>" title="<?=$text?>">
+							<div class="input-group-append">
+								<span class="input-group-text"><?= $recommended ?></span>
+							</div>
+						</div>
+						<small id="ml-help" class="form-text text-muted"><?= $this->translate('Passwort can have any character except the specified ones.') ?></small>
+					</div>
+
+					<div class="form-group">
+						<?php
+						echo "<button name=\"apply-passwords\" class=\"btn btn-outline-primary\">", $this->translate('Save'), "</button>";
+						?>
+					</div>
+				</form>
+			</div>
+
+			<div class="col-lg-4">
+				<p>
+					<?= $this->translate('To increase reliability of your application you should enable the password reset service.<br>
+					Then any registered member has the chance to reset and define a new custom password.') ?>
+				</p>
+				<p>
+					<?= $this->translate('Please specify some password conditions so that nobody is able to choose 12345 or an empty password!') ?>
+				</p>
+				<p class="alert alert-warning">
+					<?= $this->translate('Please note that you can create impossible conditions using the <code>Must Contain Characters</code> and <code>Must Not Contain Characters</code> conditions.<br>
+					Example: Enable <code>Numbers</code> and <code>Must Not Contain Characters</code> with 0-9 string.') ?>
 				</p>
 			</div>
 		</div>
@@ -222,7 +472,7 @@ if(is_string($PROBLEM )) {
 		<div class="modal-dialog success" role="document">
 			<div class="modal-content">
 				<div class="modal-header bg-danger text-white">
-					<h4 class="modal-title text-center">Settings Not Updated</h4>
+					<h4 class="modal-title text-center"><?= $this->translate('Settings Not Updated') ?></h4>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true" class="white-text">&times;</span>
 					</button>
@@ -251,7 +501,7 @@ if(is_string($PROBLEM )) {
 		<div class="modal-dialog success" role="document">
 			<div class="modal-content">
 				<div class="modal-header bg-success text-white">
-					<h4 class="modal-title text-center" id="modal-success-title">Settings Updated</h4>
+					<h4 class="modal-title text-center" id="modal-success-title"><?= $this->translate('Settings Updated') ?></h4>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true" class="white-text">&times;</span>
 					</button>
@@ -260,7 +510,7 @@ if(is_string($PROBLEM )) {
 					<div class="text-center">
 						<i class="fa fa-check fa-4x text-success animated rotateIn mb-3"></i>
 						<p>
-							The changed settings were updated successfully.
+							<?= $this->translate('The changed settings were updated successfully.') ?>
 						</p>
 					</div>
 				</div>

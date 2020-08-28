@@ -49,9 +49,21 @@ use Skyline\Render\Context\DefaultRenderContext;
 <?=$BREAD?>
 
 <h1><?=$this->translate("Configuration")?></h1>
-<div class="alert alert-primary">
-	<?=$this->translate('Your Skyline CMS Administration panel is not yet ready to use. Please go through the following steps to configure the application.')?>
-</div>
+<?php
+if($general) {
+	?>
+	<div class="alert alert-success">
+		<?=$this->translate('Your Skyline CMS Administration panel is now ready to use. <a href="/admin">Go To Panel</a>')?>
+	</div>
+	<?php
+} else {
+	?>
+	<div class="alert alert-primary">
+		<?=$this->translate('Your Skyline CMS Administration panel is not yet ready to use. Please go through the following steps to configure the application.')?>
+	</div>
+	<?php
+}
+?>
 
 <hr>
 
@@ -75,23 +87,6 @@ use Skyline\Render\Context\DefaultRenderContext;
 			</div>
 			<div class="card-footer d-flex justify-content-between">
 				<button class="btn-sm btn btn-primary" onclick="location.href='<?=$this->buildURL('Admin', '/config-security')?>'"><?= $this->translate('Setup') ?></button>
-			</div>
-		</div>
-	</div>
-
-	<div class="col-md-6 mt-3">
-		<div class="card">
-			<h4 class="card-header"><?=$this->translate("User System")?></h4>
-			<div class="card-body">
-				<p>
-					<?= $this->translate('With the user system you can switch between two different login systems.<br>
-					There is a simple login system (without database) and a complex.') ?>
-				</p>
-				<span class="badge badge-danger badge-pill"><?= $this->translate('Not yet configured') ?></span>
-				<span class="badge badge-warning badge-pill"><?= $this->translate('Works with current setup') ?></span>
-			</div>
-			<div class="card-footer d-flex justify-content-between">
-				<button class="btn-sm btn btn-primary" onclick="location.href='<?=$this->buildURL('Admin', '/config-user-system')?>'"><?= $this->translate('Setup') ?></button>
 			</div>
 		</div>
 	</div>
@@ -126,12 +121,54 @@ use Skyline\Render\Context\DefaultRenderContext;
 
 	<div class="col-md-6 mt-3">
 		<div class="card">
-			<h4 class="card-header"><?=$this->translate("Your Project")?></h4>
+			<h4 class="card-header"><?=$this->translate("User System")?></h4>
 			<div class="card-body">
 				<p>
-					<?= $this->translate('If all works fine, you need to provide Skyline CMS some information about your website for correct delivery.') ?>
+					<?= $this->translate('With the user system you can switch between two different login systems.<br>
+					There is a simple login system (without database) and a complex.') ?>
 				</p>
-				<span class="badge badge-danger badge-pill"><?= $this->translate('Not configured') ?></span>
+				<?php
+				/**
+				 * @var array $user_system
+				 */
+
+				$displaySystem = function($system, $ok) {
+					if($ok)
+						echo "<span class=\"badge badge-success badge-pill\">", $this->translate($system), "</span>";
+					else
+						echo "<span class=\"badge badge-danger badge-pill\">", $this->translate($system), "</span>";
+				};
+
+				if(isset($user_system["single"]) && isset($user_system["multiple"])) {
+					if($user_system["single"]["prio"] < $user_system["multiple"]["prio"]) {
+						$displaySystem("Single US", $user_system["single"]["ok"]);
+						$displaySystem("Multiple US", $user_system["multiple"]["ok"]);
+					} else {
+						$displaySystem("Multiple US", $user_system["multiple"]["ok"]);
+						$displaySystem("Single US", $user_system["single"]["ok"]);
+					}
+				} elseif(isset($user_system["single"])) {
+					$displaySystem("Single US", $user_system["single"]["ok"]);
+				} elseif(isset($user_system["multiple"])) {
+					$displaySystem("Multiple US", $user_system["multiple"]["ok"]);
+				} else {
+					echo "<span class=\"badge badge-danger badge-pill\">", $this->translate('Not configured'), "</span>";
+				}
+				?>
+			</div>
+			<div class="card-footer d-flex justify-content-between">
+				<button class="btn-sm btn btn-primary" onclick="location.href='<?=$this->buildURL('Admin', '/config-user-system')?>'"><?= $this->translate('Setup') ?></button>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6 mt-3">
+		<div class="card">
+			<h4 class="card-header"><?=$this->translate("Project")?></h4>
+			<div class="card-body">
+				<p>
+					<?= $this->translate('Skyline CMS needs to know about specific properties of your project.') ?>
+				</p>
 			</div>
 			<div class="card-footer d-flex justify-content-between">
 				<button class="btn-sm btn btn-primary" onclick="location.href='<?=$this->buildURL('Admin', '/config-project')?>'"><?= $this->translate('Setup') ?></button>

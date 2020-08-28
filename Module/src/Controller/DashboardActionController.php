@@ -34,6 +34,10 @@
 
 namespace Skyline\Admin\Ready\Controller;
 
+use Skyline\HTML\Bootstrap\Breadcrumb;
+use Skyline\Security\Identity\IdentityInterface;
+use Skyline\Translation\TranslationManager;
+
 /**
  * Main Controller for landing page on Skyline CMS Ready.
  * Displays the dashboard
@@ -41,6 +45,7 @@ namespace Skyline\Admin\Ready\Controller;
  * @package Skyline\Admin\Ready\Controller
  *
  * @role SKYLINE.ADMIN
+ * @reliability IdentityInterface::RELIABILITY_REMEMBER_ME
  */
 class DashboardActionController extends AbstractGeneralAdminController
 {
@@ -48,6 +53,13 @@ class DashboardActionController extends AbstractGeneralAdminController
      * @route literal /
      */
     public function dashboardAction() {
+    	/** @var TranslationManager $tm */
+    	$tm = $this->get(TranslationManager::SERVICE_NAME);
+
+    	$this->renderModel([
+    		'BREAD' => (new Breadcrumb())
+				->addItem('', $tm->translateGlobal("Dashboard"))
+		]);
         $this->renderTemplate("admin-main", [
             "Content" => 'dashboard'
         ]);

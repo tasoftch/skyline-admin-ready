@@ -2,24 +2,35 @@
 namespace Skyline\Admin\Ready\Controller;
 
 
+use Skyline\Admin\Ready\Helper\ParameterSetupHelper;
 use Skyline\HTML\Bootstrap\Breadcrumb;
 use Skyline\CMS\Security\Authentication\AuthenticationServiceFactory;
 use Skyline\CMS\Security\Identity\IdentityServiceFactory;
 use Skyline\Expose\ExposedSymbolsManager;
+use Skyline\Kernel\Config\MainKernelConfig;
 use Skyline\PDO\MySQL;
 use Skyline\Security\CSRF\CSRFToken;
 use Skyline\Security\CSRF\CSRFTokenManager;
 use Skyline\Security\Encoder\BCryptPasswordEncoder;
 use Skyline\Security\Encoder\HttpDigestA1Encoder;
+use Skyline\Security\Encoder\HttpDigestResponseEncoder;
 use Skyline\Security\Encoder\MessageDigestPasswordEncoder;
 use Skyline\Security\Encoder\PlaintextPasswordEncoder;
 use Skyline\Security\Encoder\PlaintextSaltPasswordEncoder;
 use Skyline\Security\Exception\SecurityException;
+use Skyline\Security\Identity\IdentityInterface;
+use Skyline\Security\Identity\Provider\Session\RememberMeIdentityProvider;
 use Skyline\Translation\TranslationManager;
 use Symfony\Component\HttpFoundation\Request;
+use TASoft\Service\Config\AbstractFileConfiguration;
+use TASoft\Service\Container\ConfiguredServiceContainer;
 use TASoft\Service\ServiceManager;
 use TASoft\Util\PDO;
 
+/**
+ * Class ConfigurationController
+ * @package Skyline\Admin\Ready\Controller
+ */
 class ConfigurationController extends AbstractConfigurationActionController
 {
 	private $encodersMap = [
@@ -37,6 +48,14 @@ class ConfigurationController extends AbstractConfigurationActionController
 		8 => IdentityServiceFactory::PROVIDER_NAME_HTTP_DIGEST,
 		16 => IdentityServiceFactory::PROVIDER_NAME_HTTP_BASIC,
 		32 => IdentityServiceFactory::PROVIDER_NAME_ANONYMOUS
+	];
+
+	private $validatorMap = [
+		1 => AuthenticationServiceFactory::VALIDATOR_CLIENT_BRUTE_FORCE,
+		2 => AuthenticationServiceFactory::VALIDATOR_SERVER_BRUTE_FORCE,
+		4 => AuthenticationServiceFactory::VALIDATOR_AUTO_LOGOUT,
+		8 => AuthenticationServiceFactory::VALIDATOR_PERMISSION_CHANGED,
+		16 => AuthenticationServiceFactory::VALIDATOR_UPDATE_LAST_LOGIN_DATE
 	];
 
 
@@ -63,6 +82,9 @@ class ConfigurationController extends AbstractConfigurationActionController
 
 	/**
 	 * @route literal /config
+	 * @menu path /config/Configuration/Overview
+	 * @menu action /admin/config
+	 * @menu separator after
 	 */
 	public function configurationAction(Request $request) {
 		/** @var TranslationManager $tm */
@@ -73,35 +95,67 @@ class ConfigurationController extends AbstractConfigurationActionController
 		$this->renderDescription($tm->translate("Adjust initial configuration to be able to launch Skyline CMS Administration panel."));
 
 		$security = 0;
+		$general = 1;
+
 		$sm = ServiceManager::generalServiceManager();
 
-		if(empty($encoders = $sm->getParameter('security.password-encoders.enabled')))
-			$security |=1;
+		if(empty($encoders = $sm->getParameter('security.password-encoders.enabled'))) {
+			$security |= 1;
+			$general = 0;
+		}
 		if(in_array(PlaintextSaltPasswordEncoder::class, $encoders) || in_array(PlaintextPasswordEncoder::class, $encoders))
 			$security |= 2;
-		if(empty($identities = $sm->getParameter('security.identity.order')))
+		if(empty($identities = $sm->getParameter('security.identity.order'))) {
 			$security |= 4;
+			$general = 0;
+		}
 		if(in_array(IdentityServiceFactory::PROVIDER_NAME_HTTP_BASIC, $identities))
 			$security |= 8;
 
-
-		$userSystem = 0;
+		$userSystem = [];
 
 
 		$dataBase = 0;
 		$this->getOrderedPDOIfPossible($dataBase);
-		if($dataBase === "")
+		if($dataBase === "") {
 			$dataBase = -1;
+			$general = 0;
+		}
 
+		$enabledProviders = $sm->getParameter("security.user-providers.enabled");
+		$single = array_search(AuthenticationServiceFactory::USER_PROVIDER_INITIAL_NAME, $enabledProviders);
+		$multiple = array_search(AuthenticationServiceFactory::USER_PROVIDER_DATABASE_NAME, $enabledProviders);
 
+		if($single !== false) {
+			$userSystem["single"]["ok"] = $ok = $sm->getParameter("security.initial.username") && $sm->getParameter("security.initial.password");
+			$userSystem["single"]["prio"] = $single+1;
+		}
+
+		if($multiple !== false) {
+			$PDO = $this->PDO;
+			try {
+				$userSystem["multiple"]["ok"] = $PDO->selectFieldValue("SELECT count(id) AS C FROM SKY_USER", 'C') > 0;
+				$userSystem["multiple"]["prio"] = $multiple+1;
+			} catch (\Throwable $exception) {
+				$userSystem["multiple"]["ok"] = false;
+			}
+		}
+
+		$general = $general && @( $userSystem["single"]["ok"] || $userSystem["multiple"]["ok"] );
+
+		if($general)
+			touch(SkyGetPath("$(C)") . "/config_ok");
+		elseif (file_exists($f = SkyGetPath("$(C)") . "/config_ok"))
+			unlink($f);
 
 		$this->renderModel([
 			'BREAD' => (new Breadcrumb())->addItem("", $cfgName),
 			'security' => $security,
 			'user_system' => $userSystem,
-			"data_base" => $dataBase
+			"data_base" => $dataBase,
+			'general' => $general
 		]);
-		$this->renderTemplate("admin-main", [
+		$this->renderTemplate("admin-config", [
 			"Content" => 'configuration'
 		]);
 	}
@@ -119,13 +173,6 @@ class ConfigurationController extends AbstractConfigurationActionController
 	}
 
 	private function applySecuritySettings(&$invalid) {
-		$applyUserInput = function($input, $paramKey) use (&$parameters) {
-			if($input != '@default')
-				$parameters[$paramKey] = $input;
-			elseif(isset($parameters[$paramKey]))
-				unset($parameters[$paramKey]);
-		};
-
 		/** @var TranslationManager $tm */
 		$tm = $this->translationManager;
 
@@ -164,18 +211,14 @@ class ConfigurationController extends AbstractConfigurationActionController
 					return;
 				}
 
-				$parameters = [];
-				if($f = SkyGetPath("$(C)/parameters.addon.config.php")) {
-					$parameters = require $f;
-				}
+				$paramSetup = new ParameterSetupHelper();
 
-				$parameters["security.password-encoders.enabled"] = $encoders;
+				$paramSetup->setParameter("security.password-encoders.enabled", $encoders, false);
+				$paramSetup->setParameter("security.http.digest.realm", $_POST["realm"]);
+				$paramSetup->setParameter("security.password.default-salt", $_POST["salt"]);
+				$paramSetup->setParameter("security.bcrypt.cost", $_POST['cost']);
 
-				$applyUserInput($_POST["realm"], "security.http.digest.realm");
-				$applyUserInput($_POST["salt"], "security.password.default-salt");
-
-				$parameters = var_export($parameters, true);
-				file_put_contents(SkyGetPath("$(C)") . "/parameters.addon.config.php", "<?php\nreturn $parameters;");
+				$paramSetup->store();
 			}
 		} elseif(isset($_POST['apply-identity'])) {
 			if(@empty($_POST['identity'])) {
@@ -183,33 +226,63 @@ class ConfigurationController extends AbstractConfigurationActionController
 				return;
 			}
 
+			$remember_me = false;
 			foreach($_POST["identity"] as &$identity) {
 				$identity = $this->providerMap[$identity] ?? NULL;
-				if(!$identity) {
+				if (!$identity) {
 					$invalid = $tm->translateGlobal("One of your choosen identity provider is not supported.");
 					return;
 				}
 
-				$parameters = [];
-				if($f = SkyGetPath("$(C)/parameters.addon.config.php")) {
-					$parameters = require $f;
+				if($identity == IdentityServiceFactory::PROVIDER_NAME_REMEMBER_ME) {
+					$remember_me = true;
 				}
-
-				$parameters["security.identity.order"] = $_POST['identity'];
-
-				$applyUserInput($_POST['realm-digest'], 'security.http.digest.realm');
-				$applyUserInput($_POST['realm-basic'], 'security.http.basic.realm');
-				$applyUserInput($_POST['anonymous-user'], 'security.user.anonymous');
-
-
-				$parameters = var_export($parameters, true);
-				file_put_contents(SkyGetPath("$(C)") . "/parameters.addon.config.php", "<?php\nreturn $parameters;");
 			}
+
+			$paramSetup = new ParameterSetupHelper();
+
+			$paramSetup->setParameter("security.identity.order", $_POST['identity'], false);
+
+			$paramSetup->setParameter("security.http.digest.realm", $_POST["realm-digest"]);
+			$paramSetup->setParameter("security.http.basic.realm", $_POST["realm-basic"]);
+			$paramSetup->setParameter("security.user.anonymous", $_POST["anonymous-user"]);
+			$paramSetup->setParameter("security.allows-remember-me", $remember_me ? 1 : 0);
+
+			$paramSetup->setParameter("security.http.post.tokenName", $_POST["username_field"]);
+			$paramSetup->setParameter("security.http.post.credentialName", $_POST["password_field"]);
+			$paramSetup->setParameter("security.http.post.rememberMeName", $_POST["remember_me_field"]);
+
+			$paramSetup->store();
+		} elseif (isset($_POST["apply-validators"])) {
+			foreach($_POST["validator"] as &$validator) {
+				$validator = $this->validatorMap[$validator] ?? NULL;
+				if (!$validator) {
+					$invalid = $tm->translateGlobal("One of your choosen validator is not supported.");
+					return;
+				}
+			}
+
+
+			$paramSetup = new ParameterSetupHelper();
+
+			$paramSetup->setParameter("security.validators.enabled", $_POST["validator"]);
+
+			$paramSetup->setParameter("security.brute-force.client.maximal.attempts", $_POST["cb_attempts"]);
+			$paramSetup->setParameter("security.brute-force.client.blocking.interval", $_POST["cb_block_time"]);
+
+			$paramSetup->setParameter("security.brute-force.server.maximal.attempts", $_POST["sb_attempts"]);
+			$paramSetup->setParameter("security.brute-force.server.blocking.interval", $_POST["sb_block_time"]);
+
+			$paramSetup->setParameter("security.autologout.maximal-inactive", $_POST["autologout"]);
+
+			$paramSetup->store();
 		}
 	}
 
 	/**
 	 * @route literal /config-security
+	 * @menu path /config/Configuration/Security
+	 * @menu action /admin/config-security
 	 */
 	public function securityAction() {
 		/** @var CSRFTokenManager $csrf */
@@ -242,7 +315,8 @@ class ConfigurationController extends AbstractConfigurationActionController
 				'encoders' => $this->getOptionsFromList($this->encodersMap, $sm->getParameter("security.password-encoders.enabled"), $mainEncoder),
 				'main' => $mainEncoder,
 				'realm' => $sm->getParameter('security.http.digest.realm'),
-				'salt' => $sm->getParameter("security.password.default-salt")
+				'salt' => $sm->getParameter("security.password.default-salt"),
+				'cost' => $sm->getParameter("security.bcrypt.cost")
 			],
 			'CSRF' => $csrf->getToken('skyline-admin-csrf'),
 			'BREAD' => (new Breadcrumb())
@@ -252,10 +326,21 @@ class ConfigurationController extends AbstractConfigurationActionController
 			'PROVIDERS' => [
 				'providers' => $this->getOptionsFromList($this->providerMap, $sm->getParameter("security.identity.order")),
 				'realm' => $sm->getParameter('security.http.basic.realm'),
-				'anonymous' => $sm->getParameter('security.user.anonymous') ?: ""
+				'anonymous' => $sm->getParameter('security.user.anonymous') ?: "",
+				"username_field" => $sm->getParameter("security.http.post.tokenName"),
+				"password_field" => $sm->getParameter("security.http.post.credentialName"),
+				"remember_me_field" => $sm->getParameter("security.http.post.rememberMeName")
+			],
+			"VALIDATORS" => [
+				'validators' => $this->getOptionsFromList($this->validatorMap, $sm->getParameter("security.validators.enabled")),
+				"cb_attempts" => $sm->getParameter("security.brute-force.client.maximal.attempts"),
+				'cb_block_time' => $sm->getParameter("security.brute-force.client.blocking.interval"),
+				"sb_attempts" => $sm->getParameter("security.brute-force.server.maximal.attempts"),
+				'sb_block_time' => $sm->getParameter("security.brute-force.server.blocking.interval"),
+				'autologout' => $sm->getParameter("security.autologout.maximal-inactive")
 			]
 		]);
-		$this->renderTemplate("admin-main", [
+		$this->renderTemplate("admin-config", [
 			"Content" => 'config-security'
 		]);
 	}
@@ -344,8 +429,80 @@ class ConfigurationController extends AbstractConfigurationActionController
 			}
 
 			$applyUserInput($usr, 'security.initial.username');
-			if($pwd)
-				$applyUserInput($pwd, 'security.initial.password');
+			if($pwd) {
+				$cfg = SkyMainConfig()[ MainKernelConfig::CONFIG_SERVICES ][ AuthenticationServiceFactory::AUTHENTICATION_SERVICE ][ AbstractFileConfiguration::SERVICE_INIT_CONFIGURATION ] ?? NULL;
+
+				$enabledEncoders = $sm->mapValue( $cfg[ AuthenticationServiceFactory::ENABLED_PASSWORD_ENCODERS ] );
+				$passwordEncoders = $sm->mapArray( $cfg[AuthenticationServiceFactory::PASSWORD_ENCODERS] ?? []);
+
+				foreach($enabledEncoders as $encoderClass) {
+					$encoder = $passwordEncoders[ $encoderClass ] ?? NULL;
+					if(!$encoder)
+						throw new SecurityException("No password encoder specified for $encoderClass", 403);
+
+					$cnt = new ConfiguredServiceContainer("", $encoder, $sm);
+					$passwordEncoder = $cnt->getInstance();
+					unset($cnt);
+					break;
+				}
+
+				if(isset($passwordEncoder)) {
+					$options = [
+						HttpDigestA1Encoder::OPTION_USER_KEY => $usr
+					];
+					$password = $passwordEncoder->encodePassword($pwd, $options);
+					if($password) {
+						$applyUserInput($password, 'security.initial.password');
+					} else {
+						$problem = $tm->translateGlobal("The password encoder could not encode your password.");
+						return;
+					}
+				} else {
+					$problem = $tm->translateGlobal("The authentication service is not able to find a password encoder.");
+					return;
+				}
+			}
+
+			$parameters = var_export($parameters, true);
+			file_put_contents(SkyGetPath("$(C)") . "/parameters.addon.config.php", "<?php\nreturn $parameters;");
+		}
+
+		if(isset($_POST["apply-membership"])) {
+			$parameters = [];
+			if($f = SkyGetPath("$(C)/parameters.addon.config.php")) {
+				$parameters = require $f;
+			}
+
+			$applyUserInput(($_POST['enable-verify']??0) ? 1 : 0, 'security.member-ship.verify-email');
+			$applyUserInput( $ems = ($_POST["enable-membership"] ?? 0) ? 1 : 0, 'security.allows-new-membership');
+			$applyUserInput(($_POST['membership-group'] ?? 0) * 1, 'security.member-ship.group');
+
+			if($ems && $_POST['membership-group'] * 1 < 1) {
+				$problem = $tm->translateGlobal("To enable membership you must specify a group");
+				return;
+			}
+
+			$parameters = var_export($parameters, true);
+			file_put_contents(SkyGetPath("$(C)") . "/parameters.addon.config.php", "<?php\nreturn $parameters;");
+		}
+
+		if(isset($_POST["apply-passwords"])) {
+			$parameters = [];
+			if($f = SkyGetPath("$(C)/parameters.addon.config.php")) {
+				$parameters = require $f;
+			}
+
+
+			$applyUserInput($_POST['enable-reset'] ? true : false, 'security.allows-password-reset');
+			$applyUserInput($_POST['pw_cond_min_length'] * 1, 'security.password.reset.min-length');
+
+			$applyUserInput($_POST['pw_cond_must_contain'], 'security.password.reset.must-contain');
+			$applyUserInput($_POST['pw_cond_must_not_contain'], 'security.password.reset.must-not-contain');
+
+			$pw_cond_active = 0;
+			foreach(($_POST["pass_reset_conds"] ?? []) as $cond)
+				$pw_cond_active |= $cond;
+			$applyUserInput($pw_cond_active, 'security.password.reset.conditions');
 
 			$parameters = var_export($parameters, true);
 			file_put_contents(SkyGetPath("$(C)") . "/parameters.addon.config.php", "<?php\nreturn $parameters;");
@@ -399,6 +556,8 @@ class ConfigurationController extends AbstractConfigurationActionController
 
 	/**
 	 * @route literal /config-user-system
+	 * @menu path /config/Configuration/User System
+	 * @menu action /admin/config-user-system
 	 */
 	public function userSystemConfigAction() {
 		/** @var CSRFTokenManager $csrf */
@@ -431,9 +590,9 @@ class ConfigurationController extends AbstractConfigurationActionController
 			}
 
 			try {
-				$groupsCount = $PDO->selectFieldValue("SELECT count(id) AS C FROM SKY_GROUP", 'C');
+				$groupsCount = iterator_to_array($PDO->select("SELECT * FROM SKY_GROUP ORDER BY name"));
 			} catch (\Throwable $exception) {
-				$groupsCount = -1;
+				$groupsCount = [];
 			}
 
 			try {
@@ -458,11 +617,19 @@ class ConfigurationController extends AbstractConfigurationActionController
 				'service' => $serviceName,
 				"enabled" => array_search(AuthenticationServiceFactory::USER_PROVIDER_DATABASE_NAME, $enabledProviders),
 				"usersCount" => $usersCount ?? -1,
-				"groupsCount" => $groupsCount ?? -1,
-				"rolesCount" => $rolesCount ?? -1
+				"groupsCount" => $groupsCount ?? [],
+				"rolesCount" => $rolesCount ?? -1,
+				'pass_reset' => $sm->getParameter("security.allows-password-reset"),
+				'sec_mem' => $sm->getParameter("security.allows-new-membership"),
+				'sec_mem_grp' => $sm->getParameter("security.member-ship.group"),
+				"sec_mem_vfy" => $sm->getParameter("security.member-ship.verify-email"),
+				"pass_reset_conds" => $sm->getParameter("security.password.reset.conditions"),
+				"pw_cond_min_length" => $sm->getParameter("security.password.reset.min-length"),
+				"pw_cond_must_contain" => $sm->getParameter("security.password.reset.must-contain"),
+				"pw_cond_must_not_contain" => $sm->getParameter("security.password.reset.must-not-contain"),
 			]
 		]);
-		$this->renderTemplate("admin-main", [
+		$this->renderTemplate("admin-config", [
 			"Content" => 'config-user-system'
 		]);
 	}
@@ -567,6 +734,8 @@ class ConfigurationController extends AbstractConfigurationActionController
 
 	/**
 	 * @route literal /config-data-base
+	 * @menu path /config/Configuration/Data Base
+	 * @menu action /admin/config-data-base
 	 */
 	public function configDataBaseAction() {
 		/** @var CSRFTokenManager $csrf */
@@ -650,7 +819,7 @@ class ConfigurationController extends AbstractConfigurationActionController
 				"mysql_ok" => $sm->getParameter("pdo.mysql.verified")
 			]
 		]);
-		$this->renderTemplate("admin-main", [
+		$this->renderTemplate("admin-config", [
 			"Content" => 'config-data-base'
 		]);
 	}

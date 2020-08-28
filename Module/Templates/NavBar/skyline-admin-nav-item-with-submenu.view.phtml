@@ -14,6 +14,9 @@ $action = $item->getAction();
 
 $id = uniqid("ndd_");
 
+$menuItems = $item->getSubmenu()->getMenuItems();
+if(!$menuItems && !$item->getAction())
+	return;
 ?>
 <li class="nav-item dropdown<?=$item->isSelected()?' active':''?>">
     <a class="nav-link dropdown-toggle" href="#" id="<?=$id?>" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -22,7 +25,7 @@ $id = uniqid("ndd_");
     <div class="dropdown-menu" aria-labelledby="<?=$id?>">
         <?php
         /** @var NavigationBarItem $menuItem */
-        foreach($item->getSubmenu()->getMenuItems() as $menuItem) {
+        foreach($menuItems as $menuItem) {
             if($menuItem->isEnabled() == false) {
                 ?>
                 <a class="dropdown-item disabled" href="#" tabindex="-1" aria-disabled="true"><?=$menuItem->getTitle()?></a>

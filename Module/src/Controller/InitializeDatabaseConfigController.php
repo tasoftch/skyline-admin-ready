@@ -4,8 +4,9 @@ namespace Skyline\Admin\Ready\Controller;
 
 
 use Skyline\HTML\Bootstrap\Breadcrumb;
-use Skyline\CMS\Security\Tool\UserTool;
+use Skyline\Admin\Tool\UserTool;
 use Skyline\Security\CSRF\CSRFTokenManager;
+use Skyline\Security\Role\RoleInterface;
 use Skyline\Translation\TranslationManager;
 use TASoft\Service\ServiceManager;
 
@@ -52,25 +53,38 @@ class InitializeDatabaseConfigController extends AbstractConfigurationActionCont
 				if(!$usr)
 					$problem = 1;
 				else {
-					$pwrd = $_POST["password"];
-					if(!$pwrd) {
-						$problem = 2;
+					if($_POST["email"] && !filter_var($email = $_POST["email"], FILTER_VALIDATE_EMAIL)) {
+						$problem = 5;
 					} else {
-						if($pwrd != $_POST["passwordv"]) {
-							$problem = 3;
+						$pwrd = $_POST["password"];
+						if(!$pwrd) {
+							$problem = 2;
 						} else {
-							$this->stopAction(function() use ($trial, $file, $usr, $pwrd, $sm) {
-								$contents = file_get_contents($file);
-								//$trial->exec($contents);
+							if($pwrd != $_POST["passwordv"]) {
+								$problem = 3;
+							} else {
+								$this->stopAction(function() use ($trial, $file, $usr, $pwrd, $sm, $email) {
+									$contents = file_get_contents($file);
+									$trial->exec($contents);
+									$uTool = new UserTool($trial, true);
+									$attributes = [
+										UserTool::ATTRIBUTE_EMAIL => $email,
+										UserTool::ATTRIBUTE_INTERNAL => true
+									];
+									if(@$_POST["entitlement"] == 2) {
+										$attributes[UserTool::ATTRIBUTE_ROLES] = [
+											RoleInterface::ROLE_ROOT
+										];
+									} else {
+										$attributes[UserTool::ATTRIBUTE_GROUPS] = [
+											1 // Administrator Group ID
+										];
+									}
 
-								/** @var UserTool $tool */
-								$tool = $sm->userTool;
-
-
-								var_dump($tool);
-
-								//header("Location: /admin/config-user-system");
-							});
+									$uTool->createUser($usr, $pwrd, $attributes);
+									header("Location: /admin/config-user-system");
+								});
+							}
 						}
 					}
 				}
@@ -92,7 +106,8 @@ class InitializeDatabaseConfigController extends AbstractConfigurationActionCont
 				"ok" => $ok
 			],
 			"ROOT_USER" => [
-				'name' => $_POST["username"] ?? 'admin'
+				'name' => $_POST["username"] ?? 'admin',
+				'email' => $_POST["email"] ?? ''
 			]
 		]);
 		$this->renderTemplate('admin-main', [

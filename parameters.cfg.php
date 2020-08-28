@@ -34,5 +34,8 @@
 
 
 return [
-
+	'security.challenge.child-templates' =>
+		array (
+			'Content' => '401-login-form',
+		),
 ];

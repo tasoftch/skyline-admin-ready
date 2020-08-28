@@ -41,6 +41,7 @@ use TASoft\Service\ServiceManager;
  * @var array $ENCODERS
  * @var int|string $PROBLEM
  * @var array $PROVIDERS
+ * @var array $VALIDATORS
  */
 
 $recommended = $this->translate('(recommended)');
@@ -96,6 +97,16 @@ $devOnly = $this->translate('(dev only!)');
 							</div>
 						</div>
 						<input type="text" class="form-control" readonly value="<?= $this->translate('BCrypt') ?>" aria-describedby="bc-help" aria-label="<?= $text = $this->translate('The bcryt encryption') ?>" title="<?=$text?>">
+						<select class="custom-select" name="cost" aria-label="<?= $text = $this->translate('The bcryt encryption cost (4-31)') ?>" title="<?=$text?>">
+							<?php
+							for($e=4;$e<=31;$e++) {
+								if($ENCODERS["cost"] == $e)
+									echo "<option selected value='$e'>", $this->translate("Cost $e"), "</option>";
+								else
+									echo "<option value='$e'>", $this->translate("Cost $e"), "</option>";
+							}
+							?>
+						</select>
 						<div class="input-group-append">
 							<span class="input-group-text"><?= $optional ?></span>
 						</div>
@@ -160,27 +171,30 @@ $devOnly = $this->translate('(dev only!)');
 				</div>
 
 				<div class="form-group">
-					<button class="btn btn-outline-primary" name="apply-encryption">Save</button>
+					<button class="btn btn-outline-primary" name="apply-encryption"><?= $this->translate('Save') ?></button>
 				</div>
 			</form>
 		</div>
 		<div class="col-lg-4">
 			<p>
-				Here you specify the password encryption order.
+				<?= $this->translate('Here you specify the password encryption order.') ?>
 			</p>
 			<p class="alert alert-danger">
-				Skyline CMS never stores plain passwords in production!<br>
-				If you don't disable those encoders, then a login might fail.
+				<?=$this->translate('Skyline CMS never stores plain passwords in production!<br>
+				If you don\'t disable those encoders, then a login might fail.')?>
 			</p>
 			<p>
-				The encryption order means, that a password may be stored in one of the enabled encryption.<br>
-				On login, Skyline CMS tries to verify the password by the given encryption order.
+				<?= $this->translate('The encryption order means, that a password may be stored in one of the enabled encryption.<br>
+				On login, Skyline CMS tries to verify the password by the given encryption order.') ?>
 			</p>
 			<p>
-				If you create a new user or assuming you allow new membership, then Skyline CMS will encode a new password using the encoder marked as main encoder.
+				<?= $this->translate('If you create a new user or assuming you allow new membership, then Skyline CMS will encode a new password using the encoder marked as main encoder.') ?>
 			</p>
 			<p>
-				To reset an entered value, type <code>@default</code>.
+				<?= $this->translate('To reset an entered value, type ') ?><code>@default</code>.
+			</p>
+			<p class="alert alert-warning">
+				<?= $this->translate('Please note that changing attributes of an encoder invalidates already stored credentials!') ?>
 			</p>
 		</div>
 	</div>
@@ -200,7 +214,9 @@ $devOnly = $this->translate('(dev only!)');
 								<input type="checkbox" <?=$PROVIDERS['providers'] & 1 ? 'checked' : ''?> name="identity[]" value="1" aria-label="<?= $enableDisable = $this->translate('Enable or disable identity provider') ?>" title="<?=$enableDisable?>">
 							</div>
 						</div>
-						<input type="text" class="form-control" readonly value="<?= $this->translate('HTML Form Data Provider') ?>" aria-describedby="frm-help" aria-label="<?= $text = $this->translate('Reads a HTML Form request to obtain username and password.') ?>" title="<?=$text?>">
+						<input type="text" class="form-control" readonly value="<?= $this->translate('HTML Form') ?>" aria-describedby="frm-help" aria-label="<?= $text = $this->translate('Reads a HTML Form request to obtain username and password.') ?>" title="<?=$text?>">
+						<input type="text" class="form-control" value="<?=htmlspecialchars($PROVIDERS['username_field'])?>" name="username_field" placeholder="<?= $this->translate('Username Field') ?>" aria-label="<?= $text = $this->translate('The HTML form input name to look for a transmitted username.') ?>" title="<?=$text?>">
+						<input type="text" class="form-control" value="<?=htmlspecialchars($PROVIDERS['password_field'])?>" name="password_field" placeholder="<?= $this->translate('Password Field') ?>" aria-label="<?= $text = $this->translate('The HTML form input name to look for a transmitted password.') ?>" title="<?=$text?>">
 						<div class="input-group-append">
 							<span class="input-group-text"><?= $recommended ?></span>
 						</div>
@@ -230,12 +246,13 @@ $devOnly = $this->translate('(dev only!)');
 								<input type="checkbox" <?=$PROVIDERS['providers'] & 4 ? 'checked' : ''?> name="identity[]" value="4" aria-label="<?= $enableDisable  ?>" title="<?=$enableDisable?>">
 							</div>
 						</div>
-						<input type="text" class="form-control" readonly value="<?= $this->translate('Remember Me') ?>" aria-describedby="rem-help" aria-label="<?= $text = $this->translate('Again, if the login was successful, the credentials are stored in a remember me token. This is longer valid. See the security settings later in your application.') ?>" title="<?=$text?>">
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Remember Me') ?>" aria-describedby="rem-help" aria-label="<?= $desc = $this->translate('Again, if the login was successful, the credentials are stored in a remember me token. This is longer valid. See the security settings later in your application.') ?>" title="<?=$desc?>">
+						<input type="text" class="form-control" value="<?=htmlspecialchars($PROVIDERS['remember_me_field'])?>" name="remember_me_field" placeholder="<?= $this->translate('Remember Me Field') ?>" aria-label="<?= $text = $this->translate('The HTML form input name to look for transmitted remember me service.') ?>" title="<?=$text?>">
 						<div class="input-group-append">
 							<span class="input-group-text"><?= $optional ?></span>
 						</div>
 					</div>
-					<small id="rem-help" class="form-text text-muted"><?= $text ?></small>
+					<small id="rem-help" class="form-text text-muted"><?= $desc ?></small>
 				</div>
 
 				<div class="form-group">
@@ -287,17 +304,141 @@ $devOnly = $this->translate('(dev only!)');
 				</div>
 
 				<div class="form-group">
-					<button name="apply-identity" class="btn btn-outline-primary">Save</button>
+					<button name="apply-identity" class="btn btn-outline-primary"><?= $this->translate('Save') ?></button>
 				</div>
 			</form>
 		</div>
 		<div class="col-lg-4">
 			<p>
-				Identity providers tell Skyline CMS how to obtain and challenge a client for its identity.
+				<?= $this->translate('Identity providers tell Skyline CMS how to obtain and challenge a client for its identity.') ?>
+			</p>
+			<p>
+				<?= $this->translate('Password encoders and identity providers must match. Here are some examples:') ?>
+			</p>
+			<?=$this->translate('<p>
+				<code>Message Digest</code>, <code>BCrypt</code> and/or <code>Plaintext</code> work with <br>
+				<code>HTML Form</code>, <code>Session</code> and <code>Remember Me</code>.
+			</p>
+			<p>
+				<code>HTTP Digest</code> only works with <code>HTTP Digest A1</code>.<br>
+				<em class="text-muted" style="font-size: 80%%">(Please keep in mind that encoded passwords are realm and user dependent!)</em>
+			</p>
+			<p>
+				<code>HTTP Basic</code> works with all except <code>HTTP Digest A1</code>
+			</p>
+			<p>
+				The <code>Anonymous</code> identity always work without password encoders.<br>
+				If you don\'t specify a username, Skyline CMS will fail authenticate an anonymous identity.<br>
+				<span class="text-danger">Please only assign users with low access rights to the anonymous identity!</span>
+			</p>
+			<p>
+				The <code>HTML Form</code> should be combined with <code>Session</code> and/or <code>Remember Me</code>. if not, the user needs to enter its username and password for each request again.
+			</p>')?>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="card mt-5">
+	<h4 class="card-header"><?= $this->translate('Login Validators') ?></h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$VALIDATORS['validators'] & 1 ? 'checked' : ''?> name="validator[]" value="1" aria-label="<?= $enableDisable = $this->translate('Enable or disable Validator') ?>" title="<?=$enableDisable?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Client Brute Force') ?>" aria-describedby="cbf-help" aria-label="<?= $desc = $this->translate('Blocks too many failed login attempts by ip address of a client.') ?>" title="<?=$desc?>">
+						<input type="text" class="form-control" size="3" value="<?=htmlspecialchars($VALIDATORS['cb_attempts'])?>" name="cb_attempts" placeholder="<?= $this->translate('Max') ?>" aria-label="<?= $text = $this->translate('Maximal failed attempts') ?>" title="<?=$text?>">
+						<input type="text" class="form-control" size="6" value="<?=htmlspecialchars($VALIDATORS['cb_block_time'])?>" name="cb_block_time" placeholder="<?= $this->translate('Wait') ?>" aria-label="<?= $text = $this->translate('Set time interval in seconds to block until next attempt.') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $recommended ?></span>
+						</div>
+					</div>
+					<small id="cbf-help" class="form-text text-muted"><?= $desc ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$VALIDATORS['validators'] & 2 ? 'checked' : ''?> name="validator[]" value="2" aria-label="<?= $enableDisable ?>" title="<?=$enableDisable?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Server Brute Force') ?>" aria-describedby="sbf-help" aria-label="<?= $desc = $this->translate('Blocks too many failed login attempts by a URI on the server') ?>" title="<?=$desc?>">
+						<input type="text" class="form-control" size="3" value="<?=htmlspecialchars($VALIDATORS['sb_attempts'])?>" name="sb_attempts" placeholder="<?= $this->translate('Max') ?>" aria-label="<?= $text = $this->translate('Maximal failed attempts') ?>" title="<?=$text?>">
+						<input type="text" class="form-control" size="6" value="<?=htmlspecialchars($VALIDATORS['sb_block_time'])?>" name="sb_block_time" placeholder="<?= $this->translate('Wait') ?>" aria-label="<?= $text = $this->translate('Set time interval in seconds to block until next attempt.') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $optional ?></span>
+						</div>
+					</div>
+					<small id="sbf-help" class="form-text text-muted"><?= $desc ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$VALIDATORS['validators'] & 4 ? 'checked' : ''?> name="validator[]" value="4" aria-label="<?= $enableDisable ?>" title="<?=$enableDisable?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Auto Logout') ?>" aria-describedby="alo-help" aria-label="<?= $desc = $this->translate('Cancels logged user session if there was no activity for too long time.') ?>" title="<?=$desc?>">
+						<input type="text" class="form-control" value="<?=htmlspecialchars($VALIDATORS['autologout'])?>" name="autologout" placeholder="<?= $this->translate('Time Interval') ?>" aria-label="<?= $text = $this->translate('Set the maximal time interval in seconds without a user action.') ?>" title="<?=$text?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $optional ?></span>
+						</div>
+					</div>
+					<small id="alo-help" class="form-text text-muted"><?= $desc ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$VALIDATORS['validators'] & 8 ? 'checked' : ''?> name="validator[]" value="8" aria-label="<?= $enableDisable ?>" title="<?=$enableDisable?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Permission Changed') ?>" aria-describedby="pc-help" aria-label="<?= $desc = $this->translate('Cancels logged user session if the permissions of the user changed during the session.') ?>" title="<?=$desc?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $optional ?></span>
+						</div>
+					</div>
+					<small id="pc-help" class="form-text text-muted"><?= $desc ?></small>
+				</div>
+
+				<div class="form-group">
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<div class="input-group-text">
+								<input type="checkbox" <?=$VALIDATORS['validators'] & 16 ? 'checked' : ''?> name="validator[]" value="16" aria-label="<?= $enableDisable ?>" title="<?=$enableDisable?>">
+							</div>
+						</div>
+						<input type="text" class="form-control" readonly value="<?= $this->translate('Update Last Login Date') ?>" aria-describedby="ulld-help" aria-label="<?= $desc = $this->translate('Just for information it stores the date and time of all successful logins.') ?>" title="<?=$desc?>">
+						<div class="input-group-append">
+							<span class="input-group-text"><?= $optional ?></span>
+						</div>
+					</div>
+					<small id="ulld-help" class="form-text text-muted"><?= $desc ?></small>
+				</div>
+
+				<div class="form-group">
+					<button name="apply-validators" class="btn btn-outline-primary"><?= $this->translate('Save') ?></button>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<p>
+				<?= $this->translate('The validators are active while login process of a client.') ?>
 			</p>
 		</div>
 	</div>
 </div>
+
 
 <?php
 
@@ -307,7 +448,7 @@ if(is_string($PROBLEM )) {
 		<div class="modal-dialog success" role="document">
 			<div class="modal-content">
 				<div class="modal-header bg-danger text-white">
-					<h4 class="modal-title text-center">Settings Not Updated</h4>
+					<h4 class="modal-title text-center"><?= $this->translate('Settings Not Updated') ?></h4>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true" class="white-text">&times;</span>
 					</button>
@@ -336,7 +477,7 @@ if(is_string($PROBLEM )) {
 		<div class="modal-dialog success" role="document">
 			<div class="modal-content">
 				<div class="modal-header bg-success text-white">
-					<h4 class="modal-title text-center" id="modal-success-title">Settings Updated</h4>
+					<h4 class="modal-title text-center" id="modal-success-title"><?= $this->translate('Settings Updated') ?></h4>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true" class="white-text">&times;</span>
 					</button>
@@ -345,7 +486,7 @@ if(is_string($PROBLEM )) {
 					<div class="text-center">
 						<i class="fa fa-check fa-4x text-success animated rotateIn mb-3"></i>
 						<p>
-							The changed settings were updated successfully.
+							<?= $this->translate('The changed settings were updated successfully.') ?>
 						</p>
 					</div>
 				</div>
