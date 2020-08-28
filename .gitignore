@@ -2,3 +2,4 @@ vendor
 .idea*
 Public
 SkylineAppData
+.htaccess

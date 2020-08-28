@@ -1,0 +1,362 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\Role;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var array|int $USER
+ * @var Generator $GROUPS
+ * @var Generator $ROLES
+ * @var array $S_ROLES
+ * @var array $CAN
+ */
+
+$adminRoot = $this->buildURL("Admin");
+?>
+<?=$BREAD?>
+
+<h1><?= $this->translate('Edit User') ?></h1>
+
+<hr>
+
+<?php
+if(!$USER) {
+	?>
+	<div class="alert alert-danger">
+		<?= $this->translate('The user system feature is disabled by your configuration.') ?>
+	</div>
+	<?php
+} else {
+	?>
+
+	<?php
+	if($USER['options'] & User::OPTION_INTERNAL) {
+		?>
+		<script type="application/javascript">
+            $(function() {
+                $('input, button, textarea').attr("disabled", "disabled");
+            })
+		</script>
+		<div class="alert alert-primary">
+			<h5 class="alert-heading"><?= $this->translate('Internal!') ?></h5>
+			<?= $this->translate('This user is internal and can not be modified.') ?>
+		</div>
+		<?php
+	}
+	?>
+
+	<div class="card">
+		<h4 class="card-header"><?= $this->translate('Information') ?></h4>
+		<div class="card-body row">
+			<div class="col-lg-8">
+				<form action="" method="post">
+					<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+					<div class="form-group row">
+						<label for="username" class="col-md-3 col-form-label"><?= $this->translate('Username') ?></label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-user"></i></span>
+								</div>
+								<input type="text" class="form-control" id="username" name="the-username" value="<?=htmlspecialchars($USER["username"])?>">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="email" class="col-md-3 col-form-label"><?= $this->translate('Email') ?></label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-at"></i></span>
+								</div>
+								<input type="email" class="form-control" id="email" name="the-email" value="<?=htmlspecialchars($USER["email"])?>">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="prename" class="col-md-3 col-form-label"><?= $this->translate('Name') ?></label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-tag"></i></span>
+								</div>
+								<input type="text" class="form-control" id="prename" name="the-prename" value="<?=htmlspecialchars($USER["prename"])?>">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="surname" class="col-md-3 col-form-label"><?= $this->translate('Surname') ?></label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-tag"></i></span>
+								</div>
+								<input type="text" class="form-control" id="surname" name="the-surname" value="<?=htmlspecialchars($USER["surname"])?>">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-md-3 d-none d-md-block"> </div>
+						<div class="col-md-9">
+							<button name="apply-information" class="btn btn-outline-primary"><?= $this->translate('Save') ?></button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-lg-4">
+				<hr class="d-lg-none">
+				<p>
+					<?= $this->translate('Adjust here information about a user directly.') ?>
+				</p>
+				<p class="alert alert-warning">
+					<?= $this->translate('Please note that Skyline CMS will not verify a manipulated email address. You must be sure that it is correct.') ?>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<?php
+	if($CAN["PW_RESET"]):
+	?>
+	<div class="card mt-5">
+		<h4 class="card-header"><?= $this->translate('Password') ?></h4>
+		<div class="card-body row">
+			<div class="col-lg-8">
+				<form action="" method="post">
+					<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+					<div class="form-group row">
+						<label for="password" class="col-md-3 col-form-label"><?= $this->translate('Password') ?></label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-lock"></i></span>
+								</div>
+								<input type="password" class="form-control" id="password" name="the-password" value="<?=htmlspecialchars($_POST["the-password"] ?? '')?>">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="passwordv" class="col-md-3 col-form-label"><?= $this->translate('Verify') ?></label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-key"></i></span>
+								</div>
+								<input type="password" class="form-control" id="passwordv" name="the-passwordv" value="<?=htmlspecialchars($_POST["the-passwordv"] ?? '')?>">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-md-3 d-none d-md-block">&nbsp;</div>
+						<div class="col-md-9">
+							<div class="form-check">
+								<input type="checkbox" class="form-check-input" name="ignore-conds" value="1" id="ignore-conditions">
+								<label class="form-check-label" for="ignore-conditions"><?= $this->translate("Ignore Password Conditions") ?></label>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-md-3 d-none d-md-block"> </div>
+						<div class="col-md-9">
+							<button name="apply-password" class="btn btn-outline-primary"><?= $this->translate('Save') ?></button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-lg-4">
+				<hr class="d-lg-none">
+				<p>
+					<?= $this->translate('You are allowed to directly change a password of any user. Please note that a currently logged user will loose its access immediately.') ?>
+				</p>
+				<p class="alert alert-warning">
+					<?= $this->translate('Ignoring password conditions allows you to set any password except none. But please think about security risk or lazy passwords!') ?>
+				</p>
+			</div>
+		</div>
+	</div>
+	<?php
+	endif;
+
+	if($CAN["ASSIGN"] || $CAN["PRIVILEGE"]):
+	?>
+
+		<div class="card mt-5">
+			<h4 class="card-header"><?= $this->translate('Access Control') ?></h4>
+			<div class="card-body row">
+				<div class="col-lg-8">
+					<form action="" method="post">
+						<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+						<?php
+						$gr = 0;
+						if($CAN["ASSIGN"]):
+							$gr = 1;
+							?>
+							<div class="form-group row">
+								<h5 class="col-md-3"><?= $this->translate('Groups') ?></h5>
+								<div class="col-md-9">
+									<?php
+									foreach($GROUPS as $GROUP) {
+										?>
+										<div class="form-check mt-1">
+											<input <?=$GROUP["selected"] ? 'checked' : ''?> id="group-<?=$GROUP['id']?>" type="checkbox" class="form-check-input" name="groups[]" value="<?=$GROUP['id']?>">
+											<label class="form-check-label" for="group-<?=$GROUP['id']?>"><?= htmlspecialchars($GROUP["name"]) ?><br>
+											<em class="text-muted" style="font-size: 90%"><?=htmlspecialchars($GROUP["description"])?></em></label>
+										</div>
+										<?php
+									}
+									?>
+								</div>
+							</div>
+							<?php
+						endif;
+
+						if($CAN["PRIVILEGE"]):
+							if($gr)
+								echo "<hr>";
+							?>
+
+							<div class="form-group row">
+								<h5 class="col-md-3"><?= $this->translate('Roles') ?></h5>
+								<div class="col-md-9">
+									<?php
+									/** @var Role $ROLE */
+									foreach($ROLES as $ROLE) {
+										?>
+										<div class="form-check mt-1">
+											<input <?=in_array($id = $ROLE->getId(), $S_ROLES) ? 'checked' : ''?> id="role-<?=$id?>" type="checkbox" class="form-check-input" name="roles[]" value="<?=$id?>">
+											<label class="form-check-label" for="role-<?=$id?>"><?= htmlspecialchars($ROLE->getRole()) ?><br>
+												<em class="text-muted" style="font-size: 90%"><?=htmlspecialchars($ROLE->getDescription())?></em></label>
+										</div>
+										<?php
+									}
+									?>
+								</div>
+							</div>
+
+							<?php
+						endif;
+						?>
+
+						<div class="form-group row">
+							<div class="col-md-3 d-none d-md-block"> </div>
+							<div class="col-md-9">
+								<button name="apply-acl" class="btn btn-outline-primary"><?= $this->translate('Save') ?></button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-lg-4">
+					<hr class="d-lg-none">
+					<p>
+						<?= $this->translate('You can assign the user to a group and/or privilege it directly by adding roles.') ?>
+					</p>
+				</div>
+			</div>
+		</div>
+
+	<?php
+if(is_string($PROBLEM )) {
+	?>
+	<div class="modal banner fade" id="modal-failed" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+		<div class="modal-dialog success" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-danger text-white">
+					<h4 class="modal-title text-center"><?= $this->translate('Changes not saved') ?></h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="white-text">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="text-center">
+						<i class="fa fa-times fa-4x text-danger animated rotateIn mb-3"></i>
+						<p>
+							<?=$PROBLEM?>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="application/javascript">
+        $(function() {
+            $("#modal-failed").modal("show");
+        });
+	</script>
+	<?php
+} elseif($PROBLEM === -1) {
+	?>
+	<div class="modal banner fade" id="modal-success" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+		<div class="modal-dialog success" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<h4 class="modal-title text-center" id="modal-success-title"><?= $this->translate('Changes saved') ?></h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="white-text">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="text-center">
+						<i class="fa fa-check fa-4x text-success animated rotateIn mb-3"></i>
+						<p>
+							<?= $this->translate('The user was updated successfully.') ?>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="application/javascript">
+        $(function() {
+            $("#modal-success").modal("show");
+        });
+	</script>
+	<?php
+}
+
+	endif;
+}

@@ -1,0 +1,197 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var array $COMPONENT
+ * @var array $CAN
+ */
+
+$adminRoot = $this->buildURL("Admin");
+?>
+<?=$BREAD?>
+
+<style type="text/css">
+	.list-group-item {
+		padding: 0;
+		padding-left: 0.25rem;
+		padding-right: 0.25rem;
+	}
+
+	i.position-absolute {
+		right: 0.25rem;
+		top: 1rem;
+	}
+</style>
+
+<script type="application/javascript">
+	$(function() {
+	    $(".integrity-string").hide();
+	})
+
+	function toggle(pid) {
+	    $("#is-"+pid).toggle();
+	}
+</script>
+
+<h1><?= $this->translateGlobal('Display %s', NULL, $COMPONENT["name"]) ?></h1>
+
+<div class="row">
+	<div class="col-xl-3 col-lg-4 col-md-6 mt-4">
+		<div class="card">
+			<h4 class="card-header"><?= $this->translate('Information') ?></h4>
+			<div class="card-body">
+				<ul class="list-group">
+					<li class="list-group-item d-flex justify-content-between">
+						<strong class="d-inline-block mr-1"><i class="fa fa-tag"></i> <?= $this->translate('Name') ?></strong>
+						<span><?=htmlspecialchars( $COMPONENT["name"])?></span>
+					</li>
+
+					<li class="list-group-item d-flex <?=$COMPONENT["internal"] ? 'list-group-item-warning' : 'list-group-item-success'?> justify-content-between">
+						<strong class="d-inline-block mr-1"><i class="fa fa-exclamation"></i> <?= $this->translate('Internal') ?></strong>
+						<span><?=$this->translate( $COMPONENT["internal"] ? 'Yes' : 'No') ?></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-xl-3 col-lg-4 col-md-6 mt-4">
+		<div class="card">
+			<h4 class="card-header"><?= $this->translate('Dependencies') ?></h4>
+			<div class="card-body">
+				<ul class="list-group">
+					<?php
+					if($deps = $COMPONENT["dependencies"] ?? 0)
+						echo implode(" ", array_map(function($V) {
+							return "<li class=\"list-group-item\"><strong><i class=\"fa fa-link\"></i> $V</strong></li>";
+						}, $deps));
+					else
+						echo '<li class=\"list-group-item list-group-item-secondary\">', $this->translate("None"), '</li>';
+					?>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<hr>
+
+<div class="row">
+	<?php
+	if(isset($COMPONENT["parts"])) {
+		foreach($COMPONENT["parts"] as $PID => $PART) {
+			?>
+			<div class="col-xl-3 col-lg-4 col-md-6 mt-4">
+				<div class="card">
+					<h4 class="card-header position-relative">
+						<?=htmlspecialchars($PART["caption"])?>
+						<i class="position-absolute fa <?=htmlspecialchars($PART['icon'])?>"></i>
+					</h4>
+					<div class="card-body">
+						<ul class="list-group">
+							<li class="list-group-item d-flex justify-content-between">
+								<strong class="d-inline-block mr-1"><i class="fa fa-tag"></i> Name</strong>
+								<span><?=htmlspecialchars( $PART["shorthand"])?></span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between">
+								<strong class="d-inline-block mr-1"> Type</strong>
+								<span><?=htmlspecialchars( $PART["mimeType"])?></span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between">
+								<strong class="d-inline-block mr-1"> Origin</strong>
+								<span><?=htmlspecialchars( $PART["cross_origin"] ?: 'anonymous')?></span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between">
+								<strong class="d-inline-block mr-1"> Integrity</strong>
+								<span class="text-muted"><?php
+									if($PART["integrity"])
+										echo "<a class='text-primary' onclick='toggle($PID)'>{$PART['integrity']}</a>";
+									else
+										echo $this->translate("None");
+									?></span>
+							</li>
+							<?php
+							if($PART["integrity_str"] ?? 0) {
+								?>
+								<li class="list-group-item integrity-string" id="is-<?=$PID?>">
+									<em class="text-muted"><?=$PART["integrity_str"]?></em>
+								</li>
+								<?php
+							}
+
+							if($PART["media"]) {
+								?>
+								<li class="list-group-item d-flex justify-content-between">
+									<strong class="d-inline-block mr-1"> Media</strong>
+									<span><?=htmlspecialchars( $PART["media"])?></span>
+								</li>
+								<?php
+							}
+							?>
+							<?php
+							if($PART["local_file"]) {
+								?>
+								<li class="list-group-item d-flex justify-content-between">
+									<strong class="d-inline-block mr-1"><i class="fa fa-file"></i> Local</strong>
+									<code><?=htmlspecialchars( $PART["local_file"])?></code>
+								</li>
+								<?php
+							}
+							?>
+						</ul>
+					</div>
+					<div class="card-footer">
+						<code><?=htmlspecialchars($PART["slug"])?></code>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
+	} else {
+		?>
+	<div class="col-xl-3 col-lg-4 col-md-6 mt-4">
+		<p class="alert alert-primary">
+			<?= $this->translate('This component has no sources.') ?>
+		</p>
+	</div>
+		<?php
+	}
+	?>
+</div>

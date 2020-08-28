@@ -1,0 +1,220 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\Admin\Tool\UserRoleTool;
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\Role;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var Role $ROLE
+ * @var array $ROLES
+ */
+
+$adminRoot = $this->buildURL("Admin");
+/** @var UserRoleTool $rTool */
+$rTool = $this->get(UserRoleTool::SERVICE_NAME);
+?>
+<?=$BREAD?>
+
+<h1><?= $this->translate('Edit Role') ?></h1>
+
+<hr>
+
+	<div class="card">
+		<h4 class="card-header"><?= $this->translate('Information') ?></h4>
+		<div class="card-body row">
+			<div class="col-lg-8">
+				<form action="" method="post">
+					<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+					<div class="form-group row">
+						<label for="gname" class="col-md-3 col-form-label"><?= $this->translate('Name') ?></label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-tag"></i></span>
+								</div>
+								<input type="text" class="form-control" id="gname" name="rname" value="<?=htmlspecialchars( (function() use ($ROLE) {
+									$r = explode(".", $ROLE->getRole());
+									return array_pop($r);
+								})() )?>">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="parent" class="col-md-3 col-form-label"><?= $this->translate('Parent') ?></label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-list"></i></span>
+								</div>
+								<select class="form-control" id="parent" name="rparent">
+									<option value="0"><?= $this->translate('Root (no parent)') ?></option>
+									<?php
+									$parent = $rTool->getParent( $ROLE->getId() );
+									if($parent)
+										$parent = $parent->getId();
+									/** @var Role $R */
+									foreach($ROLES as $R) {
+										if($R->getId() == $ROLE->getId())
+											continue;
+
+										if($R->getId() == $parent)
+											printf( "<option selected value='%s'>%s</option>", $R->getId(), htmlspecialchars($R->getRole()));
+										else
+											printf( "<option value='%s'>%s</option>", $R->getId(), htmlspecialchars($R->getRole()));
+									}
+									?>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<label for="gdesc" class="col-md-3 col-form-label"><?= $this->translate('Description') ?></label>
+						<div class="col-md-9">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text"><i class="fa fa-comment"></i></span>
+								</div>
+								<textarea id="gdesc" name="rdesc" class="form-control"><?=htmlspecialchars($ROLE->getDescription())?></textarea>
+							</div>
+						</div>
+					</div>
+
+					<hr>
+
+					<div class="form-group row">
+						<h5 class="col-md-3"><?= $this->translate('Options') ?></h5>
+						<div class="col-md-9">
+							<div class="form-check mt-1">
+								<input <?=$ROLE->getOptions() & Role::OPTION_VISIBLE ? 'checked' : ''?> id="option-visible" type="checkbox" class="form-check-input" name="options[]" value="<?=Role::OPTION_VISIBLE?>">
+								<label class="form-check-label" for="option-visible"><?= $this->translate('Visible') ?><br>
+									<em class="text-muted" style="font-size: 90%">The role is visible to other users.</em></label>
+							</div>
+
+							<div class="form-check mt-1">
+								<input <?=$ROLE->getOptions() & Role::OPTION_ASSIGNABLE ? 'checked' : ''?> id="option-assign" type="checkbox" class="form-check-input" name="options[]" value="<?=Role::OPTION_ASSIGNABLE?>">
+								<label class="form-check-label" for="option-assign"><?= $this->translate('Assignable') ?><br>
+									<em class="text-muted" style="font-size: 90%">Users or groups can be assigned to this role.</em></label>
+							</div>
+
+							<div class="form-check mt-1">
+								<input <?=$ROLE->getOptions() & Role::OPTION_FINAL ? 'checked' : ''?> id="option-final" type="checkbox" class="form-check-input" name="options[]" value="<?=Role::OPTION_FINAL?>">
+								<label class="form-check-label" for="option-final"><?= $this->translate('Final') ?><br>
+									<em class="text-muted" style="font-size: 90%">This role is final and can not have more child roles.</em></label>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="form-group row">
+						<div class="col-md-3 d-none d-md-block"> </div>
+						<div class="col-md-9">
+							<button name="apply-information" class="btn btn-outline-primary"><?= $this->translate('Save') ?></button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="col-lg-4">
+				<hr class="d-lg-none">
+				<p>
+					<?= $this->translate('Adjust here information about the role.<br>Please note that the maximum role nesting level is 10. So after ten subroles Skyline CMS will ignore them!') ?>
+				</p>
+			</div>
+		</div>
+	</div>
+<?php
+	if(is_string($PROBLEM )) {
+		?>
+		<div class="modal banner fade" id="modal-failed" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+			<div class="modal-dialog success" role="document">
+				<div class="modal-content">
+					<div class="modal-header bg-danger text-white">
+						<h4 class="modal-title text-center"><?= $this->translate('Changes not saved') ?></h4>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true" class="white-text">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="text-center">
+							<i class="fa fa-times fa-4x text-danger animated rotateIn mb-3"></i>
+							<p>
+								<?=$PROBLEM?>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="application/javascript">
+            $(function() {
+                $("#modal-failed").modal("show");
+            });
+		</script>
+		<?php
+	} elseif($PROBLEM === -1) {
+		?>
+		<div class="modal banner fade" id="modal-success" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+			<div class="modal-dialog success" role="document">
+				<div class="modal-content">
+					<div class="modal-header bg-success text-white">
+						<h4 class="modal-title text-center" id="modal-success-title"><?= $this->translate('Changes saved') ?></h4>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true" class="white-text">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="text-center">
+							<i class="fa fa-check fa-4x text-success animated rotateIn mb-3"></i>
+							<p>
+								<?= $this->translate('The user was updated successfully.') ?>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="application/javascript">
+            $(function() {
+                $("#modal-success").modal("show");
+            });
+		</script>
+		<?php
+	}

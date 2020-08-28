@@ -1,0 +1,15 @@
+Dear $(User)
+
+Thank you very much for joining our $(AppName)!
+The purpose of this email is to verify, if the email address was typed successfully.
+Please click on the following link or fully copy it into your favourite browser's address bar:
+$(ResetLink)
+
+Once confirmed, you'll get invited to setup a password.
+After that you are able to login with the following credentials:
+Username: $(Username)
+or Email: $(Email)
+Password: >your password<
+
+Best regards
+$(TeamName)

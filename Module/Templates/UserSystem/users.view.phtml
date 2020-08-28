@@ -1,0 +1,190 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var Generator|int $USERS
+ * @var string $ME
+ * @var array $CAN
+ */
+
+$adminRoot = $this->buildURL("Admin");
+?>
+<?=$BREAD?>
+
+
+
+<h1><?= $this->translate('Users') ?></h1>
+<?php
+if(!$USERS) {
+	?>
+	<div class="alert alert-danger">
+		<?= $this->translate('The user system feature is disabled by your configuration.') ?>
+	</div>
+	<?php
+} else {
+	?>
+	<div class="alert alert-primary">
+		<?= $this->translate('You can see here a list of all registered members in your application') ?>
+	</div>
+
+	<table class="table table-sm table-striped table-hover table-responsive-md">
+		<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col"><?= $this->translate('Username') ?></th>
+			<th scope="col"><?= $this->translate('Name') ?></th>
+			<th scope="col"><?= $this->translate('Email') ?></th>
+			<th scope="col"><?= $this->translate('Last Login') ?></th>
+			<th scope="col"> </th>
+			<th scope="col"> </th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php
+		foreach($USERS as $user) {
+			?>
+		<tr<?=$user["username"] == $ME?' class="table-danger"' : ''?>>
+			<th scope="row"><?=$user["id"]?></th>
+			<td><?=htmlspecialchars($user["username"])?></td>
+			<td><?=htmlspecialchars(trim($user["prename"] . " " . $user["surname"]) ?: "-.-")?></td>
+			<td><?=htmlspecialchars($user["email"])?></td>
+			<td><?=$user["lastLoginDate"] ? (new \TASoft\Util\ValueObject\DateTime($user["lastLoginDate"])) : "-.-"?></td>
+			<td><?php
+				$options = $user["options"] * 1;
+				if($options & User::OPTION_INTERNAL)
+					echo "<i class='fa fa-exclamation text-skyline'></i> ";
+				else
+					echo "<i class='fa fa-exclamation text-muted'></i> ";
+
+				if($options & User::OPTION_CAN_LOGIN_WITH_MAIL)
+					echo "<i class='fa fa-at text-skyline'></i> ";
+				else
+					echo "<i class='fa fa-at text-muted'></i> ";
+
+				if($options & User::OPTION_BLOCKED)
+					echo "<i class='fa fa-ban text-danger'></i> ";
+				else
+					echo "<i class='fa fa-ban text-muted'></i> ";
+
+				if($options & User::OPTION_HIDDEN)
+					echo "<i class='fa fa-eye-slash text-danger'></i> ";
+				else
+					echo "<i class='fa fa-eye text-skyline'></i> ";
+				?></td>
+			<td class="text-right"><?php
+
+				if($user["username"] != $ME) {
+					$intl = $options & User::OPTION_INTERNAL ? true : false;
+
+					if($CAN["EDIT"]) {
+						if($intl)
+							echo "<a href=\"{$adminRoot}users/edit/{$user["id"]}\" class=\"fa fa-edit text-warning\"></a> ";
+						else
+							echo "<a href=\"{$adminRoot}users/edit/{$user["id"]}\" class=\"fa fa-edit text-primary\"></a> ";
+					}
+
+					if($CAN["DELETE"] && !$intl)
+						echo "<a href=\"{$adminRoot}users/delete/{$user["id"]}\" class=\"fa fa-trash text-danger\"></a> ";
+				}
+				?></td>
+		</tr>
+			<?php
+		}
+		?>
+		</tbody>
+	</table>
+
+	<?php
+	if($CAN["ADD"]):
+		?>
+		<script type="application/javascript">
+            function create_new_user() {
+				var name = prompt("Please enter the new username here");
+
+				if(name) {
+				    window.location.href='/admin/users/add/'+encodeURIComponent(name);
+				}
+            }
+		</script>
+
+		<div class="text-right">
+			<button onclick="create_new_user()" class="btn btn-outline-success">
+				<i class="fa fa-plus"></i> <?= $this->translate('Add New Member') ?>
+			</button>
+		</div>
+		<?php
+	endif;
+	?>
+	<hr class="my-4">
+
+	<dl>
+		<dt><i class="fa fa-exclamation text-skyline"></i></dt>
+		<dd>
+			<?= $this->translate('User is internal, which means, it can not be changed.') ?>
+		</dd>
+		<dt><i class="fa fa-at text-skyline"></i></dt>
+		<dd>
+			<?= $this->translate('User can login with email address instead of username.') ?>
+		</dd>
+		<dt><i class="fa fa-ban text-danger"></i></dt>
+		<dd>
+			<?= $this->translate('User is blocked. It can login but Skyline CMS will not grant any access.') ?>
+		</dd>
+		<dt><i class="fa fa-eye-slash text-danger"></i> / <i class="fa fa-eye text-success"></i></dt>
+		<dd>
+			<?= $this->translate('User is visible or invisible. An invisible user means that Skyline CMS pretends the user does not exist.') ?>
+		</dd>
+		<dt><span class="table-danger">red background</span></dt>
+		<dd>
+			<?= $this->translate('Your own account. For safety reasons you can not edit your account here.') ?>
+		</dd>
+		<dt><i class="fa fa-edit text-primary"></i></dt>
+		<dd>
+			<?= $this->translate('Edit this user.') ?>
+		</dd>
+		<dt><i class="fa fa-trash text-danger"></i></dt>
+		<dd>
+			<?= $this->translate('Delete this user.') ?>
+		</dd>
+	</dl>
+	<?php
+}
+?>
+<hr>
+

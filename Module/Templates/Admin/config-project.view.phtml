@@ -1,0 +1,356 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\Render\Context\DefaultRenderContext;
+use TASoft\Service\ServiceManager;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var array $PROJECT
+ * @var int|string $PROBLEM
+ */
+
+$recommended = $this->translate('(recommended)');
+$optional = $this->translate('(optional)');
+$devOnly = $this->translate('(dev only!)');
+
+$DEV = $PROJECT["mode"] == 0 ? true : false;
+?>
+<style type="text/css">
+
+</style>
+
+<?=$BREAD?>
+
+<h1><?=$this->translate("Project")?></h1>
+<div class="alert alert-primary">
+	<?= $this->translate('Skyline CMS needs to know about specific properties of your project.') ?>
+</div>
+
+<hr>
+
+<?php
+if($PROBLEM == -1) {
+	?>
+	<div class="alert alert-warning">
+		<h4 class="alert-heading">Missing Config</h4>
+		<p>
+			Skyline CMS stores your project information in an xml file which is used by the Skyline CMS compiler to make your website deliverable.<br>
+			At this moment, we could not find such a config file.<br>
+			We can solve this problem by <strong>downloading and installing</strong> a default project file.<br>
+
+			This will install a development file <a target="_blank" href="https://packages.skyline-cms.ch/project/dev-project.xml">https://packages.skyline-cms.ch/project/dev-project.xml (Development)</a><br>
+			and a production file <a target="_blank" href="https://packages.skyline-cms.ch/project/dev-project.xml">https://packages.skyline-cms.ch/project/live-project.xml (Production)</a>.
+		</p>
+		<button class="btn btn-lg btn-outline-primary" onclick="location.href='<?=$this->buildURL('Admin', '/config-project-install-defaults')?>'">Download And Install</button>
+	</div>
+	<?php
+	return;
+}
+?>
+
+<div class="card">
+	<h4 class="card-header"><?= $this->translate('General') ?></h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+				<div class="form-group row">
+					<label for="mode" class="col-md-2 col-form-label"><?= $this->translate('Mode') ?></label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-tag"></i></span>
+							</div>
+							<select class="custom-select" id="mode" name="mode" onchange="location.href='?mode='+$(this).val()">
+								<option <?=$PROJECT["mode"] == 0 ? 'selected' : ''?> value="0"><?=$this->translate("Development")?></option>
+								<option <?=$PROJECT["mode"] == 2 ? 'selected' : ''?> value="2"><?=$this->translate("Production")?></option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="title" class="col-md-2 col-form-label"><?= $this->translate('Title') ?></label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-tag"></i></span>
+							</div>
+							<input type="text" class="form-control" placeholder="<?=$this->translate('Your Application\'s Title')?>" id="title" name="title" value="<?=htmlspecialchars($PROJECT["title"])?>">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="description" class="col-md-2 col-form-label"><?= $this->translate('Description') ?></label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-comment"></i></span>
+							</div>
+							<textarea type="text" class="form-control" placeholder="<?=$this->translate('Your Application\'s Description')?>" id="description" name="description" rows="3"><?=htmlspecialchars($PROJECT["description"])?></textarea>
+						</div>
+					</div>
+				</div>
+
+				<hr>
+
+				<div class="form-group row">
+					<div class="col-md-2 col-form-label"><?= $this->translate('Options') ?></div>
+					<div class="col-md-10">
+
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<div class="input-group-text">
+										<input type="checkbox" <?=in_array('https', $FLAGS) ? 'checked' : ''?> name="flags[]" value="https" aria-label="<?= $enableDisable  ?>" title="<?=$enableDisable?>">
+									</div>
+								</div>
+								<input type="text" class="form-control" readonly value="<?= $this->translate('HTTPS Routing') ?>" aria-describedby="https-help" aria-label="<?= $text = $this->translate('Routes all incoming http request to https requests.') ?>" title="<?=$text?>">
+								<div class="input-group-append">
+									<span class="input-group-text"><?= $recommended ?></span>
+								</div>
+							</div>
+							<small id="https-help" class="form-text text-muted"><?= $text ?></small>
+						</div>
+
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<div class="input-group-text">
+										<input type="checkbox" <?=in_array('test', $FLAGS) ? 'checked' : ''?> name="flags[]" value="test" aria-label="<?= $enableDisable  ?>" title="<?=$enableDisable?>">
+									</div>
+								</div>
+								<input type="text" class="form-control" readonly value="<?= $this->translate('Test Environment') ?>" aria-describedby="test-help" aria-label="<?= $text = $this->translate('Defines the SKY_TEST constant to true and enable feedbacks on errors.') ?>" title="<?=$text?>">
+								<div class="input-group-append">
+									<span class="input-group-text"><?= $optional ?></span>
+								</div>
+							</div>
+							<small id="test-help" class="form-text text-muted"><?= $text ?></small>
+						</div>
+
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<div class="input-group-text">
+										<input type="checkbox" <?=in_array('with-pdo', $FLAGS) ? 'checked' : ''?> name="flags[]" value="with-pdo" aria-label="<?= $enableDisable  ?>" title="<?=$enableDisable?>">
+									</div>
+								</div>
+								<input type="text" class="form-control" readonly value="<?= $this->translate('Include PDO (Database)') ?>" aria-describedby="pdo-help" aria-label="<?= $text = $this->translate('Synchronizes the database against the required specifications of the installed packages.') ?>" title="<?=$text?>">
+								<div class="input-group-append">
+									<span class="input-group-text"><?= $optional ?></span>
+								</div>
+							</div>
+							<small id="test-help" class="form-text text-muted"><?= $text ?></small>
+						</div>
+
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<div class="input-group-text">
+										<input type="checkbox" <?=!$DEV ? 'disabled ':'', in_array('zero', $FLAGS) ? 'checked' : ''?> name="flags[]" value="zero" aria-label="<?= $enableDisable  ?>" title="<?=$enableDisable?>">
+									</div>
+								</div>
+								<input type="text" class="form-control" readonly value="<?= $this->translate('Zero Linking') ?>" aria-describedby="zero-help" aria-label="<?= $text = $this->translate('Compile the project using zero linking which means absolute filenames. Some debug tools require zero links but you can not distribute a zero linked project.') ?>" title="<?=$text?>">
+								<div class="input-group-append">
+									<span class="input-group-text"><?= $devOnly ?></span>
+								</div>
+							</div>
+							<small id="zero-help" class="form-text text-muted"><?= $text ?></small>
+						</div>
+
+
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<div class="input-group-text">
+										<input type="checkbox" <?=!$DEV ? 'disabled ':'', in_array('debug', $FLAGS) ? 'checked' : ''?> name="flags[]" value="debug" aria-label="<?= $enableDisable  ?>" title="<?=$enableDisable?>">
+									</div>
+								</div>
+								<input type="text" class="form-control" readonly value="<?= $this->translate('Debug Environment') ?>" aria-describedby="debug-help" aria-label="<?= $text = $this->translate('Defines the SKY_DEBUG constant to true and allow detailed errors.') ?>" title="<?=$text?>">
+								<div class="input-group-append">
+									<span class="input-group-text"><?= $devOnly ?></span>
+								</div>
+							</div>
+							<small id="debug-help" class="form-text text-muted"><?= $text ?></small>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="verbose" class="col-md-2 col-form-label"><?= $this->translate('Verbosity') ?></label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-tag"></i></span>
+							</div>
+							<select class="custom-select" id="verbose" name="verbose" aria-describedby="verbose-help">
+								<option <?=$PROJECT["verbose"] & 16 ? 'selected' : ''?> value="16"><?=$this->translate("Quiet")?></option>
+								<option <?=$PROJECT["verbose"] & 32 ? 'selected' : ''?> value="32"><?=$this->translate("Normal")?></option>
+								<option <?=$PROJECT["verbose"] & 64 ? 'selected' : ''?> value="64"><?=$this->translate("Verbose")?></option>
+								<option <?=$PROJECT["verbose"] & 128 ? 'selected' : ''?> value="128"><?=$this->translate("Very Verbose")?></option>
+								<option <?=$PROJECT["verbose"] & 256 ? 'selected' : ''?> value="256"><?=$this->translate("Debug")?></option>
+							</select>
+						</div>
+						<small id="verbose-help" class="form-text text-muted"><?= $this->translate('During compilation of your project, Skyline CMS will inform you what happens. Here you can specify how much information you want to see.') ?></small>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<button class="btn btn-outline-primary" name="apply-title"><?= $this->translate('Save') ?></button>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<p>
+				Skyline CMS is able to store all following settings under two different modes: Development and Production.<br>
+				Development is used to design and test your application. For example Skyline CMS will give you most information possible about an occured error, while in Production it will log the error and displays as less information possible.
+			</p>
+		</div>
+	</div>
+</div>
+
+
+<div class="card mt-5">
+	<h4 class="card-header"><?= $this->translate('Hosts') ?></h4>
+
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+				<?php
+				for($idx = 0;$idx <= count($PROJECT["hosts"]);$idx++) {
+					if($idx > 0)
+						echo "<hr>";
+					$host = $PROJECT["hosts"][$idx] ?? ['name'=>'', 'label'=>''];
+					?>
+					<div class="form-group">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-globe"></i></span>
+							</div>
+							<input name="host[<?=$idx?>][name]" type="text" class="form-control" value="<?=htmlspecialchars($host['name'])?>" aria-label="<?= $text = $this->translate('A Host name like localhost:8080 or 192.168.1.12 or www.example.org') ?>" placeholder="<?=$text?>" title="<?=$text?>">
+							<input name="host[<?=$idx?>][label]" type="text" class="form-control" value="<?=htmlspecialchars($host['label'])?>" aria-label="<?= $text = $this->translate('Shorthand caption') ?>" placeholder="<?=$text?>" title="<?=$text?>">
+						</div>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-link"></i></span>
+							</div>
+							<input name="host[<?=$idx?>][accepts]" type="text" class="form-control" value="<?=htmlspecialchars(implode(", ", $host['accept'] ?? []))?>" aria-label="<?= $text = $this->translate('Comma separated list of host accepting requests from.') ?>" placeholder="<?=$text?>" title="<?=$text?>">
+						</div>
+					</div>
+					<?php
+				}
+				?>
+				<div class="form-group">
+					<button class="btn btn-outline-primary" name="apply-hosts"><?= $this->translate('Save') ?></button>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<p>
+				Skyline CMS needs to know the domain names of your application to build exact linkings.<br>
+				It also offers you a resource protection (known as hotlink protection).<br>
+				This means, that only your application is allowed to access specific resources like images or stylesheets. All other requests are blocked.<br>
+				To do so, you should tell Skyline CMS to which hosts it should deliver resources.
+			</p>
+		</div>
+	</div>
+</div>
+
+
+<?php
+
+if(is_string($PROBLEM)) {
+	?>
+	<div class="modal banner fade" id="modal-failed" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+		<div class="modal-dialog success" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-danger text-white">
+					<h4 class="modal-title text-center">Settings Not Updated</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="white-text">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="text-center">
+						<i class="fa fa-times fa-4x text-danger animated rotateIn mb-3"></i>
+						<p>
+							<?=$PROBLEM?>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="application/javascript">
+        $(function() {
+            $("#modal-failed").modal("show");
+        });
+	</script>
+	<?php
+} elseif($_SESSION["updated"] ?? false) {
+	unset($_SESSION["updated"]);
+	?>
+	<div class="modal banner fade" id="modal-success" tabindex="-1" role="dialog" aria-labelledby="modal-success-title" aria-hidden="true">
+		<div class="modal-dialog success" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-success text-white">
+					<h4 class="modal-title text-center" id="modal-success-title">Settings Updated</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true" class="white-text">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="text-center">
+						<i class="fa fa-check fa-4x text-success animated rotateIn mb-3"></i>
+						<p>
+							The changed settings were updated successfully.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="application/javascript">
+		$(function() {
+			$("#modal-success").modal("show");
+		});
+	</script>
+	<?php
+}

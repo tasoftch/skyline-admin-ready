@@ -1,0 +1,439 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\HTML\Form\Feedback\InvalidFeedback;
+use Skyline\HTML\Form\FormElement;
+use Skyline\HTML\Form\Validator\CallbackValidator;
+use Skyline\HTML\Form\Validator\NotEmptyValidator;
+use Skyline\HTML\Form\Validator\UniqueSQLColumnValidator;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var array $COMPONENT
+ * @var FormElement $FORMULA
+ */
+
+$adminRoot = $this->buildURL("Admin");
+?>
+<?=$BREAD?>
+
+<style type="text/css">
+	.list-group-item {
+		padding: 0;
+		padding-left: 0.25rem;
+		padding-right: 0.25rem;
+	}
+
+	i.position-absolute {
+		right: 0.25rem;
+		top: 1rem;
+	}
+
+	.custom-file-label::after {
+		content: "<?=$this->translateGlobal("Browse")?>" !important;
+	}
+</style>
+
+<script type="application/javascript">
+	const FIELD_MAP = <?=json_encode( $FIELD_MAP )?>;
+
+	function adjust_form() {
+	    var src_id = $("#src-kind").val();
+		var theList = FIELD_MAP[ src_id ];
+		$("[data-field]").hide();
+        $("[data-desc]").hide();
+
+        $("[data-desc='"+ src_id +"']").show();
+
+		if(theList && theList.length) {
+		    for(var e=0;e<theList.length;e++) {
+                $("[data-field='"+theList[e]+"']").show();
+			}
+		}
+	}
+
+	$(function() {
+	    adjust_form();
+	    $("#src-kind").on('change', adjust_form);
+	    $("#local_file").on('change', function() {
+	        var file = document.getElementById('local_file').files[0];
+	        if(file) {
+	            if(file.size > <?=$MAX_FILE_SIZE?>) {
+	                alert("<?=$this->translateGlobal('The built-in PHP and Apache server won\'t accept such a large file.')?>");
+                    document.getElementById('local_file').value = "";
+				} else {
+                    $("#local_file").parent().find("label").html(file.name);
+				}
+			}
+		});
+	})
+</script>
+
+<h1><?= $TITLE ?></h1>
+
+<hr>
+
+<div class="card">
+	<h4 class="card-header">
+		<?= $this->translate('Information') ?>
+	</h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+				<div class="form-group row">
+					<label for="src-kind" class="col-md-3 col-form-label"><?= $this->translate('Source Kind') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-tree"></i></span>
+							</div>
+							<?php
+							$FORMULA->manualBuildControl('src-kind');
+							$FORMULA->manualBuildValidationFeedback(
+								'src-kind',
+								new InvalidFeedback(NotEmptyValidator::class, function() {
+									echo "<div class='invalid-feedback'>", $this->translate("Typ must be specified.") ,"</div>";
+								})
+							);
+							?>
+						</div>
+						<small class="form-text text-muted"><?= $this->translate('The type specified, how Skyline CMS should include the given source into the layouts.') ?></small>
+					</div>
+				</div>
+
+				<hr>
+
+				<div class="form-group row" data-field="1">
+					<label for="shorthand" class="col-md-3 col-form-label"><?= $this->translate('Shorthand') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-tag"></i></span>
+							</div>
+							<?php
+							$FORMULA->manualBuildControl('shorthand');
+							$FORMULA->manualBuildValidationFeedback(
+								'shorthand',
+								new InvalidFeedback(NotEmptyValidator::class, function() {
+									echo "<div class='invalid-feedback'>", $this->translate("Shorthand must be specified.") ,"</div>";
+								}),
+								new InvalidFeedback(CallbackValidator::class, function() {
+									echo "<div class='invalid-feedback'>", $this->translate("Shorthand must be unique.") ,"</div>";
+								})
+							);
+							?>
+						</div>
+						<small class="form-text text-muted"><?= $this->translate('A shorthand string to identify the source.') ?></small>
+					</div>
+				</div>
+
+				<div class="form-group row" data-field="2">
+					<label for="uri" class="col-md-3 col-form-label"><?= $this->translate('URI') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-link"></i></span>
+								<code class="input-group-text">/Public/</code>
+							</div>
+							<?php
+							$FORMULA->manualBuildControl('uri');
+							$FORMULA->manualBuildValidationFeedback(
+								'uri',
+								new InvalidFeedback(NotEmptyValidator::class, function() {
+									echo "<div class='invalid-feedback'>", $this->translate("URI must not be empty.") ,"</div>";
+								}),
+								new InvalidFeedback('invalid-uri-not-exists', function() {
+									echo "<div class='invalid-feedback'>", $this->translate("File must exist at given URI. Check for correct URI or remove the Search Existing File option.") ,"</div>";
+								}),
+								new InvalidFeedback('invalid-uri-exists', function() {
+									echo "<div class='invalid-feedback'>", $this->translate("File exists at given URI. Please choose another URI or delete the erxisting file.") ,"</div>";
+								}),
+								new InvalidFeedback('is_dir', function() {
+									echo "<div class='invalid-feedback'>", $this->translate("URI must not reference a directory.") ,"</div>";
+								}),
+								new InvalidFeedback(CallbackValidator::class, function() {
+									echo "<div class='invalid-feedback'>", $this->translate("URI must be unique.") ,"</div>";
+								})
+							);
+							?>
+						</div>
+						<small class="form-text text-muted"><?= $this->translate('The URI to target this source.') ?></small>
+					</div>
+				</div>
+
+				<div class="form-group row" data-field="3">
+					<label for="url" class="col-md-3 col-form-label"><?= $this->translate('URL') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-globe"></i></span>
+								<code class="input-group-text">https://</code>
+							</div>
+							<?php
+							$FORMULA->manualBuildControl('url');
+							$FORMULA->manualBuildValidationFeedback(
+								'url',
+								new InvalidFeedback(NotEmptyValidator::class, function() {
+									echo "<div class='invalid-feedback'>", $this->translate("URL must not be empty.") ,"</div>";
+								}),
+								new InvalidFeedback('invalid-url', function() {
+									echo "<div class='invalid-feedback'>", $this->translate("URL is not reachable by the application now. Please verify your connection to the internet or remove the Check URL option.") ,"</div>";
+								}),
+								new InvalidFeedback('invalid-url-code', function() use (&$URL_CODE) {
+									echo "<div class='invalid-feedback'>", $this->translate("The server responded: $URL_CODE. If you are sure to use this source, remove the Check URL option.") ,"</div>";
+								}),
+								new InvalidFeedback('invalid-url-itgy', function() use (&$URL_CODE) {
+									echo "<div class='invalid-feedback'>", $this->translate("Integrity violation. The generated checksum of the source does not match your passed integrity. Please verify it or remove Check Integrity option.") ,"</div>";
+								})
+							);
+							?>
+						</div>
+						<small class="form-text text-muted"><?= $this->translate('The full URL to the remote source.') ?></small>
+					</div>
+				</div>
+
+
+				<div class="form-group row" data-field="4">
+					<hr class="col-12">
+
+					<label for="cross_origin" class="col-md-3 col-form-label"><?= $this->translate('Cross Origin') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-question"></i></span>
+							</div>
+							<?php
+							$FORMULA->manualBuildControl('cross_origin');
+							?>
+						</div>
+						<small class="form-text text-muted"><?= $this->translate('Define a specific origin or leave empty to allow all.') ?></small>
+					</div>
+				</div>
+
+				<div class="form-group row" data-field="7">
+					<label for="media" class="col-md-3 col-form-label"><?= $this->translate('Media') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-code"></i></span>
+							</div>
+							<?php
+							$FORMULA->manualBuildControl('media');
+							?>
+						</div>
+						<small class="form-text text-muted"><?= $this->translate('Define a default media query for this css source.') ?></small>
+					</div>
+				</div>
+
+				<div class="form-group row" data-field="5">
+					<label for="integrity" class="col-md-3 col-form-label"><?= $this->translate('Integrity') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-certificate"></i></span>
+							</div>
+							<?php
+							$FORMULA->manualBuildControl('integrity');
+							?>
+						</div>
+						<small class="form-text text-muted"><?= $this->translate('Specify an integrity string to verify a remote source.') ?></small>
+					</div>
+				</div>
+
+				<div class="form-group row" data-field="8">
+					<hr class="col-12">
+
+					<div class="col-md-3 col-form-label"><?= $this->translate('Local File') ?></div>
+					<div class="col-md-9">
+						<div class="custom-file">
+							<?php
+							$FORMULA->manualBuildControl('local_file', ['class' => 'custom-file-input']);
+							$FORMULA->manualBuildValidationFeedback('local_file',
+								new InvalidFeedback('expecting-file', function() use (&$URL_CODE) {
+									echo "<div class='invalid-feedback'>", $this->translate("Skyline CMS did not receive any uploaded file information.") ,"</div>";
+								}),
+								new InvalidFeedback('invalid-type', function() use (&$URL_CODE) {
+									echo "<div class='invalid-feedback'>", $this->translate("The contents of this uploaded file can not be recognized as component.") ,"</div>";
+								}),
+								new InvalidFeedback('copy-error', function() use (&$URL_CODE) {
+									echo "<div class='invalid-feedback'>", $this->translate("Skyline CMS could not copy your uploaded file to destination. Please try again.") ,"</div>";
+								})
+							);
+							?>
+							<label for="local_file" class="custom-file-label"><?= $this->translate('Upload a custom file.') ?></label>
+							<small class="form-text text-muted"><?= $this->translate('Upload a local file.') ?></small>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="form-group row" data-field="6">
+					<label for="integrity" class="col-md-3 col-form-label"><?= $this->translate('Integrity') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-certificate"></i></span>
+							</div>
+							<?php
+							$FORMULA->manualBuildControl('integrity_enc');
+							?>
+						</div>
+						<small class="form-text text-muted"><?= $this->translate('Choose a hash generator to create an integrity string of a new source.') ?></small>
+					</div>
+				</div>
+
+				<div class="form-group row" data-field="9">
+					<hr class="col-12">
+					<div class="col-md-3 col-form-label"><?= $this->translate('Options') ?></div>
+					<div class="col-md-9">
+						<div class="custom-file">
+							<?php
+							$FORMULA->manualBuildControl('options_local');
+							?>
+							<small class="form-text text-muted"><?= $this->translate('Choose options to generate this source.') ?></small>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row" data-field="10">
+					<hr class="col-12">
+					<div class="col-md-3 col-form-label"><?= $this->translate('Options') ?></div>
+					<div class="col-md-9">
+						<div class="custom-file">
+							<?php
+							$FORMULA->manualBuildControl('options_remote');
+							?>
+							<small class="form-text text-muted"><?= $this->translate('Choose options to generate this source.') ?></small>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<div class="col-md-3"> </div>
+					<div class="col-md-9">
+						<button class="btn btn-outline-primary" name="create">
+							<i class="fa fa-plus"></i> Create
+						</button>
+						<?php
+						if(!$LOCAL):
+						?>
+						<button class="btn btn-outline-success" name="read-tag" type="button" onclick="read_from_tag()">
+							<i class="fa fa-eye"></i> Read Tag
+						</button>
+						<?
+						else:
+						?>
+							<button class="btn btn-outline-success" name="read-file" type="button" onclick="location.href='/admin/contents/components/add-from-file/<?=$COMPONENT['id']?>'">
+								<i class="fa fa-search"></i> Lookup
+							</button>
+						<?
+						endif
+						?>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<hr class="d-lg-none">
+			<?php
+			foreach($SRC_DESC as $descID => $desc) {
+				?>
+				<p class="alert alert-secondary" data-desc="<?=$descID?>">
+					<?=$desc?>
+				</p>
+				<?php
+			}
+
+			if($LOCAL):
+			?>
+			<p>
+				If you want to target an existing file, it must be located at: <br>
+				<kbd><em>your-project</em>/SkylineAppData/Components/</kbd>
+			</p>
+			<p class="alert alert-info">
+				Please note that uploading a file may take some time depending on your internet speed and file size.
+			</p>
+			<?php
+			endif;
+			?>
+
+		</div>
+	</div>
+</div>
+
+<script type="application/javascript">
+	function read_from_tag() {
+	    $("#read-modal").modal("show")
+	}
+</script>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="read-modal">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title"><?= $this->translate('Read HTML Tag') ?></h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p><?= $this->translate('Many times you can copy prepared html tags from a cdn provider.<br>
+					This helper reads a html link or script tag and completes the form for you.') ?></p>
+				<form action="" id="read-frm" method="post">
+					<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+					<div class="form-group" >
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-html"></i></span>
+							</div>
+							<textarea name="read-html" rows="5" aria-label="<?= $this->translate('HTML tag') ?>" placeholder="<?=htmlspecialchars("<link href=\"...\" ... />")?>" class="form-control" id="html-tag"></textarea>
+						</div>
+						<small class="form-text text-muted"><?= $this->translate('Copy the html tag into this text area.') ?></small>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="document.getElementById('read-frm').submit();">Read</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,201 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\HTML\Form\Feedback\InvalidFeedback;
+use Skyline\HTML\Form\FormElement;
+use Skyline\HTML\Form\Validator\CallbackValidator;
+use Skyline\HTML\Form\Validator\NotEmptyValidator;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var array $LAYOUT
+ * @var FormElement $FORMULA
+ * @var array $CAN
+ */
+
+$adminRoot = $this->buildURL("Admin");
+?>
+<?=$BREAD?>
+
+<h1><?= $this->translate('Setup Layout') ?></h1>
+
+<hr>
+
+<script type="application/javascript">
+	function add_category() {
+	    var name = prompt("Please enter a name for the new category");
+	    if(name)
+	    	window.location.href = '<?=$adminRoot?>contents/layouts/<?=$LAYOUT['id']?>/add-cat/'+btoa(name);
+	}
+</script>
+
+<div class="card">
+	<h4 class="card-header"><?= $this->translate('Meta') ?></h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+
+				<div class="form-group row">
+					<label for="gcat" class="col-md-3 col-form-label"><?= $this->translate('Category') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<?php $FORMULA->manualBuildControl('gcat', ['class' => 'custom-select']); ?>
+							<div class="input-group-append">
+								<button class="btn btn-outline-secondary" type="button" onclick="add_category()">...</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="form-group row">
+					<label for="lname" class="col-md-3 col-form-label"><?= $this->translate('Name') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-tag"></i></span>
+							</div>
+							<?php $FORMULA->manualBuildControl('lname'); ?>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="form-group row">
+					<label for="slug" class="col-md-3 col-form-label"><?= $this->translate('Slug') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-globe"></i></span>
+							</div>
+							<?php
+							$FORMULA->manualBuildControl('slug');
+							$FORMULA->manualBuildValidationFeedback('slug',
+								new InvalidFeedback(CallbackValidator::class, function () {
+									echo "<div class='invalid-feedback'>", $this->translateGlobal("Slug must be unique in your application."), "</div>";
+								}),
+								new InvalidFeedback(NotEmptyValidator::class, function () {
+									echo "<div class='invalid-feedback'>", $this->translateGlobal("Slug must not be empty."), "</div>";
+								})
+							)
+							?>
+						</div>
+					</div>
+				</div>
+
+				<hr>
+
+				<div class="form-group row">
+					<label for="gname" class="col-md-3 col-form-label">HTML <?= $this->translate('Title') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-tag"></i></span>
+							</div>
+							<?php $FORMULA->manualBuildControl('ltitle'); ?>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="gdesc" class="col-md-3 col-form-label">HTML <?= $this->translate('Description') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-comment"></i></span>
+							</div>
+							<?php $FORMULA->manualBuildControl('ldescription'); ?>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<div class="col-md-3 d-none d-md-block"> </div>
+					<div class="col-md-9">
+						<button name="apply-meta" class="btn btn-outline-primary"><?= $this->translate('Save') ?></button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<hr class="d-lg-none">
+			<p>
+				<?= $this->translate('Setup the layout\'s metadata. Name and slug are for you and Skyline CMS to identify the layout.') ?>
+			</p>
+			<p class="alert alert-warning">
+				<?= $this->translate('Please note that changing the slug may cause problems if there are pages referencing the layout.') ?>
+			</p>
+		</div>
+	</div>
+</div>
+
+
+<div class="card mt-5">
+	<h4 class="card-header"><?= $this->translate('Components') ?></h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+				<div class="form-group row">
+					<label for="lname" class="col-md-3 col-form-label"><span class="sr-only"><?= $this->translate('Components') ?></span></label>
+					<div class="col-md-9">
+						<?php $FORMULA2->manualBuildControl('components'); ?>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<div class="col-md-3 d-none d-md-block"> </div>
+					<div class="col-md-9">
+						<button name="apply-components" class="btn btn-outline-primary"><?= $this->translate('Save') ?></button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<hr class="d-lg-none">
+			<p>
+				<?= $this->translate('Specify which components this layout will need to be rendered correctly.') ?>
+			</p>
+		</div>
+	</div>
+</div>
+
+

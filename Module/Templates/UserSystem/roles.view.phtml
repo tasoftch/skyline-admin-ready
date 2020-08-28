@@ -1,0 +1,163 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\Role;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var Role[] $ROLES
+ * @var array $CAN
+ */
+
+$adminRoot = $this->buildURL("Admin");
+?>
+<?=$BREAD?>
+
+
+
+<h1><?= $this->translate('Roles') ?></h1>
+
+<div class="alert alert-primary">
+	<?= $this->translate('You can see here a list of all available roles') ?>
+</div>
+
+<table class="table table-sm table-striped table-hover table-responsive-md">
+	<thead>
+	<tr>
+		<th scope="col"><?= $this->translate('Name') ?></th>
+		<th scope="col"><?= $this->translate('Description') ?></th>
+		<th scope="col"> </th>
+		<th scope="col"> </th>
+	</tr>
+	</thead>
+	<tbody>
+	<?php
+	foreach($ROLES as $ROLE) {
+		$RID = $ROLE->getId();
+
+		?>
+		<tr>
+			<td><?=htmlspecialchars($ROLE->getRole())?></td>
+			<td><?=htmlspecialchars($ROLE->getDescription())?></td>
+			<td><?php
+				$options = $ROLE->getOptions();
+				if($ROLE->isInternal())
+					echo "<i class='fa fa-exclamation text-skyline'></i> ";
+				else
+					echo "<i class='fa fa-exclamation text-muted'></i> ";
+
+				if($options & Role::OPTION_VISIBLE)
+					echo "<i class='fa fa-eye text-skyline'></i> ";
+				else
+					echo "<i class='fa fa-eye-slash text-muted'></i> ";
+
+				if($options & Role::OPTION_ASSIGNABLE)
+					echo "<i class='fa fa-link text-skyline'></i> ";
+				else
+					echo "<i class='fa fa-link text-muted'></i> ";
+				?></td>
+			<td class="text-right"><?php
+				if($CAN["EDIT"]) {
+					if(!$ROLE->isInternal())
+						echo "<a href=\"{$adminRoot}roles/edit/$RID\" class=\"fa fa-edit text-primary\"></a> ";
+
+					if(!($ROLE->getOptions() & Role::OPTION_FINAL))
+						echo "<a onclick='create_new_user($RID)' class=\"fa fa-plus text-success\"></a> ";
+				}
+
+				if(!$ROLE->isInternal()) {
+					if($CAN["DELETE"])
+						echo "<a href=\"{$adminRoot}roles/delete/$RID\" class=\"fa fa-trash text-danger\"></a> ";
+				}
+				?></td>
+		</tr>
+		<?php
+	}
+	?>
+	</tbody>
+</table>
+
+<?php
+if($CAN["EDIT"]):
+	?>
+	<script type="application/javascript">
+        function create_new_user(parent) {
+            var name = prompt("Please enter the new role name here");
+
+            if(name && parent) {
+                window.location.href='/admin/roles/add/'+encodeURIComponent(name) + "?parent="+parent;
+            } else {
+                if(name)
+                    window.location.href='/admin/roles/add/'+encodeURIComponent(name);
+			}
+        }
+	</script>
+
+	<div class="text-right">
+		<button onclick="create_new_user()" class="btn btn-outline-success">
+			<i class="fa fa-plus"></i> <?= $this->translate('Add Top Level Role') ?>
+		</button>
+	</div>
+<?php
+endif;
+?>
+<hr class="my-4">
+
+<dl>
+	<dt><i class="fa fa-exclamation text-skyline"></i></dt>
+	<dd>
+		<?= $this->translate('Role is internal, which means, it can not be changed.') ?>
+	</dd>
+	<dt><i class="fa fa-eye-slash text-danger"></i> / <i class="fa fa-eye text-success"></i></dt>
+	<dd>
+		<?= $this->translate('Role is visible to other users or not.') ?>
+	</dd>
+	<dt><i class="fa fa-link text-skyline"></i></dt>
+	<dd>
+		<?= $this->translate('Role is assignable to groups and/or users.') ?>
+	</dd>
+	<dt><i class="fa fa-edit text-primary"></i></dt>
+	<dd>
+		<?= $this->translate('Edit this role.') ?>
+	</dd>
+	<dt><i class="fa fa-trash text-danger"></i></dt>
+	<dd>
+		<?= $this->translate('Delete this role.') ?>
+	</dd>
+</dl>
+

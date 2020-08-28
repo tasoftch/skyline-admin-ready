@@ -1,0 +1,151 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var Generator|int $GROUPS
+ * @var array $CAN
+ */
+
+$adminRoot = $this->buildURL("Admin");
+?>
+<?=$BREAD?>
+
+
+
+<h1><?= $this->translate('Groups') ?></h1>
+<?php
+if(!$GROUPS) {
+	?>
+	<div class="alert alert-danger">
+		<?= $this->translate('The user system feature is disabled by your configuration.') ?>
+	</div>
+	<?php
+} else {
+	?>
+	<div class="alert alert-primary">
+		<?= $this->translate('You can see here a list of all available groups') ?>
+	</div>
+
+	<table class="table table-sm table-striped table-hover table-responsive-md">
+		<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col"><?= $this->translate('Name') ?></th>
+			<th scope="col"><?= $this->translate('Description') ?></th>
+			<th scope="col"><?= $this->translate('Members') ?></th>
+			<th scope="col"> </th>
+			<th scope="col"> </th>
+		</tr>
+		</thead>
+		<tbody>
+		<?php
+		foreach($GROUPS as $group) {
+			?>
+		<tr>
+			<th scope="row"><?=$group["id"]?></th>
+			<td><?=htmlspecialchars($group["name"])?></td>
+			<td><?=htmlspecialchars($group["description"])?></td>
+			<td><?=htmlspecialchars($group["members"])?></td>
+			<td><?php
+				$options = $group["options"] * 1;
+				if($options & Group::OPTION_INTERNAL)
+					echo "<i class='fa fa-exclamation text-skyline'></i> ";
+				else
+					echo "<i class='fa fa-exclamation text-muted'></i> ";
+				?></td>
+			<td class="text-right"><?php
+				if(!($options & 1)) {
+					if($CAN["EDIT"])
+						echo "<a href=\"{$adminRoot}groups/edit/{$group["id"]}\" class=\"fa fa-edit text-primary\"></a> ";
+					if($CAN["DELETE"])
+						echo "<a href=\"{$adminRoot}groups/delete/{$group["id"]}\" class=\"fa fa-trash text-danger\"></a> ";
+				} else {
+					echo "<a href=\"{$adminRoot}groups/edit/{$group["id"]}\" class=\"fa fa-edit text-warning\"></a> ";
+				}
+				?></td>
+		</tr>
+			<?php
+		}
+		?>
+		</tbody>
+	</table>
+
+	<?php
+	if($CAN["ADD"]):
+		?>
+		<script type="application/javascript">
+            function create_new_user() {
+				var name = prompt("Please enter the new username here");
+
+				if(name) {
+				    window.location.href='/admin/groups/add/'+encodeURIComponent(name);
+				}
+            }
+		</script>
+
+		<div class="text-right">
+			<button onclick="create_new_user()" class="btn btn-outline-success">
+				<i class="fa fa-plus"></i> <?= $this->translate('Add New Group') ?>
+			</button>
+		</div>
+		<?php
+	endif;
+	?>
+	<hr class="my-4">
+
+	<dl>
+		<dt><i class="fa fa-exclamation text-skyline"></i></dt>
+		<dd>
+			<?= $this->translate('Group is internal, which means, it can not be changed.') ?>
+		</dd>
+		<dt><i class="fa fa-edit text-primary"></i></dt>
+		<dd>
+			<?= $this->translate('Edit this group.') ?>
+		</dd>
+		<dt><i class="fa fa-trash text-danger"></i></dt>
+		<dd>
+			<?= $this->translate('Delete this group.') ?>
+		</dd>
+	</dl>
+	<?php
+}
+?>
+<hr>
+

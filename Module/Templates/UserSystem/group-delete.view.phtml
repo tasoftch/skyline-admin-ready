@@ -1,0 +1,101 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\Role;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\Render\Context\DefaultRenderContext;
+use TASoft\Service\ServiceManager;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var Group|int $GROUP
+ */
+
+$adminRoot = $this->buildURL("Admin");
+$sm = ServiceManager::generalServiceManager();
+
+?>
+<?=$BREAD?>
+
+<h1><?= $this->translate('Delete Group') ?></h1>
+
+<hr>
+<div class="alert alert-danger">
+	<h4 class="alert-heading"><?= $this->translate('Danger Zone!') ?></h4>
+	<p>
+		<?= $this->translate('Are you really sure to perform this action? It can not be undone!') ?>
+	</p>
+
+	<?= $this->translate('If yes, please confirm with your password.') ?>
+</div>
+<hr>
+<ul class="list-group">
+	<li class="list-group-item d-flex justify-content-between">
+		<strong><?= $this->translate('Name') ?></strong>
+		<?=htmlspecialchars($GROUP->getName())?>
+	</li>
+	<li class="list-group-item d-flex justify-content-between">
+		<strong><?= $this->translate('Description') ?></strong>
+		<?=htmlspecialchars($GROUP->getDescription())?>
+	</li>
+	<li class="list-group-item d-flex justify-content-between">
+		<strong><?= $this->translate('ID') ?></strong>
+		#<?=htmlspecialchars($GROUP->getId())?>
+	</li>
+</ul>
+<hr>
+<div class="alert alert-primary">
+	<?= $this->translate('This action will delete the specified group from your application. All members of that group will loose their membership, but no user is removed.') ?>
+</div>
+
+<div class="card">
+	<h4 class="card-header alert-danger"><?= $this->translate('Delete %s', NULL, $GROUP->getName()) ?></h4>
+	<div class="card-body">
+		<form action="" method="post" class="form-inline">
+			<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+			<div class="form-group mb-2">
+				<label for="username" class="sr-only"><?= $this->translate('Username') ?></label>
+				<input type="text" name="<?=$sm->getParameter("security.http.post.tokenName")?>" readonly class="form-control-plaintext" id="username"  value="<?=htmlspecialchars($USERNAME)?>">
+			</div>
+			<div class="form-group mx-sm-3 mb-2">
+				<label for="inputPassword2" class="sr-only"><?= $this->translate('Password') ?></label>
+				<input type="password" name="<?=$sm->getParameter("security.http.post.credentialName")?>" class="form-control" id="inputPassword2" placeholder="<?= $this->translate('Password') ?>">
+			</div>
+			<button type="submit" name="delete-now" class="btn btn-danger mb-2"><?= $this->translate('Confirm And Delete') ?></button>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,120 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\HTML\Form\Feedback\InvalidFeedback;
+use Skyline\HTML\Form\FormElement;
+use Skyline\HTML\Form\Validator\NotEmptyValidator;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var array $COMPONENTS
+ * @var array $COMPILATION
+ * @var array $CAN
+ */
+
+$adminRoot = $this->buildURL("Admin");
+
+$on = $this->translateGlobal("On");
+$off = $this->translateGlobal("Off");
+
+?>
+<style type="text/css">
+	.list-group-item {
+		padding: 0;
+		padding-left: 0.25rem;
+		padding-right: 0.25rem;
+	}
+
+	i.position-absolute {
+		left: 0.25rem;
+		top: 0.25rem;
+	}
+
+	iframe {
+		width: 100%;
+		border: 1px solid gray;
+		height: 80%;
+	}
+</style>
+
+<?=$BREAD?>
+
+<h1><?= $this->translate('Compilation') ?></h1>
+<p class="alert alert-primary">
+	Here your project gets compiled and prepared for publishing.<br>
+	Please do not interrupt this process.
+</p>
+
+<hr>
+
+<div class="row">
+	<div class="col-md-3">
+		<strong><?= $this->translate('Settings') ?></strong>
+	</div>
+	<div class="col-md-9">
+		<ul class="list-group">
+			<li class="list-group-item d-flex justify-content-between">
+				<strong><?= $this->translate('Mode') ?></strong>
+				<?=$COMPILATION["MODE"] == 0 ? 'Development' : 'Production'?>
+			</li>
+			<li class="list-group-item d-flex justify-content-between">
+				<strong><?= $this->translate('Debug Environment') ?></strong>
+				<?= in_array('debug', $COMPILATION["FLAGS"] ) ? $on : $off?>
+			</li>
+			<li class="list-group-item d-flex justify-content-between">
+				<strong><?= $this->translate('Test Environment') ?></strong>
+				<?= in_array('test', $COMPILATION["FLAGS"] ) ? $on : $off?>
+			</li>
+			<li class="list-group-item d-flex justify-content-between">
+				<strong><?= $this->translate('Zero Linking') ?></strong>
+				<?= in_array('zero', $COMPILATION["FLAGS"] ) ? $on : $off?>
+			</li>
+			<li class="list-group-item d-flex justify-content-between">
+				<strong><?= $this->translate('PDO (Database)') ?></strong>
+				<?= in_array('with-pdo', $COMPILATION["FLAGS"] ) ? $on : $off?>
+			</li>
+		</ul>
+	</div>
+</div>
+<hr>
+
+<div class="embed-responsive embed-responsive-16by9">
+	<iframe class="embed-responsive-item border border-primary rounded" src="/admin/project/compile/run"></iframe>
+</div>
+
+

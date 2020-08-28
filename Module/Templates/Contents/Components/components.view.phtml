@@ -1,0 +1,178 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\Admin\Ready\Controller\Management\ComponentCompilationController;
+use Skyline\Admin\Ready\Controller\Management\ComponentManagementActionController;
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var array $COMPONENTS
+ * @var array $CAN
+ */
+
+$adminRoot = $this->buildURL("Admin");
+
+$internal = $this->translateGlobal("Internal Component");
+?>
+<?=$BREAD?>
+
+<style type="text/css">
+	.list-group-item {
+		padding: 0;
+		padding-left: 0.25rem;
+		padding-right: 0.25rem;
+	}
+
+	i.position-absolute {
+		left: 0.25rem;
+		top: 0.25rem;
+	}
+</style>
+
+<h1><?= $this->translate('Components') ?></h1>
+<p class="alert alert-primary">
+	Components are external resources that are required to render a view. A component can link to a local file on that server or an external resource. Typically components are stylesheets or javascripts.
+</p>
+<hr>
+
+<button class="btn btn-outline-success" onclick="window.location.href='/admin/contents/components/edit/0';">
+	<i class="fa fa-plus"></i> New Component
+</button>
+
+<?php
+if($CHANGES):
+?>
+	<form class="my-3" action="/admin/project/compile" method="post">
+
+
+		<div class="alert alert-warning">
+			<h5 class="alert-heading">Changes detected</h5>
+			<p>
+				This Information appears because at least one change was detected. To publish the changes, your project needs to be recompiled.<br>
+				If you want to publish now, click the Publish Changes button below.<br>
+				If the button does not exist, please contact the administrator, because you don't have the privilege to compile the project.
+			</p>
+		</div>
+		<?php
+		if($CAN["COMPILE"]) {
+			?>
+			<input type="hidden" name="compile-csrf" value="<?=$CSRF?>">
+			<input type="hidden" name="compile[]" value="components-config">
+			<input type="hidden" name="returnURI" value="/admin/contents/components">
+			<input type="hidden" name="pre-compiler" value="<?=base64_encode( ComponentCompilationController::class . '::componentPreCompiler' )?>">
+			<input type="hidden" name="post-compiler" value="<?=base64_encode( ComponentCompilationController::class . '::componentPostCompiler' )?>">
+
+			<button class="btn btn-outline-primary">
+				<i class="fa fa-globe"></i> Publish Changes
+			</button>
+			<?php
+		}
+		?>
+	</form>
+<?php
+endif;
+?>
+
+
+
+<div class="row">
+	<?php
+	foreach($COMPONENTS as $componentID => $COMPONENT) {
+
+		?>
+	<div class="col-xl-3 col-lg-4 col-md-6 mt-4">
+		<div class="card">
+			<h3 class="card-header d-flex justify-content-between<?=$COMPONENT["modified"]?' alert-warning':''?>">
+				<?=htmlspecialchars($COMPONENT['name'])?>
+				<?=$COMPONENT["internal"] ? '<i class="fa fa-exclamation text-primary" title="'.$internal.'"></i>' : '' ?>
+			</h3>
+			<div class="card-body">
+				<?php
+				$first = true;
+
+				if(isset($COMPONENT["parts"])) {
+					foreach($COMPONENT["parts"] as $partID => $PART) {
+
+						?>
+						<ul class="list-group<?=$first?'':' mt-4'?>">
+							<li class="list-group-item list-group-item-primary text-center position-relative">
+								<i class="position-absolute fa <?=htmlspecialchars($PART['icon'])?>"></i>
+								<strong><?=htmlspecialchars($PART['caption'])?></strong>
+							</li>
+							<li class="list-group-item d-flex justify-content-start">
+								<strong class="d-inline-block mr-1"><i class="fa fa-tag"></i></strong>
+								<code><?=htmlspecialchars($PART['shorthand'])?></code>
+							</li>
+							<li class="list-group-item d-flex justify-content-start">
+								<strong class="d-inline-block mr-1"><i class="fa fa-link"></i></strong>
+								<code class="word-wrap"><?=htmlspecialchars($PART['slug'])?></code>
+							</li>
+						</ul>
+						<?php
+						$first = false;
+					}
+				} else {
+					?>
+				<p class="alert alert-primary">
+					<?= $this->translate('This component has no sources.') ?>
+				</p>
+					<?php
+				}
+
+
+
+				if($deps = $COMPONENT["dependencies"] ?? 0)
+					echo "<hr>", implode(" ", array_map(function($V) {
+						return "<span class='badge badge-pill badge-primary'>$V</span>";
+					}, $deps));
+				?>
+			</div>
+			<div class="card-footer d-flex justify-content-between">
+				<button title="<?=$internal?>" class="btn btn-sm btn-outline-primary" <?=$COMPONENT["internal"]?'disabled':'onclick="location.href=\'/admin/contents/components/edit/'.$componentID.'\'"'?>>
+					<i class="fa fa-cogs"></i> Setup
+				</button>
+				<button class="btn btn-sm btn-outline-success" onclick="location.href='/admin/contents/components/display/<?=$componentID?>';">
+					<i class="fa fa-info"></i> Info
+				</button>
+			</div>
+		</div>
+	</div>
+		<?php
+	}
+	?>
+</div>

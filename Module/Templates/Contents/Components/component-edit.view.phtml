@@ -1,0 +1,290 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\HTML\Form\Feedback\InvalidFeedback;
+use Skyline\HTML\Form\FormElement;
+use Skyline\HTML\Form\Validator\CallbackValidator;
+use Skyline\HTML\Form\Validator\NotEmptyValidator;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var array $COMPONENT
+ * @var Generator $DEPENDENCIES
+ * @var FormElement $FORMULA
+ * @var array $CAN
+ */
+
+$adminRoot = $this->buildURL("Admin");
+?>
+<?=$BREAD?>
+
+<style type="text/css">
+	.list-group-item {
+		padding: 0;
+		padding-left: 0.25rem;
+		padding-right: 0.25rem;
+	}
+
+	i.position-absolute {
+		right: 0.25rem;
+		top: 1rem;
+	}
+</style>
+
+<script type="application/javascript">
+    $(function() {
+        $(".integrity-string").hide();
+    })
+
+    function toggle(pid) {
+        $("#is-"+pid).toggle();
+    }
+</script>
+
+<h1><?= @$this->translateGlobal($COMPONENT['id'] ? "Edit %s" : 'Create New Component', NULL, $COMPONENT['name']) ?></h1>
+
+<hr>
+
+<div class="card">
+	<h4 class="card-header">
+		<?= $this->translate('Information') ?>
+	</h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<form action="" method="post">
+				<input type="hidden" name="skyline-admin-csrf" value="<?=$CSRF?>">
+
+				<div class="form-group row">
+					<label for="nname" class="col-md-3 col-form-label"><?= $this->translate('Name') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-tag"></i></span>
+							</div>
+							<?php
+							$FORMULA->manualBuildControl('nname');
+							$FORMULA->manualBuildValidationFeedback(
+									'nname',
+									new InvalidFeedback(NotEmptyValidator::class, function() {
+										echo "<div class='invalid-feedback'>", $this->translate("Component name must not be empty.") ,"</div>";
+									}),
+									new InvalidFeedback(CallbackValidator::class, function() {
+										echo "<div class='invalid-feedback'>", $this->translate("Component name must be unique.") ,"</div>";
+									})
+							);
+							?>
+						</div>
+						<small class="form-text text-muted"><?= $this->translate('The name of the component. (Please note that names must be unique.)') ?></small>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="desc" class="col-md-3 col-form-label"><?= $this->translate('Description') ?></label>
+					<div class="col-md-9">
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text"><i class="fa fa-comment"></i></span>
+							</div>
+							<?php
+							$FORMULA->manualBuildControl('desc');
+							?>
+						</div>
+						<small id="descHelp" class="form-text text-muted"><?= $this->translate('A description of the component.') ?></small>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<h5 class="col-md-3"><?= $this->translate('Dependencies') ?></h5>
+					<div class="col-md-9">
+						<?php
+						$FORMULA->manualBuildControl('dependencies');
+						?>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<div class="col-md-3"> </div>
+					<div class="col-md-9">
+						<button class="btn btn-outline-primary" name="apply-information">
+							<i class="fa fa-save"></i> Save
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-lg-4">
+			<hr class="d-lg-none">
+			<p>
+				<?= $this->translate('Setup here the name of the component and its dependencies. Descriptions are only for you. Skyline CMS does not handle the descriptions.') ?>
+			</p>
+			<p class="alert alert-warning">
+				<?= $this->translate('This name here is used later to identify the component.<br>
+				Please note that on chagning it, you might loose render information in other layouts or views.') ?>
+			</p>
+		</div>
+	</div>
+</div>
+
+
+<div class="card mt-5">
+	<h4 class="card-header">
+		<?= $this->translate('Sources') ?>
+	</h4>
+	<div class="card-body row">
+		<div class="col-lg-8">
+			<?php
+			if(isset($COMPONENT["parts"])) {
+				?>
+
+				<div class="row">
+
+					<?php
+					foreach($COMPONENT["parts"] as $PID => $PART) {
+						?>
+						<div class="col-md-6 mb-4">
+							<div class="card">
+								<h5 class="card-header position-relative">
+									<?=htmlspecialchars($PART["caption"])?>
+									<i class="position-absolute fa <?=htmlspecialchars($PART['icon'])?>"></i>
+								</h5>
+								<div class="card-body">
+									<ul class="list-group">
+										<li class="list-group-item d-flex justify-content-between">
+											<strong class="d-inline-block mr-1"><i class="fa fa-tag"></i> Name</strong>
+											<span><?=htmlspecialchars( $PART["shorthand"])?></span>
+										</li>
+										<li class="list-group-item d-flex justify-content-between">
+											<strong class="d-inline-block mr-1"> Type</strong>
+											<span><?=htmlspecialchars( $PART["mimeType"])?></span>
+										</li>
+										<li class="list-group-item d-flex justify-content-between">
+											<strong class="d-inline-block mr-1"> Origin</strong>
+											<span><?=htmlspecialchars( $PART["cross_origin"] ?: 'none')?></span>
+										</li>
+										<li class="list-group-item d-flex justify-content-between">
+											<strong class="d-inline-block mr-1"> Integrity</strong>
+											<span class="text-muted"><?php
+												if($PART["integrity"])
+													echo "<a class='text-primary' onclick='toggle($PID)'>{$PART['integrity']}</a>";
+												else
+													echo $this->translate("None");
+												?></span>
+										</li>
+										<?php
+										if($PART["integrity_str"] ?? 0) {
+											?>
+											<li class="list-group-item integrity-string" id="is-<?=$PID?>">
+												<em class="text-muted"><?=$PART["integrity_str"]?></em>
+											</li>
+											<?php
+										}
+
+										if($PART["media"]) {
+											?>
+											<li class="list-group-item d-flex justify-content-between">
+												<strong class="d-inline-block mr-1"> Media</strong>
+												<span><?=htmlspecialchars( $PART["media"])?></span>
+											</li>
+											<?php
+										}
+										?>
+										<?php
+										if($PART["local_file"]) {
+											?>
+											<li class="list-group-item d-flex justify-content-between">
+												<strong class="d-inline-block mr-1"><i class="fa fa-file"></i> Local</strong>
+												<code><?=htmlspecialchars( $PART["local_file"])?></code>
+											</li>
+											<?php
+										}
+										?>
+									</ul>
+								</div>
+								<div class="card-footer">
+									<code><?=htmlspecialchars($PART["slug"])?></code>
+									<div class="float-right">
+										<button class="btn btn-sm btn-outline-danger" onclick="if(confirm('<?=$this->translateGlobal('Do you really want to remove this source?')?>'))window.location.href='/admin/contents/components/<?=$COMPONENT['id']?>/remove-source/<?=$PID?>'">
+											<i class="fa fa-trash"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<?php
+					}
+					?>
+
+				</div>
+
+				<?php
+			} elseif($COMPONENT["id"] == 0) {
+				?>
+				<p class="alert alert-danger">
+					<?= $this->translate('Please create the component first before adding sources to it.') ?>
+				</p>
+				<?php
+			} else {
+				?>
+				<p class="alert alert-primary">
+					<?= $this->translate('This component has no sources.') ?>
+				</p>
+				<?php
+			}
+
+			if($COMPONENT['id'] != 0) {
+				?>
+			<hr>
+				<button class="btn btn-outline-success" onclick="location.href='/admin/contents/components/add-local/<?=$COMPONENT["id"]?>'">
+					<i class="fa fa-plus"></i> <?= $this->translate('Add Local Source') ?>
+				</button>
+				<button class="btn btn-outline-success" onclick="location.href='/admin/contents/components/add-remote/<?=$COMPONENT["id"]?>'">
+					<i class="fa fa-plus"></i> <?= $this->translate('Add Remote Source') ?>
+				</button>
+				<?php
+			}
+			?>
+
+		</div>
+		<div class="col-lg-4">
+			<hr class="d-lg-none">
+			<p>
+				<?= $this->translate('Here are the sources defined, from where Skyline CMS can request the contents.') ?>
+			</p>
+		</div>
+	</div>
+</div>

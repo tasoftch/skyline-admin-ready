@@ -1,0 +1,173 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\HTML\Form\Feedback\InvalidFeedback;
+use Skyline\HTML\Form\FormElement;
+use Skyline\HTML\Form\Validator\CallbackValidator;
+use Skyline\HTML\Form\Validator\NotEmptyValidator;
+use Skyline\HTML\Form\Validator\UniqueSQLColumnValidator;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var array $COMPONENT
+ * @var FormElement $FORMULA
+ */
+
+$adminRoot = $this->buildURL("Admin");
+?>
+<?=$BREAD?>
+
+<style type="text/css">
+	.list-group-item {
+		padding: 0;
+		padding-left: 0.25rem;
+		padding-right: 0.25rem;
+	}
+
+	i.position-absolute {
+		right: 0.25rem;
+		top: 1rem;
+	}
+
+	/* Remove default bullets */
+	ul, #myUL {
+		list-style-type: none;
+	}
+
+	/* Remove margins and padding from the parent ul */
+	#myUL {
+		margin: 0;
+		padding: 0;
+	}
+
+	/* Style the caret/arrow */
+	.caret {
+		cursor: pointer;
+		user-select: none; /* Prevent text selection */
+	}
+
+	/* Create the caret/arrow with a unicode, and style it */
+	.caret::before {
+		content: "\25B6";
+		color: black;
+		display: inline-block;
+		margin-right: 6px;
+	}
+
+	/* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+	.caret-down::before {
+		transform: rotate(90deg);
+	}
+
+	/* Hide the nested list */
+	.nested {
+		display: none;
+	}
+
+	/* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+	.active {
+		display: block;
+	}
+
+	.list-group {
+		margin-left: 1.75rem;
+	}
+</style>
+
+<script type="application/javascript">
+    $(function() {
+        var toggler = document.getElementsByClassName("caret");
+        var i;
+
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function() {
+                this.parentElement.querySelector(".nested").classList.toggle("active");
+                this.classList.toggle("caret-down");
+            });
+        }
+
+        $(".file-item").on('click', function() {
+            $(".file-item").removeClass("list-group-item-primary");
+            $(this).addClass("list-group-item-primary");
+
+            $("#file-hash").val( $(this).attr("data-hash") );
+            $("button").attr("disabled", false);
+		})
+	})
+</script>
+
+<h1><?=$this->translateGlobal('Lookup Directory')?></h1>
+
+<hr>
+
+<?php
+
+function displayDirectory($directory) {
+	foreach(new DirectoryIterator($directory) as $file) {
+		if($file->getBasename()[0] == '.')
+			continue;
+
+		$hash = md5( $file->getPathname() );
+
+		if($file->isFile())
+			echo "<li class=\"list-group-item file-item\" data-hash=\"$hash\">", $file->getBasename(), "</li>";
+		elseif($file->isDir()) {
+			echo "<li class=\"list-group-item\"><span class=\"caret\">", $file->getBasename(), "</span><ul class=\"nested list-group\">";
+			displayDirectory($file->getPathname());
+			echo "</ul></li>";
+		}
+	}
+
+}
+
+if(is_dir($SRC)) {
+	echo "<ul class=\"list-group\"><li class='list-group-item'><span class=\"caret\">Components</span><ul class=\"nested list-group\">";
+	displayDirectory($SRC);
+	echo "</ul></li></ul>";
+}
+
+?>
+<hr>
+
+<form action="/admin/contents/components/add-local/<?=$COMPONENT['id']?>" method="post">
+	<input type="hidden" name="file-hash" id="file-hash" value="0">
+
+	<button class="btn btn-outline-success" style="margin-left: 1.75rem" disabled>
+		<i class="fa fa-refresh"></i> Load
+	</button>
+</form>

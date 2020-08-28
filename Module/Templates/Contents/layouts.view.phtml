@@ -1,0 +1,114 @@
+<?php
+/**
+ * BSD 3-Clause License
+ *
+ * Copyright (c) 2019, TASoft Applications
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ *  Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ *  Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ *  Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+use Skyline\CMS\Security\UserSystem\Group;
+use Skyline\CMS\Security\UserSystem\User;
+use Skyline\Render\Context\DefaultRenderContext;
+
+/**
+ *
+ * @var DefaultRenderContext $this
+ * @var Generator|int $GROUPS
+ * @var array $CAN
+ */
+
+$adminRoot = $this->buildURL("Admin");
+?>
+<?=$BREAD?>
+
+<h1><?= $this->translate('Layouts') ?></h1>
+<p class="alert alert-primary">
+	Layouts are designed to adjust your application's contents.<br>
+	They should not be used to render contents except if the content never changes in the whole application (like header or footer).<br>
+	Then you can create placeholders which are rendered using views or contents from a data model.
+</p>
+<hr>
+<div class="row">
+	<?php
+	foreach($LAYOUTS as $LAYOUT) {
+
+		?>
+		<div class="col-xl-3 col-lg-4 col-md-6">
+			<div class="card">
+				<h3 class="card-header"><?=htmlspecialchars($LAYOUT['name'])?></h3>
+				<div class="card-body text-muted">
+					<?php
+					if($LAYOUT['category'])
+						printf("<span class='mt-1 float-right badge badge-pill badge-primary'>%s</span>", htmlspecialchars($LAYOUT['category']));
+					echo nl2br( htmlspecialchars($LAYOUT['description'] ?: "-.-"));
+					if($LAYOUT['component']) {
+						echo "<hr>";
+						foreach($LAYOUT["component"] as $C) {
+							printf("<span class='mr-2 badge badge-pill badge-success'>%s</span>", htmlspecialchars($C));
+						}
+					}
+					?>
+				</div>
+				<div class="card-footer d-flex justify-content-between">
+					<button onclick="location.href='<?=$adminRoot?>contents/layouts/edit/<?=$LAYOUT['id']?>';" class="btn btn-sm btn-outline-primary">
+						<i class="fa fa-cogs"></i> Setup
+					</button>
+
+					<button onclick="location.href='<?=$adminRoot?>editor/init?mode=layout&symbol=<?=$LAYOUT['slug']?>';" class="btn btn-sm btn-outline-success">
+						<i class="fa fa-edit"></i> Edit
+					</button>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	if(!isset($LAYOUT)) {
+		?>
+	<p class="alert alert-warning mx-3">
+		Your application does not yet contain any layout.
+	</p>
+		<?php
+	}
+	?>
+</div>
+<hr>
+<div class="d-flex justify-content-between">
+	<button class="btn btn-outline-success" onclick="add_layout()">
+		<i class="fa fa-plus"></i> Add
+	</button>
+</div>
+<script type="application/javascript">
+	function add_layout() {
+	    var name = prompt("Please enter a name for the layout:");
+
+	    if(name)
+	        window.location.href = '/admin/contents/layouts/add/'+encodeURIComponent(name);
+	}
+</script>
