@@ -122,7 +122,7 @@ class ConfigurationController extends AbstractConfigurationActionController
 			$general = 0;
 		}
 
-		$enabledProviders = $sm->getParameter("security.user-providers.enabled");
+		$enabledProviders = $sm->getParameter("security.user-providers.enabled") ?: [];
 		$single = array_search(AuthenticationServiceFactory::USER_PROVIDER_INITIAL_NAME, $enabledProviders);
 		$multiple = array_search(AuthenticationServiceFactory::USER_PROVIDER_DATABASE_NAME, $enabledProviders);
 
