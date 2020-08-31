@@ -16,10 +16,10 @@ class ParameterSetupHelper implements \ArrayAccess
 
 	private function _loadParameters() {
 		if(NULL === $this->parameters) {
-			if($f = SkyGetPath($this->parameterFilename)) {
+			if(is_file($f = SkyGetPath($this->parameterFilename, false))) {
 				$this->parameters = require $f;
 			} else
-				throw new \RuntimeException("Can not open parameter storage. No such file or directory");
+				$this->parameters = [];
 		}
 	}
 
@@ -85,7 +85,7 @@ class ParameterSetupHelper implements \ArrayAccess
 			ksort($parameters);
 
 			$parameters = var_export($parameters, true);
-			file_put_contents(SkyGetPath($path), "<?php\nreturn $parameters;");
+			file_put_contents(SkyGetPath($path, false), "<?php\nreturn $parameters;");
 			$this->hasChanges = false;
 		}
 		return $this;
