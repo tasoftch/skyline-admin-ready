@@ -4,28 +4,216 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1148141662b28e361b135105ed4d9062",
+    "content-hash": "d4972f31496d3992cb7b8810f70ec959",
     "packages": [
+        {
+            "name": "paragonie/random_compat",
+            "version": "v9.99.99.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/paragonie/random_compat.git",
+                "reference": "0947f25b883d4172df340a0d95f1b7cdabc5368a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/0947f25b883d4172df340a0d95f1b7cdabc5368a",
+                "reference": "0947f25b883d4172df340a0d95f1b7cdabc5368a",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*|5.*",
+                "vimeo/psalm": "^1"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Paragon Initiative Enterprises",
+                    "email": "security@paragonie.com",
+                    "homepage": "https://paragonie.com"
+                }
+            ],
+            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
+            "keywords": [
+                "csprng",
+                "polyfill",
+                "pseudorandom",
+                "random"
+            ],
+            "time": "2018-08-07T13:07:48+00:00"
+        },
+        {
+            "name": "phpdocumentor/reflection-common",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpDocumentor/ReflectionCommon.git",
+                "reference": "cf8df60735d98fd18070b7cab0019ba0831e219c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/cf8df60735d98fd18070b7cab0019ba0831e219c",
+                "reference": "cf8df60735d98fd18070b7cab0019ba0831e219c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "phpDocumentor\\Reflection\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jaap van Otterdijk",
+                    "email": "opensource@ijaap.nl"
+                }
+            ],
+            "description": "Common reflection classes used by phpdocumentor to reflect the code structure",
+            "homepage": "http://www.phpdoc.org",
+            "keywords": [
+                "FQSEN",
+                "phpDocumentor",
+                "phpdoc",
+                "reflection",
+                "static analysis"
+            ],
+            "time": "2020-06-19T17:42:03+00:00"
+        },
+        {
+            "name": "phpdocumentor/reflection-docblock",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
+                "reference": "13d9a6bb0b5bbb89d085c7d557c4b55499128eb9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/13d9a6bb0b5bbb89d085c7d557c4b55499128eb9",
+                "reference": "13d9a6bb0b5bbb89d085c7d557c4b55499128eb9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-filter": "*",
+                "php": "^7.2 || ^8.0",
+                "phpdocumentor/reflection-common": "^2.2",
+                "phpdocumentor/type-resolver": "^1.3",
+                "webmozart/assert": "^1.9.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "~1.3.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "phpDocumentor\\Reflection\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mike van Riel",
+                    "email": "me@mikevanriel.com"
+                },
+                {
+                    "name": "Jaap van Otterdijk",
+                    "email": "account@ijaap.nl"
+                }
+            ],
+            "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
+            "time": "2020-08-22T07:19:02+00:00"
+        },
+        {
+            "name": "phpdocumentor/type-resolver",
+            "version": "1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpDocumentor/TypeResolver.git",
+                "reference": "e878a14a65245fbe78f8080eba03b47c3b705651"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/e878a14a65245fbe78f8080eba03b47c3b705651",
+                "reference": "e878a14a65245fbe78f8080eba03b47c3b705651",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2 || ^8.0",
+                "phpdocumentor/reflection-common": "^2.0"
+            },
+            "require-dev": {
+                "ext-tokenizer": "*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-1.x": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "phpDocumentor\\Reflection\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mike van Riel",
+                    "email": "me@mikevanriel.com"
+                }
+            ],
+            "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
+            "time": "2020-06-27T10:12:23+00:00"
+        },
         {
             "name": "skyline-admin/component-css",
             "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-admin-component-style.git",
-                "reference": "99bb37231d3fe63ef59514290d92cfbb8bdbdc31"
+                "reference": "d8bbcdf1db898af2f2b23b040efaf48e15bb1b04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-admin-component-style/zipball/99bb37231d3fe63ef59514290d92cfbb8bdbdc31",
-                "reference": "99bb37231d3fe63ef59514290d92cfbb8bdbdc31",
+                "url": "https://api.github.com/repos/tasoftch/skyline-admin-component-style/zipball/d8bbcdf1db898af2f2b23b040efaf48e15bb1b04",
+                "reference": "d8bbcdf1db898af2f2b23b040efaf48e15bb1b04",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2"
             },
             "require-dev": {
-                "skyline/compiler": "dev-master",
-                "skyline/direct-components": "dev-master",
+                "skyline/compiler": "^0.8",
+                "skyline/direct-components": "^0.8",
                 "twbs/bootstrap": "^4"
             },
             "type": "library",
@@ -40,23 +228,36 @@
                 }
             ],
             "description": "The default css for any Skyline CMS Application user interface (Ready, Set and Go)",
-            "time": "2019-11-02T10:26:17+00:00"
+            "time": "2020-08-28T21:15:39+00:00"
         },
         {
             "name": "skyline-admin/pdo-initialisation",
-            "version": "v0.8.2",
+            "version": "v0.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-pdo-initialisation.git",
-                "reference": "f33285db074755585cf7a8c865f828f230d06f0e"
+                "reference": "66f05c43a5ba49cfebf3c32c7fbc410de279d5ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-pdo-initialisation/zipball/f33285db074755585cf7a8c865f828f230d06f0e",
-                "reference": "f33285db074755585cf7a8c865f828f230d06f0e",
+                "url": "https://api.github.com/repos/tasoftch/skyline-pdo-initialisation/zipball/66f05c43a5ba49cfebf3c32c7fbc410de279d5ae",
+                "reference": "66f05c43a5ba49cfebf3c32c7fbc410de279d5ae",
                 "shasum": ""
             },
+            "require": {
+                "ext-pdo": "*",
+                "php": ">=7.2",
+                "skyline/pdo": "^0.9"
+            },
+            "require-dev": {
+                "skyline/kernel": "^0.8"
+            },
             "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Skyline\\Admin\\PDO\\": "src"
+                }
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
@@ -67,20 +268,20 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-04-23T14:27:35+00:00"
+            "time": "2020-08-31T19:43:28+00:00"
         },
         {
             "name": "skyline-admin/tools",
-            "version": "v0.8.0",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-admin-tools.git",
-                "reference": "cfb5c72c7004455b6ffb11c0965b236bf16ee47a"
+                "reference": "956ca9055ea2e06e183586ab817f6bb8534446e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-admin-tools/zipball/cfb5c72c7004455b6ffb11c0965b236bf16ee47a",
-                "reference": "cfb5c72c7004455b6ffb11c0965b236bf16ee47a",
+                "url": "https://api.github.com/repos/tasoftch/skyline-admin-tools/zipball/956ca9055ea2e06e183586ab817f6bb8534446e1",
+                "reference": "956ca9055ea2e06e183586ab817f6bb8534446e1",
                 "shasum": ""
             },
             "require": {
@@ -110,20 +311,20 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-05-06T12:06:35+00:00"
+            "time": "2020-08-27T20:31:56+00:00"
         },
         {
             "name": "skyline/cms-security",
-            "version": "v0.8.1",
+            "version": "v0.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-cms-security.git",
-                "reference": "97ddefe4e458aaefe019684d15494584f290aee0"
+                "reference": "d2a3656beffc747a3202f838f752a30124283ff7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-cms-security/zipball/97ddefe4e458aaefe019684d15494584f290aee0",
-                "reference": "97ddefe4e458aaefe019684d15494584f290aee0",
+                "url": "https://api.github.com/repos/tasoftch/skyline-cms-security/zipball/d2a3656beffc747a3202f838f752a30124283ff7",
+                "reference": "d2a3656beffc747a3202f838f752a30124283ff7",
                 "shasum": ""
             },
             "require": {
@@ -158,20 +359,20 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-05-06T13:47:23+00:00"
+            "time": "2020-08-28T22:14:47+00:00"
         },
         {
             "name": "skyline/compiler",
-            "version": "v0.8.4",
+            "version": "v0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-compiler.git",
-                "reference": "fe68d684c4789959a471189c4f90c5a8d7d54df7"
+                "reference": "3109c82abefc42da7aabc33fdf0b7ce5b5a4ea7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-compiler/zipball/fe68d684c4789959a471189c4f90c5a8d7d54df7",
-                "reference": "fe68d684c4789959a471189c4f90c5a8d7d54df7",
+                "url": "https://api.github.com/repos/tasoftch/skyline-compiler/zipball/3109c82abefc42da7aabc33fdf0b7ce5b5a4ea7d",
+                "reference": "3109c82abefc42da7aabc33fdf0b7ce5b5a4ea7d",
                 "shasum": ""
             },
             "require": {
@@ -205,20 +406,20 @@
                 }
             ],
             "description": "The compiler package allows you to manually edit the source files and compile them to a bootable structure, so any Skyline Application is able to boot from that compilation.",
-            "time": "2020-04-29T12:56:49+00:00"
+            "time": "2020-08-27T20:43:56+00:00"
         },
         {
             "name": "skyline/component-animation",
-            "version": "v3.7.2",
+            "version": "v3.7.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-component-animation.git",
-                "reference": "b5af9db5f390eacaba47574d80682af3b408a89f"
+                "reference": "a0bd7eec6efe96e79d4f5364f6465db2e5b31ffe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-component-animation/zipball/b5af9db5f390eacaba47574d80682af3b408a89f",
-                "reference": "b5af9db5f390eacaba47574d80682af3b408a89f",
+                "url": "https://api.github.com/repos/tasoftch/skyline-component-animation/zipball/a0bd7eec6efe96e79d4f5364f6465db2e5b31ffe",
+                "reference": "a0bd7eec6efe96e79d4f5364f6465db2e5b31ffe",
                 "shasum": ""
             },
             "require": {
@@ -242,20 +443,20 @@
                 }
             ],
             "description": "Includes the animation css framework by Daniel Eden",
-            "time": "2020-04-23T11:28:02+00:00"
+            "time": "2020-08-28T21:38:47+00:00"
         },
         {
             "name": "skyline/component-bootstrap",
-            "version": "v4.3.2",
+            "version": "v4.5.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-component-bootstrap.git",
-                "reference": "9704c4d0398a4d88274e7178f4bf4341907b4b6b"
+                "reference": "6c6b7b0f4a1d2dc705a9da144c0b23d439ae7c4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-component-bootstrap/zipball/9704c4d0398a4d88274e7178f4bf4341907b4b6b",
-                "reference": "9704c4d0398a4d88274e7178f4bf4341907b4b6b",
+                "url": "https://api.github.com/repos/tasoftch/skyline-component-bootstrap/zipball/6c6b7b0f4a1d2dc705a9da144c0b23d439ae7c4e",
+                "reference": "6c6b7b0f4a1d2dc705a9da144c0b23d439ae7c4e",
                 "shasum": ""
             },
             "require": {
@@ -284,20 +485,20 @@
                 }
             ],
             "description": "Describes a Skyline Application compatible component package to include the Bootstrap CSS framework",
-            "time": "2020-05-06T14:10:52+00:00"
+            "time": "2020-08-28T21:41:26+00:00"
         },
         {
             "name": "skyline/component-jquery",
-            "version": "v3.4.2",
+            "version": "v3.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-component-jquery.git",
-                "reference": "0123edcd696a710a54c45f85c4865e29f7529d86"
+                "reference": "04ee951d7c916be59634e8444ef31ea501aa135a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-component-jquery/zipball/0123edcd696a710a54c45f85c4865e29f7529d86",
-                "reference": "0123edcd696a710a54c45f85c4865e29f7529d86",
+                "url": "https://api.github.com/repos/tasoftch/skyline-component-jquery/zipball/04ee951d7c916be59634e8444ef31ea501aa135a",
+                "reference": "04ee951d7c916be59634e8444ef31ea501aa135a",
                 "shasum": ""
             },
             "require": {
@@ -315,20 +516,20 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-04-23T11:31:33+00:00"
+            "time": "2020-08-28T16:20:58+00:00"
         },
         {
             "name": "skyline/core-application",
-            "version": "v0.8.3",
+            "version": "v0.8.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-core-application.git",
-                "reference": "5ed64ecaa17f7aa886b4412d212c386829009634"
+                "reference": "81e4229a0a24faa6a88191333773d992c9549260"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-core-application/zipball/5ed64ecaa17f7aa886b4412d212c386829009634",
-                "reference": "5ed64ecaa17f7aa886b4412d212c386829009634",
+                "url": "https://api.github.com/repos/tasoftch/skyline-core-application/zipball/81e4229a0a24faa6a88191333773d992c9549260",
+                "reference": "81e4229a0a24faa6a88191333773d992c9549260",
                 "shasum": ""
             },
             "require": {
@@ -366,20 +567,20 @@
                 }
             ],
             "description": "Required package to create any kind of Skyline Applications. It will add all necessary packages to launch the application for any purpose like web application or php server.",
-            "time": "2020-04-29T09:30:59+00:00"
+            "time": "2020-08-27T20:49:28+00:00"
         },
         {
             "name": "skyline/direct-components",
-            "version": "v0.8.0",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-direct-components.git",
-                "reference": "0e710fb95a07babad69a727d6a36b4c505dd7f5a"
+                "reference": "3559d293d4de9d4fe0d81db6efcd7a94f3c8c83f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-direct-components/zipball/0e710fb95a07babad69a727d6a36b4c505dd7f5a",
-                "reference": "0e710fb95a07babad69a727d6a36b4c505dd7f5a",
+                "url": "https://api.github.com/repos/tasoftch/skyline-direct-components/zipball/3559d293d4de9d4fe0d81db6efcd7a94f3c8c83f",
+                "reference": "3559d293d4de9d4fe0d81db6efcd7a94f3c8c83f",
                 "shasum": ""
             },
             "require": {
@@ -411,7 +612,7 @@
                 }
             ],
             "description": "Direct component access plugin for Skyline CMS Applications",
-            "time": "2020-04-23T11:19:16+00:00"
+            "time": "2020-08-27T20:51:03+00:00"
         },
         {
             "name": "skyline/direct-components-forwarding",
@@ -454,16 +655,16 @@
         },
         {
             "name": "skyline/exposed-symbols",
-            "version": "v0.8.0",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-exposed-symbols.git",
-                "reference": "4d514af08b75ae937eb52feba4f6b2dac41bdcd9"
+                "reference": "da678ff2198107b68d6af9c270aebcf103de714e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-exposed-symbols/zipball/4d514af08b75ae937eb52feba4f6b2dac41bdcd9",
-                "reference": "4d514af08b75ae937eb52feba4f6b2dac41bdcd9",
+                "url": "https://api.github.com/repos/tasoftch/skyline-exposed-symbols/zipball/da678ff2198107b68d6af9c270aebcf103de714e",
+                "reference": "da678ff2198107b68d6af9c270aebcf103de714e",
                 "shasum": ""
             },
             "require": {
@@ -490,7 +691,7 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-04-23T11:42:27+00:00"
+            "time": "2020-08-27T20:52:20+00:00"
         },
         {
             "name": "skyline/html-elements",
@@ -534,16 +735,16 @@
         },
         {
             "name": "skyline/html-form",
-            "version": "v0.8.0",
+            "version": "v0.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-html-form.git",
-                "reference": "7dc87023091e2606492de78d7b7c3427cc3fa9a7"
+                "reference": "3ad9273e8cde0126bde8e9c3231a833219fb6abe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-html-form/zipball/7dc87023091e2606492de78d7b7c3427cc3fa9a7",
-                "reference": "7dc87023091e2606492de78d7b7c3427cc3fa9a7",
+                "url": "https://api.github.com/repos/tasoftch/skyline-html-form/zipball/3ad9273e8cde0126bde8e9c3231a833219fb6abe",
+                "reference": "3ad9273e8cde0126bde8e9c3231a833219fb6abe",
                 "shasum": ""
             },
             "require": {
@@ -576,20 +777,20 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-04-23T11:33:43+00:00"
+            "time": "2020-07-14T06:33:36+00:00"
         },
         {
             "name": "skyline/html-render",
-            "version": "v0.8.1",
+            "version": "v0.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-html-render.git",
-                "reference": "58332c7cc9ce0e1bee460b92484bb26e2e9b6538"
+                "reference": "9ee67634229cdd4be4509d1781dec3897cf58e04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-html-render/zipball/58332c7cc9ce0e1bee460b92484bb26e2e9b6538",
-                "reference": "58332c7cc9ce0e1bee460b92484bb26e2e9b6538",
+                "url": "https://api.github.com/repos/tasoftch/skyline-html-render/zipball/9ee67634229cdd4be4509d1781dec3897cf58e04",
+                "reference": "9ee67634229cdd4be4509d1781dec3897cf58e04",
                 "shasum": ""
             },
             "require": {
@@ -622,26 +823,26 @@
                 }
             ],
             "description": "Extension to skyline/render which prepares more routings, extended renders for specially html css and js rendering",
-            "time": "2020-04-23T11:26:13+00:00"
+            "time": "2020-08-27T20:55:14+00:00"
         },
         {
             "name": "skyline/kernel",
-            "version": "v0.8.3",
+            "version": "v0.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-kernel.git",
-                "reference": "577f931360b52c1d9172348d2be6d8fa0a2d3c2b"
+                "reference": "3b6602e558329bdf6cfb035d7ae96f66a1f1c5c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-kernel/zipball/577f931360b52c1d9172348d2be6d8fa0a2d3c2b",
-                "reference": "577f931360b52c1d9172348d2be6d8fa0a2d3c2b",
+                "url": "https://api.github.com/repos/tasoftch/skyline-kernel/zipball/3b6602e558329bdf6cfb035d7ae96f66a1f1c5c3",
+                "reference": "3b6602e558329bdf6cfb035d7ae96f66a1f1c5c3",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-pdo": "*",
-                "php": "^7.2",
+                "php": ">=7.2",
                 "symfony/http-foundation": "^5.0",
                 "tasoft/config": "^3",
                 "tasoft/dependency-injection": "^1",
@@ -672,7 +873,7 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-05-06T13:57:13+00:00"
+            "time": "2020-08-31T18:02:02+00:00"
         },
         {
             "name": "skyline/modules",
@@ -717,16 +918,16 @@
         },
         {
             "name": "skyline/navigation",
-            "version": "v0.8.0",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-navigation.git",
-                "reference": "2b77037d093089bc863211337336d5ea68c558c4"
+                "reference": "2cad4df6350d0ac22dd826d38ae31295c29ecfab"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-navigation/zipball/2b77037d093089bc863211337336d5ea68c558c4",
-                "reference": "2b77037d093089bc863211337336d5ea68c558c4",
+                "url": "https://api.github.com/repos/tasoftch/skyline-navigation/zipball/2cad4df6350d0ac22dd826d38ae31295c29ecfab",
+                "reference": "2cad4df6350d0ac22dd826d38ae31295c29ecfab",
                 "shasum": ""
             },
             "require": {
@@ -760,31 +961,73 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-04-23T11:39:11+00:00"
+            "time": "2020-08-27T20:56:58+00:00"
         },
         {
-            "name": "skyline/pdo",
-            "version": "v0.9.2",
+            "name": "skyline/navigation-annotation-compiler",
+            "version": "v0.8.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tasoftch/skyline-pdo.git",
-                "reference": "e95ce0cc639673511886d99b640227e4220730f4"
+                "url": "https://github.com/tasoftch/skyline-navigation-annotation-compiler.git",
+                "reference": "5d8cea1e0e1bc2851c4c9563faf6a1a4bddf9768"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-pdo/zipball/e95ce0cc639673511886d99b640227e4220730f4",
-                "reference": "e95ce0cc639673511886d99b640227e4220730f4",
+                "url": "https://api.github.com/repos/tasoftch/skyline-navigation-annotation-compiler/zipball/5d8cea1e0e1bc2851c4c9563faf6a1a4bddf9768",
+                "reference": "5d8cea1e0e1bc2851c4c9563faf6a1a4bddf9768",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2",
+                "skyline/cms-security": "^0.8",
+                "skyline/compiler": "^0.8",
+                "skyline/exposed-symbols": "^0.8",
+                "skyline/navigation": "^0.8"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Skyline\\Navigation\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Abplanalp",
+                    "email": "info@tasoft.ch"
+                }
+            ],
+            "time": "2020-08-28T20:59:13+00:00"
+        },
+        {
+            "name": "skyline/pdo",
+            "version": "v0.9.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tasoftch/skyline-pdo.git",
+                "reference": "90d8270308b4adee24f11a9224fff39a2d732ea7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tasoftch/skyline-pdo/zipball/90d8270308b4adee24f11a9224fff39a2d732ea7",
+                "reference": "90d8270308b4adee24f11a9224fff39a2d732ea7",
                 "shasum": ""
             },
             "require": {
                 "ext-pdo": "*",
-                "php": "^7.2",
+                "php": ">=7.2",
                 "tasoft/php-pdo": "^0.7"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6",
                 "skyline/compiler": "^0.8",
-                "tasoft/php-parser": "dev-master"
+                "tasoft/php-string-parser": "^0.9"
             },
             "bin": [
                 "bin/compile-pdo.php"
@@ -805,20 +1048,20 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-05-05T15:05:58+00:00"
+            "time": "2020-08-31T17:55:21+00:00"
         },
         {
             "name": "skyline/render",
-            "version": "v0.8.2",
+            "version": "v0.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-render.git",
-                "reference": "bfc527016a4f1cd78c174436c4419293a95700f0"
+                "reference": "468c4b8cb89bae253202bf0fdf77b21b290d9a07"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-render/zipball/bfc527016a4f1cd78c174436c4419293a95700f0",
-                "reference": "bfc527016a4f1cd78c174436c4419293a95700f0",
+                "url": "https://api.github.com/repos/tasoftch/skyline-render/zipball/468c4b8cb89bae253202bf0fdf77b21b290d9a07",
+                "reference": "468c4b8cb89bae253202bf0fdf77b21b290d9a07",
                 "shasum": ""
             },
             "require": {
@@ -850,7 +1093,7 @@
                 }
             ],
             "description": "The Skyline Render package is responsible to transform the results from action controllers into valid http responses.",
-            "time": "2020-04-29T12:40:55+00:00"
+            "time": "2020-08-27T20:59:39+00:00"
         },
         {
             "name": "skyline/router",
@@ -895,16 +1138,16 @@
         },
         {
             "name": "skyline/security",
-            "version": "v0.8.1",
+            "version": "v0.8.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-security.git",
-                "reference": "fa1c44abab7425995f19c1d01289e3108013d2f7"
+                "reference": "59f01a8139c22bd77adbdca43befb44441a04540"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-security/zipball/fa1c44abab7425995f19c1d01289e3108013d2f7",
-                "reference": "fa1c44abab7425995f19c1d01289e3108013d2f7",
+                "url": "https://api.github.com/repos/tasoftch/skyline-security/zipball/59f01a8139c22bd77adbdca43befb44441a04540",
+                "reference": "59f01a8139c22bd77adbdca43befb44441a04540",
                 "shasum": ""
             },
             "require": {
@@ -937,20 +1180,20 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-05-06T13:53:18+00:00"
+            "time": "2020-08-28T21:59:20+00:00"
         },
         {
             "name": "skyline/translation",
-            "version": "v0.8.6",
+            "version": "v0.8.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/skyline-translation.git",
-                "reference": "8ca0f6b4b94945f6eff1b00068e222102a642985"
+                "reference": "017602c4568d19c09ca3c68293f4972235e034db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/skyline-translation/zipball/8ca0f6b4b94945f6eff1b00068e222102a642985",
-                "reference": "8ca0f6b4b94945f6eff1b00068e222102a642985",
+                "url": "https://api.github.com/repos/tasoftch/skyline-translation/zipball/017602c4568d19c09ca3c68293f4972235e034db",
+                "reference": "017602c4568d19c09ca3c68293f4972235e034db",
                 "shasum": ""
             },
             "require": {
@@ -981,7 +1224,71 @@
                 }
             ],
             "description": "Translation and locale management for Skyline CMS",
-            "time": "2020-05-02T06:49:52+00:00"
+            "time": "2020-08-27T21:02:57+00:00"
+        },
+        {
+            "name": "symfony/deprecation-contracts",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/deprecation-contracts.git",
+                "reference": "5e20b83385a77593259c9f8beb2c43cd03b2ac14"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/5e20b83385a77593259c9f8beb2c43cd03b2ac14",
+                "reference": "5e20b83385a77593259c9f8beb2c43cd03b2ac14",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1-dev"
+                },
+                "thanks": {
+                    "name": "symfony/contracts",
+                    "url": "https://github.com/symfony/contracts"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "function.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "A generic function and convention to trigger deprecation notices",
+            "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-06-06T08:49:21+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -1031,6 +1338,20 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-03-27T16:56:45+00:00"
         },
         {
@@ -1094,19 +1415,24 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/mime.git",
-                "reference": "e2c903bce82b6840609a910cad7dd0fa148dad7c"
+                "reference": "1c85bca573dfe8e38a891b3f89037ac4c2563070"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/mime/zipball/e2c903bce82b6840609a910cad7dd0fa148dad7c",
-                "reference": "e2c903bce82b6840609a910cad7dd0fa148dad7c",
+                "url": "https://api.github.com/repos/symfony/mime/zipball/1c85bca573dfe8e38a891b3f89037ac4c2563070",
+                "reference": "1c85bca573dfe8e38a891b3f89037ac4c2563070",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2.5",
+                "php": ">=7.2.5",
+                "phpdocumentor/reflection-docblock": "^3.0|^4.0|^5.0",
+                "symfony/deprecation-contracts": "^2.1",
                 "symfony/polyfill-intl-idn": "^1.10",
                 "symfony/polyfill-mbstring": "^1.0",
-                "symfony/polyfill-php80": "^1.15"
+                "symfony/polyfill-php80": "^1.15",
+                "symfony/property-access": "^4.4|^5.1",
+                "symfony/property-info": "^4.4|^5.1",
+                "symfony/serializer": "^5.2"
             },
             "conflict": {
                 "symfony/mailer": "<4.4"
@@ -1118,7 +1444,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.1-dev"
+                    "dev-master": "5.2-dev"
                 }
             },
             "autoload": {
@@ -1149,7 +1475,21 @@
                 "mime",
                 "mime-type"
             ],
-            "time": "2020-04-18T20:50:29+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-08-17T11:58:42+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
@@ -1157,12 +1497,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "4719fa9c18b0464d399f1a63bf624b42b6fa8d14"
+                "reference": "1c302646f6efc070cd46856e600e5e0684d6b454"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/4719fa9c18b0464d399f1a63bf624b42b6fa8d14",
-                "reference": "4719fa9c18b0464d399f1a63bf624b42b6fa8d14",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/1c302646f6efc070cd46856e600e5e0684d6b454",
+                "reference": "1c302646f6efc070cd46856e600e5e0684d6b454",
                 "shasum": ""
             },
             "require": {
@@ -1174,7 +1514,11 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.15-dev"
+                    "dev-master": "1.18-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
                 }
             },
             "autoload": {
@@ -1207,7 +1551,99 @@
                 "polyfill",
                 "portable"
             ],
-            "time": "2020-02-27T09:26:54+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-07-14T12:35:20+00:00"
+        },
+        {
+            "name": "symfony/polyfill-intl-grapheme",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-intl-grapheme.git",
+                "reference": "b740103edbdcc39602239ee8860f0f45a8eb9aa5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/b740103edbdcc39602239ee8860f0f45a8eb9aa5",
+                "reference": "b740103edbdcc39602239ee8860f0f45a8eb9aa5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-intl": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.18-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Grapheme\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for intl's grapheme_* functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "grapheme",
+                "intl",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-07-14T12:35:20+00:00"
         },
         {
             "name": "symfony/polyfill-intl-idn",
@@ -1215,17 +1651,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-intl-idn.git",
-                "reference": "47bd6aa45beb1cd7c6a16b7d1810133b728bdfcf"
+                "reference": "045643b91eaa34c4c37150ac477765c13552af33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/47bd6aa45beb1cd7c6a16b7d1810133b728bdfcf",
-                "reference": "47bd6aa45beb1cd7c6a16b7d1810133b728bdfcf",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-idn/zipball/045643b91eaa34c4c37150ac477765c13552af33",
+                "reference": "045643b91eaa34c4c37150ac477765c13552af33",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3",
-                "symfony/polyfill-mbstring": "^1.3",
+                "symfony/polyfill-intl-normalizer": "^1.10",
+                "symfony/polyfill-php70": "^1.10",
                 "symfony/polyfill-php72": "^1.10"
             },
             "suggest": {
@@ -1234,7 +1671,11 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.15-dev"
+                    "dev-master": "1.18-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
                 }
             },
             "autoload": {
@@ -1255,6 +1696,10 @@
                     "email": "laurent@bassin.info"
                 },
                 {
+                    "name": "Trevor Rowbotham",
+                    "email": "trevor.rowbotham@pm.me"
+                },
+                {
                     "name": "Symfony Community",
                     "homepage": "https://symfony.com/contributors"
                 }
@@ -1269,7 +1714,102 @@
                 "portable",
                 "shim"
             ],
-            "time": "2020-03-09T19:04:49+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-08-04T21:02:56+00:00"
+        },
+        {
+            "name": "symfony/polyfill-intl-normalizer",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-intl-normalizer.git",
+                "reference": "37078a8dd4a2a1e9ab0231af7c6cb671b2ed5a7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/37078a8dd4a2a1e9ab0231af7c6cb671b2ed5a7e",
+                "reference": "37078a8dd4a2a1e9ab0231af7c6cb671b2ed5a7e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "suggest": {
+                "ext-intl": "For best performance"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.18-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Intl\\Normalizer\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ],
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill for intl's Normalizer class and related functions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "intl",
+                "normalizer",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-07-14T12:35:20+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -1277,12 +1817,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "81ffd3a9c6d707be22e3012b827de1c9775fc5ac"
+                "reference": "a6977d63bf9a0ad4c65cd352709e230876f9904a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/81ffd3a9c6d707be22e3012b827de1c9775fc5ac",
-                "reference": "81ffd3a9c6d707be22e3012b827de1c9775fc5ac",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/a6977d63bf9a0ad4c65cd352709e230876f9904a",
+                "reference": "a6977d63bf9a0ad4c65cd352709e230876f9904a",
                 "shasum": ""
             },
             "require": {
@@ -1294,7 +1834,11 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.15-dev"
+                    "dev-master": "1.18-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
                 }
             },
             "autoload": {
@@ -1328,7 +1872,98 @@
                 "portable",
                 "shim"
             ],
-            "time": "2020-03-09T19:04:49+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-07-14T12:35:20+00:00"
+        },
+        {
+            "name": "symfony/polyfill-php70",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php70.git",
+                "reference": "0dd93f2c578bdc9c72697eaa5f1dd25644e618d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php70/zipball/0dd93f2c578bdc9c72697eaa5f1dd25644e618d3",
+                "reference": "0dd93f2c578bdc9c72697eaa5f1dd25644e618d3",
+                "shasum": ""
+            },
+            "require": {
+                "paragonie/random_compat": "~1.0|~2.0|~9.99",
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.18-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php70\\": ""
+                },
+                "files": [
+                    "bootstrap.php"
+                ],
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 7.0+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-07-14T12:35:20+00:00"
         },
         {
             "name": "symfony/polyfill-php72",
@@ -1336,12 +1971,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php72.git",
-                "reference": "41d115ace412a5a006a92f29a51c7d863e28482b"
+                "reference": "639447d008615574653fb3bc60d1986d7172eaae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/41d115ace412a5a006a92f29a51c7d863e28482b",
-                "reference": "41d115ace412a5a006a92f29a51c7d863e28482b",
+                "url": "https://api.github.com/repos/symfony/polyfill-php72/zipball/639447d008615574653fb3bc60d1986d7172eaae",
+                "reference": "639447d008615574653fb3bc60d1986d7172eaae",
                 "shasum": ""
             },
             "require": {
@@ -1350,7 +1985,11 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.15-dev"
+                    "dev-master": "1.18-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
                 }
             },
             "autoload": {
@@ -1383,7 +2022,21 @@
                 "portable",
                 "shim"
             ],
-            "time": "2020-04-13T15:22:19+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-07-14T12:35:20+00:00"
         },
         {
             "name": "symfony/polyfill-php80",
@@ -1391,12 +2044,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "cb64c503a89a49bcf6334a57639e244e488b0fe9"
+                "reference": "d87d5766cbf48d72388a9f6b85f280c8ad51f981"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/cb64c503a89a49bcf6334a57639e244e488b0fe9",
-                "reference": "cb64c503a89a49bcf6334a57639e244e488b0fe9",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/d87d5766cbf48d72388a9f6b85f280c8ad51f981",
+                "reference": "d87d5766cbf48d72388a9f6b85f280c8ad51f981",
                 "shasum": ""
             },
             "require": {
@@ -1405,7 +2058,11 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.15-dev"
+                    "dev-master": "1.18-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
                 }
             },
             "autoload": {
@@ -1445,7 +2102,382 @@
                 "portable",
                 "shim"
             ],
-            "time": "2020-04-23T15:16:55+00:00"
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-07-14T12:35:20+00:00"
+        },
+        {
+            "name": "symfony/property-access",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/property-access.git",
+                "reference": "5ab82c4bcf6d5fe094fc9169b0025a1673f45295"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/property-access/zipball/5ab82c4bcf6d5fe094fc9169b0025a1673f45295",
+                "reference": "5ab82c4bcf6d5fe094fc9169b0025a1673f45295",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/polyfill-php80": "^1.15",
+                "symfony/property-info": "^5.2"
+            },
+            "require-dev": {
+                "symfony/cache": "^4.4|^5.0"
+            },
+            "suggest": {
+                "psr/cache-implementation": "To cache access methods."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\PropertyAccess\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony PropertyAccess Component",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "access",
+                "array",
+                "extraction",
+                "index",
+                "injection",
+                "object",
+                "property",
+                "property path",
+                "reflection"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-08-31T09:58:56+00:00"
+        },
+        {
+            "name": "symfony/property-info",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/property-info.git",
+                "reference": "5aba5b80eb61b3faa6875672a3054bbdc8669bec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/property-info/zipball/5aba5b80eb61b3faa6875672a3054bbdc8669bec",
+                "reference": "5aba5b80eb61b3faa6875672a3054bbdc8669bec",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.1",
+                "symfony/polyfill-php80": "^1.15",
+                "symfony/string": "^5.1"
+            },
+            "conflict": {
+                "phpdocumentor/reflection-docblock": "<3.2.2",
+                "phpdocumentor/type-resolver": "<0.3.0",
+                "symfony/dependency-injection": "<4.4"
+            },
+            "require-dev": {
+                "doctrine/annotations": "~1.7",
+                "phpdocumentor/reflection-docblock": "^3.0|^4.0|^5.0",
+                "symfony/cache": "^4.4|^5.0",
+                "symfony/dependency-injection": "^4.4|^5.0",
+                "symfony/serializer": "^4.4|^5.0"
+            },
+            "suggest": {
+                "phpdocumentor/reflection-docblock": "To use the PHPDoc",
+                "psr/cache-implementation": "To cache results",
+                "symfony/doctrine-bridge": "To use Doctrine metadata",
+                "symfony/serializer": "To use Serializer metadata"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\PropertyInfo\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kévin Dunglas",
+                    "email": "dunglas@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Property Info Component",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "doctrine",
+                "phpdoc",
+                "property",
+                "symfony",
+                "type",
+                "validator"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-08-26T07:35:07+00:00"
+        },
+        {
+            "name": "symfony/serializer",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/serializer.git",
+                "reference": "961e35b688c94a8a558b7dd64fc84ce05b341198"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/serializer/zipball/961e35b688c94a8a558b7dd64fc84ce05b341198",
+                "reference": "961e35b688c94a8a558b7dd64fc84ce05b341198",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/polyfill-ctype": "~1.8",
+                "symfony/polyfill-php80": "^1.15"
+            },
+            "conflict": {
+                "phpdocumentor/type-resolver": "<0.2.1",
+                "symfony/dependency-injection": "<4.4",
+                "symfony/property-access": "<4.4",
+                "symfony/property-info": "<4.4",
+                "symfony/yaml": "<4.4"
+            },
+            "require-dev": {
+                "doctrine/annotations": "~1.0",
+                "doctrine/cache": "~1.0",
+                "phpdocumentor/reflection-docblock": "^3.0|^4.0|^5.0",
+                "symfony/cache": "^4.4|^5.0",
+                "symfony/config": "^4.4|^5.0",
+                "symfony/dependency-injection": "^4.4|^5.0",
+                "symfony/error-handler": "^4.4|^5.0",
+                "symfony/filesystem": "^4.4|^5.0",
+                "symfony/http-foundation": "^4.4|^5.0",
+                "symfony/http-kernel": "^4.4|^5.0",
+                "symfony/mime": "^4.4|^5.0",
+                "symfony/property-access": "^4.4|^5.0",
+                "symfony/property-info": "^4.4|^5.0",
+                "symfony/validator": "^4.4|^5.0",
+                "symfony/var-exporter": "^4.4|^5.0",
+                "symfony/yaml": "^4.4|^5.0"
+            },
+            "suggest": {
+                "doctrine/annotations": "For using the annotation mapping. You will also need doctrine/cache.",
+                "doctrine/cache": "For using the default cached annotation reader and metadata cache.",
+                "psr/cache-implementation": "For using the metadata cache.",
+                "symfony/config": "For using the XML mapping loader.",
+                "symfony/mime": "For using a MIME type guesser within the DataUriNormalizer.",
+                "symfony/property-access": "For using the ObjectNormalizer.",
+                "symfony/property-info": "To deserialize relations.",
+                "symfony/var-exporter": "For using the metadata compiler.",
+                "symfony/yaml": "For using the default YAML mapping loader."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Serializer\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Serializer Component",
+            "homepage": "https://symfony.com",
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-08-25T06:52:02+00:00"
+        },
+        {
+            "name": "symfony/string",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/string.git",
+                "reference": "68e150ace76a1f7476970d3816c97be94366cb03"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/string/zipball/68e150ace76a1f7476970d3816c97be94366cb03",
+                "reference": "68e150ace76a1f7476970d3816c97be94366cb03",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/polyfill-ctype": "~1.8",
+                "symfony/polyfill-intl-grapheme": "~1.0",
+                "symfony/polyfill-intl-normalizer": "~1.0",
+                "symfony/polyfill-mbstring": "~1.0",
+                "symfony/polyfill-php80": "~1.15"
+            },
+            "require-dev": {
+                "symfony/error-handler": "^4.4|^5.0",
+                "symfony/http-client": "^4.4|^5.0",
+                "symfony/translation-contracts": "^1.1|^2",
+                "symfony/var-exporter": "^4.4|^5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.2-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\String\\": ""
+                },
+                "files": [
+                    "Resources/functions.php"
+                ],
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony String component",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "grapheme",
+                "i18n",
+                "string",
+                "unicode",
+                "utf-8",
+                "utf8"
+            ],
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2020-08-17T08:48:15+00:00"
         },
         {
             "name": "tasoft/cached-generator",
@@ -1487,16 +2519,16 @@
         },
         {
             "name": "tasoft/collection",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-collection.git",
-                "reference": "5923f246fc818e142cb3a55a2ec0c03106ba06b7"
+                "reference": "b3973dfb55454370c3b978d741270f634d34d3c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/php-collection/zipball/5923f246fc818e142cb3a55a2ec0c03106ba06b7",
-                "reference": "5923f246fc818e142cb3a55a2ec0c03106ba06b7",
+                "url": "https://api.github.com/repos/tasoftch/php-collection/zipball/b3973dfb55454370c3b978d741270f634d34d3c7",
+                "reference": "b3973dfb55454370c3b978d741270f634d34d3c7",
                 "shasum": ""
             },
             "require": {
@@ -1521,7 +2553,7 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-04-13T09:36:18+00:00"
+            "time": "2020-08-27T21:07:58+00:00"
         },
         {
             "name": "tasoft/config",
@@ -1647,16 +2679,16 @@
         },
         {
             "name": "tasoft/menu-service",
-            "version": "v0.9.5",
+            "version": "v0.9.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-menu-service.git",
-                "reference": "20eeef146fb07bfe26b9f0056d98934b3b1bd282"
+                "reference": "de7d3286658fb0ec9aef1ac03adfebbf88e22249"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/php-menu-service/zipball/20eeef146fb07bfe26b9f0056d98934b3b1bd282",
-                "reference": "20eeef146fb07bfe26b9f0056d98934b3b1bd282",
+                "url": "https://api.github.com/repos/tasoftch/php-menu-service/zipball/de7d3286658fb0ec9aef1ac03adfebbf88e22249",
+                "reference": "de7d3286658fb0ec9aef1ac03adfebbf88e22249",
                 "shasum": ""
             },
             "require": {
@@ -1681,7 +2713,7 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2019-09-08T20:56:06+00:00"
+            "time": "2020-08-27T21:06:58+00:00"
         },
         {
             "name": "tasoft/method-signature",
@@ -1761,21 +2793,21 @@
         },
         {
             "name": "tasoft/php-pdo",
-            "version": "v0.7.1",
+            "version": "v0.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-pdo.git",
-                "reference": "5607bc42b0aa2c768b7666f565c30a69fe9f5474"
+                "reference": "2d7759314400e5345a3240c3b078362c328417ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/php-pdo/zipball/5607bc42b0aa2c768b7666f565c30a69fe9f5474",
-                "reference": "5607bc42b0aa2c768b7666f565c30a69fe9f5474",
+                "url": "https://api.github.com/repos/tasoftch/php-pdo/zipball/2d7759314400e5345a3240c3b078362c328417ed",
+                "reference": "2d7759314400e5345a3240c3b078362c328417ed",
                 "shasum": ""
             },
             "require": {
                 "ext-pdo": "*",
-                "php": "^7.2"
+                "php": ">=7.2"
             },
             "require-dev": {
                 "phpunit/phpunit": "^6"
@@ -1796,7 +2828,7 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-01-15T12:30:53+00:00"
+            "time": "2020-08-31T16:31:59+00:00"
         },
         {
             "name": "tasoft/php-string-parser",
@@ -1838,20 +2870,20 @@
         },
         {
             "name": "tasoft/service-manager",
-            "version": "v2.2.1",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tasoftch/php-service-manager.git",
-                "reference": "6ce02924b8453d43d25b01dcde479617321d0d82"
+                "reference": "0b0c5d52fa55521c0b6c28f335074fd08ec4d9dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tasoftch/php-service-manager/zipball/6ce02924b8453d43d25b01dcde479617321d0d82",
-                "reference": "6ce02924b8453d43d25b01dcde479617321d0d82",
+                "url": "https://api.github.com/repos/tasoftch/php-service-manager/zipball/0b0c5d52fa55521c0b6c28f335074fd08ec4d9dc",
+                "reference": "0b0c5d52fa55521c0b6c28f335074fd08ec4d9dc",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2",
+                "php": ">=7.2",
                 "tasoft/collection": "^1.0",
                 "tasoft/method-signature": "^0.8"
             },
@@ -1859,7 +2891,7 @@
                 "phpunit/phpunit": "^6"
             },
             "suggest": {
-                "tasoft/dependency-injection": "dev-master"
+                "tasoft/dependency-injection": "^1.0"
             },
             "type": "library",
             "autoload": {
@@ -1877,7 +2909,7 @@
                     "email": "info@tasoft.ch"
                 }
             ],
-            "time": "2020-05-06T13:51:17+00:00"
+            "time": "2020-08-31T17:38:17+00:00"
         },
         {
             "name": "tasoft/tools-path",
@@ -1955,6 +2987,55 @@
                 }
             ],
             "time": "2020-04-21T18:29:33+00:00"
+        },
+        {
+            "name": "webmozart/assert",
+            "version": "1.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webmozart/assert.git",
+                "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webmozart/assert/zipball/bafc69caeb4d49c39fd0779086c03a3738cbb389",
+                "reference": "bafc69caeb4d49c39fd0779086c03a3738cbb389",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0 || ^8.0",
+                "symfony/polyfill-ctype": "^1.8"
+            },
+            "conflict": {
+                "phpstan/phpstan": "<0.12.20",
+                "vimeo/psalm": "<3.9.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36 || ^7.5.13"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Webmozart\\Assert\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bernhard Schussek",
+                    "email": "bschussek@gmail.com"
+                }
+            ],
+            "description": "Assertions to validate method input/output with nice error messages.",
+            "keywords": [
+                "assert",
+                "check",
+                "validate"
+            ],
+            "time": "2020-07-08T17:02:28+00:00"
         }
     ],
     "packages-dev": [
@@ -2009,7 +3090,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.2"
+        "php": ">=7.2"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }

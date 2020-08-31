@@ -3,6 +3,7 @@
 namespace Skyline\Admin\Ready\Compiler;
 
 
+use Skyline\Admin\PDO\ContentsInstaller;
 use Skyline\Compiler\CompilerContext;
 use Skyline\PDO\SQLite;
 
@@ -31,22 +32,7 @@ class CreateContentsPDOCompiler extends \Skyline\Compiler\AbstractCompiler
 	 */
 	public function compile(CompilerContext $context)
 	{
-		$ds = DIRECTORY_SEPARATOR;
-
-		if(is_dir($dir = getcwd() . "{$ds}vendor{$ds}skyline-admin{$ds}pdo-initialisation{$ds}SQL{$ds}UI{$ds}Contents")) {
-			$PDO = self::getContentsPDO($context);
-
-			foreach(new \DirectoryIterator($dir) as $file) {
-				if(preg_match("/^([a-z0-9_]+)\.sql$/i", $file->getBasename(), $ms)) {
-					try {
-						$PDO->exec("SELECT 1 FROM $ms[1]");
-					} catch (\PDOException $exception) {
-						$contents = file_get_contents( $file->getRealPath() );
-						$PDO->exec($contents);
-					}
-				}
-			}
-		} else
-			trigger_error("Package skyline-admin/pdo-initialisation not found", E_USER_WARNING);
+		$PDO = self::getContentsPDO($context);
+		ContentsInstaller::init($PDO);
 	}
 }

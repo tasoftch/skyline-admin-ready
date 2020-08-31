@@ -15,7 +15,7 @@
   "minimum-stability": "dev",
   "name": "skyline-admin/ready",
   "require": {
-    "php": "^7.2",
+    "php": ">=7.2",
 
     "skyline-admin/component-css": "dev-master",
     "skyline/component-animation": "^3.7",
@@ -23,7 +23,7 @@
     "skyline/component-bootstrap": "^4.3",
     "skyline/direct-components-forwarding": "^0.8",
 
-    "skyline-admin/pdo-initialisation": "^0.8",
+    "skyline-admin/pdo-initialisation": "^0.9",
     "skyline-admin/tools": "^0.8",
 
     "skyline/cms-security": "^0.8",

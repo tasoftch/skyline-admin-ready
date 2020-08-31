@@ -182,17 +182,19 @@ if(isset($exception) && $exception instanceof Exception) {
 
             <div class="modal-footer">
                 <div class="options text-center text-md-right mt-1">
-                    <?if(ServiceManager::generalServiceManager()->getParameter("security.allows-new-membership")):?>
+                    <?php
+                    if(ServiceManager::generalServiceManager()->getParameter("security.allows-new-membership")):?>
                         <p><?= $this->translate('No access?') ?>
                             <a href="/admin/sign-in/register-new-membership" target="_blank" class="text-primary"><?= $this->translate('Sign in') ?></a>
                         </p>
-                    <?endif?>
-                    <?if(ServiceManager::generalServiceManager()->getParameter("security.allows-password-reset")):?>
+                    <?php endif?>
+                    <?php
+                    if(ServiceManager::generalServiceManager()->getParameter("security.allows-password-reset")):?>
                         <p>
 							<?= $this->translate('Forgot Password?') ?>
                             <a href="/admin/forgot-password/request-reset-link" class="text-primary" target="_blank"><?= $this->translate('Reset') ?></a>
                         </p>
-                    <?endif?>
+                    <?php endif?>
                 </div>
             </div>
         </div>

@@ -567,7 +567,7 @@ class ConfigurationController extends AbstractConfigurationActionController
 		$tm->setDefaultGlobalTableName("configuration");
 		$sm = ServiceManager::generalServiceManager();
 
-		$enabledProviders = $sm->getParameter("security.user-providers.enabled");
+		$enabledProviders = $sm->getParameter("security.user-providers.enabled") ?: [];
 
 		$problem = 0;
 		if($_POST) {

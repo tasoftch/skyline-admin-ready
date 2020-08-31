@@ -3,6 +3,7 @@
 namespace Skyline\Admin\Ready\Controller;
 
 
+use Skyline\Admin\PDO\UserSystemInstaller;
 use Skyline\HTML\Bootstrap\Breadcrumb;
 use Skyline\Admin\Tool\UserTool;
 use Skyline\Security\CSRF\CSRFTokenManager;
@@ -42,7 +43,7 @@ class InitializeDatabaseConfigController extends AbstractConfigurationActionCont
 		}
 
 		$ok = 0;
-		if(is_file($file = "vendor/skyline-admin/pdo-initialisation/SQL/User-System/create.$driverName.sql")) {
+		if(UserSystemInstaller::canInit($trial)) {
 			$ok = 1;
 
 			$problem = 0;
@@ -63,9 +64,9 @@ class InitializeDatabaseConfigController extends AbstractConfigurationActionCont
 							if($pwrd != $_POST["passwordv"]) {
 								$problem = 3;
 							} else {
-								$this->stopAction(function() use ($trial, $file, $usr, $pwrd, $sm, $email) {
-									$contents = file_get_contents($file);
-									$trial->exec($contents);
+								$this->stopAction(function() use ($trial, $usr, $pwrd, $sm, $email) {
+									UserSystemInstaller::init($trial);
+
 									$uTool = new UserTool($trial, true);
 									$attributes = [
 										UserTool::ATTRIBUTE_EMAIL => $email,
@@ -99,7 +100,7 @@ class InitializeDatabaseConfigController extends AbstractConfigurationActionCont
 				->addItem('/admin/config', $tm->translateGlobal("Configuration"))
 				->addItem("/admin/config-user-system", $tm->translateGlobal("User System"))
 			->addItem("", $tm->translateGlobal("Init Database")),
-			'PROBLEM' => $problem,
+			'PROBLEM' => $problem ?? NULL,
 			'PDO' => [
 				'service' => $serviceName,
 				'driver' => $driverName,
